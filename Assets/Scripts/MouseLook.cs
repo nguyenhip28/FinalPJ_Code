@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class MouseLook : MonoBehaviour
 {
@@ -16,10 +15,8 @@ public class MouseLook : MonoBehaviour
 
     void Update()
     {
-        Vector2 mouse = Mouse.current.delta.ReadValue() * mouseSensitivity * Time.deltaTime;
-
-        float mouseX = mouse.x;
-        float mouseY = mouse.y;
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);

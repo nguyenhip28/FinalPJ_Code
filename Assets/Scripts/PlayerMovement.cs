@@ -1,37 +1,47 @@
-﻿using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 5f;
+    public float walkSpeed = 5f;
+    public float runSpeed = 9f;
+    public float jumpHeight = 2f;
+    public float gravity = -20f;
 
-    private InputAction moveAction;
+    private CharacterController controller;
+    private Vector3 velocity;
 
-    void Awake()
+    void Start()
     {
-        var inputActions = new InputSystem_Actions();
-        moveAction = inputActions.Player.Move;
-    }
-
-    void OnEnable()
-    {
-        moveAction.Enable();
-    }
-
-    void OnDisable()
-    {
-        moveAction.Disable();
+        controller = GetComponent<CharacterController>();
     }
 
     void Update()
     {
-        Vector2 input = moveAction.ReadValue<Vector2>();
+        bool isGrounded = controller.isGrounded;
 
-        // 👉 hướng theo thân Player
-        Vector3 move =
-            transform.forward * input.y +
-            transform.right * input.x;
+        // 🔒 FIX RƠI XUYÊN ĐẤT
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
 
-        transform.position += move * speed * Time.deltaTime;
+        // MOVE
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        Vector3 move = transform.right * x + transform.forward * z;
+        controller.Move(move * speed * Time.deltaTime);
+
+        // JUMP
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+
+        // GRAVITY
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 }

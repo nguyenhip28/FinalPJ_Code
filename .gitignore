@@ -1,4 +1,3 @@
-# Unity
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -7,13 +6,11 @@
 [Ll]ogs/
 UserSettings/
 
-# Visual Studio
 .vs/
 *.csproj
 *.sln
 *.user
 *.userprefs
 
-# OS
 .DS_Store
 Thumbs.db
