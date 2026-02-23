@@ -2,34 +2,23 @@ using UnityEngine;
 
 public class CuttingBoard : MonoBehaviour
 {
-    private FoodItem currentFood;
+    public Transform placePoint;
+    public GameObject currentFood;
 
-    private void OnTriggerEnter(Collider other)
+    public bool HasFood()
     {
-        FoodItem food = other.GetComponent<FoodItem>();
-
-        if (food != null)
-        {
-            currentFood = food;
-        }
+        return currentFood != null;
     }
 
-    private void OnTriggerExit(Collider other)
+    public void PlaceFood(GameObject food)
     {
-        FoodItem food = other.GetComponent<FoodItem>();
-
-        if (food != null && food == currentFood)
-        {
-            currentFood = null;
-        }
+        currentFood = food;
+        food.transform.position = placePoint.position;
+        food.transform.rotation = placePoint.rotation;
     }
 
-    private void Update()
+    public void RemoveFood()
     {
-        if (currentFood != null && Input.GetKeyDown(KeyCode.F))
-        {
-            currentFood.ChangeState();
-            currentFood = null;
-        }
+        currentFood = null;
     }
 }
