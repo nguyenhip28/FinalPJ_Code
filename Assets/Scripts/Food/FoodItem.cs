@@ -1,10 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum FoodState
 {
     Raw,
     Chopped,
-    Cooked
+    Cooked,
+    Burned
 }
 
 public class FoodItem : MonoBehaviour
@@ -15,32 +16,57 @@ public class FoodItem : MonoBehaviour
     [Header("State Prefabs")]
     public GameObject choppedPrefab;
     public GameObject cookedPrefab;
+    public GameObject burnedPrefab;
+
+    [Header("Cooking Settings")]
+    public float cookTime = 5f;
+    public float burnTime = 10f;
+
+    private float timer = 0f;
+    private bool isCooking = false;
+
+    void Update()
+    {
+        if (!isCooking) return;
+
+        timer += Time.deltaTime;
+
+        // Chopped → Cooked
+        if (currentState == FoodState.Chopped && timer >= cookTime)
+        {
+            ChangeState(cookedPrefab);
+        }
+
+        // Cooked → Burned
+        if (currentState == FoodState.Cooked && timer >= burnTime)
+        {
+            ChangeState(burnedPrefab);
+        }
+    }
 
     public void Chop()
     {
         if (currentState != FoodState.Raw || choppedPrefab == null)
             return;
 
-        GameObject newFood = Instantiate(
-            choppedPrefab,
-            transform.position,
-            transform.rotation
-        );
-
+        Instantiate(choppedPrefab, transform.position, transform.rotation);
         Destroy(gameObject);
     }
 
-    public void Cook()
+    public void StartCooking()
     {
-        if (currentState != FoodState.Chopped || cookedPrefab == null)
-            return;
+        if (currentState == FoodState.Chopped)
+        {
+            isCooking = true;
+            timer = 0f;
+        }
+    }
 
-        GameObject newFood = Instantiate(
-            cookedPrefab,
-            transform.position,
-            transform.rotation
-        );
+    void ChangeState(GameObject prefab)
+    {
+        if (prefab == null) return;
 
+        Instantiate(prefab, transform.position, transform.rotation);
         Destroy(gameObject);
     }
 }

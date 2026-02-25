@@ -14,32 +14,58 @@ public class PlayerInteraction : MonoBehaviour
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
-        // Vẽ ray trong Scene để debug
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
 
-        if (Input.GetMouseButtonDown(0)) // Chuột trái
+        if (Input.GetMouseButtonDown(0))
         {
-            // Nếu đang cầm → thả
+            // =========================
+            // 1️⃣ Nếu đang cầm đồ
+            // =========================
             if (heldObject != null)
             {
+                if (Physics.Raycast(ray, out hit, interactDistance))
+                {
+                    // 🔹 Kiểm tra Counter (bàn)
+                    KitchenCounter counter = hit.collider.GetComponentInParent<KitchenCounter>();
+
+                    if (counter != null && !counter.HasFood())
+                    {
+                        counter.PlaceFood(heldObject);
+                        heldObject = null;
+                        return;
+                    }
+                }
+
+                // Nếu không trúng bàn → thả xuống đất
                 DropObject();
                 return;
             }
 
-            // Nếu chưa cầm → thử nhặt
+            // =========================
+            // 2️⃣ Nếu chưa cầm đồ
+            // =========================
             if (Physics.Raycast(ray, out hit, interactDistance))
             {
-                // Quan trọng: dùng GetComponentInParent để bắt root object
+                // 🔹 Thử nhặt Food
                 FoodItem food = hit.collider.GetComponentInParent<FoodItem>();
 
                 if (food != null)
                 {
                     PickUpObject(food.gameObject);
+                    return;
                 }
-                else
+
+                // 🔹 Thử lấy đồ từ Counter
+                KitchenCounter counter = hit.collider.GetComponentInParent<KitchenCounter>();
+
+                if (counter != null && counter.HasFood())
                 {
-                    Debug.Log("Ray hit but no FoodItem on this object: " + hit.collider.name);
+                    GameObject foodFromCounter = counter.TakeFood();
+                    PickUpObject(foodFromCounter);
+                    return;
                 }
+
+                Debug.Log("Ray hit: " + hit.collider.name);
             }
         }
     }
