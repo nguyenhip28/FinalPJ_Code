@@ -3,104 +3,212 @@
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("Raycast Settings")]
-    public float interactDistance = 5f;
+    public float interactDistance = 3f;
     public Camera playerCamera;
     public Transform holdPoint;
 
+    [Header("Knife Visual (FPS)")]
+    public GameObject knifeVisual;
+
+    private BaseCounter selectedCounter;
+
     private GameObject heldObject;
+    private Knife heldKnife;
+
+    void Start()
+    {
+        if (knifeVisual != null)
+            knifeVisual.SetActive(false);
+    }
 
     void Update()
+    {
+        HandleRaycast();
+        HandlePrimaryAction();
+    }
+
+    // =====================================================
+    // RAYCAST
+    // =====================================================
+    void HandleRaycast()
     {
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
-        Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
-
-        if (Input.GetMouseButtonDown(0))
+        if (Physics.Raycast(ray, out hit, interactDistance))
         {
-            // =========================
-            // 1️⃣ Nếu đang cầm đồ
-            // =========================
-            if (heldObject != null)
+            selectedCounter = hit.collider.GetComponentInParent<BaseCounter>();
+        }
+        else
+        {
+            selectedCounter = null;
+        }
+
+        Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
+    }
+
+    // =====================================================
+    // LEFT CLICK
+    // =====================================================
+    void HandlePrimaryAction()
+    {
+        if (!Input.GetMouseButtonDown(0)) return;
+
+        // ===== INTERACT WITH COUNTER =====
+        if (selectedCounter != null)
+        {
+            if (!IsHoldingAnything())
             {
-                if (Physics.Raycast(ray, out hit, interactDistance))
+                if (selectedCounter.HasObject())
                 {
-                    // 🔹 Kiểm tra Counter (bàn)
-                    KitchenCounter counter = hit.collider.GetComponentInParent<KitchenCounter>();
-
-                    if (counter != null && !counter.HasFood())
-                    {
-                        counter.PlaceFood(heldObject);
-                        heldObject = null;
-                        return;
-                    }
+                    PickUp(selectedCounter.TakeObject());
                 }
-
-                // Nếu không trúng bàn → thả xuống đất
-                DropObject();
-                return;
+            }
+            else
+            {
+                if (!selectedCounter.HasObject())
+                {
+                    selectedCounter.PlaceObject(GetHeldGameObject());
+                    ClearHeld();
+                }
             }
 
-            // =========================
-            // 2️⃣ Nếu chưa cầm đồ
-            // =========================
+            return;
+        }
+
+        // ===== PICK DIRECT OBJECT (FIX KHÔNG NHẶT GROUND) =====
+        if (!IsHoldingAnything())
+        {
+            Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+            RaycastHit hit;
+
             if (Physics.Raycast(ray, out hit, interactDistance))
             {
-                // 🔹 Thử nhặt Food
-                FoodItem food = hit.collider.GetComponentInParent<FoodItem>();
-
-                if (food != null)
+                // Chỉ nhặt Food hoặc Knife
+                if (hit.collider.CompareTag("Food") ||
+                    hit.collider.GetComponent<Knife>() != null)
                 {
-                    PickUpObject(food.gameObject);
-                    return;
+                    PickUp(hit.collider.gameObject);
                 }
-
-                // 🔹 Thử lấy đồ từ Counter
-                KitchenCounter counter = hit.collider.GetComponentInParent<KitchenCounter>();
-
-                if (counter != null && counter.HasFood())
-                {
-                    GameObject foodFromCounter = counter.TakeFood();
-                    PickUpObject(foodFromCounter);
-                    return;
-                }
-
-                Debug.Log("Ray hit: " + hit.collider.name);
             }
+        }
+        else
+        {
+            DropToGround();
         }
     }
 
-    void PickUpObject(GameObject obj)
+    // =====================================================
+    // PICK UP
+    // =====================================================
+    void PickUp(GameObject obj)
     {
+        if (obj == null) return;
+
+        Knife knife = obj.GetComponent<Knife>();
+
+        // ===== PICK KNIFE =====
+        if (knife != null)
+        {
+            heldKnife = knife;
+
+            obj.SetActive(false);
+
+            if (knifeVisual != null)
+                knifeVisual.SetActive(true);
+
+            return;
+        }
+
+        // ===== PICK FOOD =====
         heldObject = obj;
 
-        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.isKinematic = true;
             rb.useGravity = false;
         }
 
-        heldObject.transform.SetParent(holdPoint);
-        heldObject.transform.localPosition = Vector3.zero;
-        heldObject.transform.localRotation = Quaternion.identity;
-
-        Debug.Log("Picked up: " + obj.name);
+        obj.transform.SetParent(holdPoint);
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.identity;
     }
 
-    void DropObject()
+    // =====================================================
+    // DROP
+    // =====================================================
+    void DropToGround()
     {
-        Rigidbody rb = heldObject.GetComponent<Rigidbody>();
-
-        heldObject.transform.SetParent(null);
-
-        if (rb != null)
+        // DROP KNIFE
+        if (heldKnife != null)
         {
-            rb.isKinematic = false;
-            rb.useGravity = true;
+            heldKnife.gameObject.SetActive(true);
+            heldKnife = null;
+
+            if (knifeVisual != null)
+                knifeVisual.SetActive(false);
+
+            return;
         }
 
-        Debug.Log("Dropped: " + heldObject.name);
+        // DROP FOOD
+        if (heldObject != null)
+        {
+            heldObject.transform.SetParent(null);
+
+            Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+                rb.useGravity = true;
+            }
+
+            heldObject = null;
+        }
+    }
+
+    // =====================================================
+    // API
+    // =====================================================
+
+    public GameObject GetHeldObject()
+    {
+        return heldObject;
+    }
+
+    public GameObject GetHeldGameObject()
+    {
+        if (heldObject != null) return heldObject;
+        if (heldKnife != null) return heldKnife.gameObject;
+        return null;
+    }
+
+    public bool IsHoldingObject()
+    {
+        return heldObject != null;
+    }
+
+    public bool HasKnife()
+    {
+        return heldKnife != null;
+    }
+
+    public bool IsHoldingAnything()
+    {
+        return heldObject != null || heldKnife != null;
+    }
+
+    public void ClearHeld()
+    {
+        if (heldKnife != null)
+        {
+            heldKnife.gameObject.SetActive(true);
+            heldKnife = null;
+
+            if (knifeVisual != null)
+                knifeVisual.SetActive(false);
+        }
 
         heldObject = null;
     }

@@ -1,29 +1,39 @@
 ﻿using UnityEngine;
 
+public enum FoodType
+{
+    Tomato,
+    Lettuce,
+    Meat,
+    Tortilla
+}
+
 public enum FoodState
 {
     Raw,
     Chopped,
+    Cooking,
     Cooked,
     Burned
 }
 
 public class FoodItem : MonoBehaviour
 {
-    public string foodName;
+    [Header("Food Info")]
+    public FoodType foodType;
     public FoodState currentState;
 
-    [Header("State Prefabs")]
+    [Header("Prefabs")]
     public GameObject choppedPrefab;
     public GameObject cookedPrefab;
     public GameObject burnedPrefab;
 
-    [Header("Cooking Settings")]
+    [Header("Cooking")]
     public float cookTime = 5f;
-    public float burnTime = 10f;
+    public float burnTime = 8f;
 
-    private float timer = 0f;
-    private bool isCooking = false;
+    private float timer;
+    private bool isCooking;
 
     void Update()
     {
@@ -31,42 +41,46 @@ public class FoodItem : MonoBehaviour
 
         timer += Time.deltaTime;
 
-        // Chopped → Cooked
-        if (currentState == FoodState.Chopped && timer >= cookTime)
+        if (currentState == FoodState.Cooking && timer >= cookTime)
         {
-            ChangeState(cookedPrefab);
+            ReplaceWith(cookedPrefab, FoodState.Cooked);
         }
 
-        // Cooked → Burned
         if (currentState == FoodState.Cooked && timer >= burnTime)
         {
-            ChangeState(burnedPrefab);
+            ReplaceWith(burnedPrefab, FoodState.Burned);
         }
     }
 
     public void Chop()
     {
-        if (currentState != FoodState.Raw || choppedPrefab == null)
-            return;
+        if (currentState != FoodState.Raw) return;
 
-        Instantiate(choppedPrefab, transform.position, transform.rotation);
-        Destroy(gameObject);
+        ReplaceWith(choppedPrefab, FoodState.Chopped);
     }
 
     public void StartCooking()
     {
         if (currentState == FoodState.Chopped)
         {
+            currentState = FoodState.Cooking;
             isCooking = true;
             timer = 0f;
         }
     }
 
-    void ChangeState(GameObject prefab)
+    void ReplaceWith(GameObject prefab, FoodState newState)
     {
         if (prefab == null) return;
 
-        Instantiate(prefab, transform.position, transform.rotation);
+        GameObject newObj = Instantiate(prefab, transform.position, transform.rotation);
+        FoodItem newFood = newObj.GetComponent<FoodItem>();
+
+        if (newFood != null)
+        {
+            newFood.currentState = newState;
+        }
+
         Destroy(gameObject);
     }
 }
