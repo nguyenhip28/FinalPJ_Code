@@ -2392,7 +2392,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 531661fa8d75321468eb94ae43af562a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlateCounter
-  placePoint: {fileID: 0}
+  foodPlacePoint: {fileID: 0}
+  knifePlacePoint: {fileID: 0}
   tacoPrefab: {fileID: 0}
 --- !u!1 &75122014
 GameObject:
@@ -3245,6 +3246,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!1 &90567855
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 90567856}
+  m_Layer: 0
+  m_Name: FoodPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &90567856
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90567855}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.031, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 905565393}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &92122553
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7195,7 +7227,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 077cd2d02327d1c4f8e7e945e7920950, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 847624175}
+      addedObject: {fileID: 90567856}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 077cd2d02327d1c4f8e7e945e7920950, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 230101431}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 077cd2d02327d1c4f8e7e945e7920950, type: 3}
       insertIndex: -1
@@ -9883,6 +9918,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 033999da19ac9074d84c50be8da3917e, type: 3}
+--- !u!1 &230101430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 230101431}
+  m_Layer: 0
+  m_Name: KnifePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &230101431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230101430}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.591, y: 1.031, z: 0.012}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 905565393}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &235656751
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34412,37 +34478,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e3c71c50de390ec4190b877211ba0717, type: 3}
---- !u!1 &847624174
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 847624175}
-  m_Layer: 0
-  m_Name: PlacePoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &847624175
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847624174}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.061, z: 0}
-  m_LocalScale: {x: 10, y: 1, z: 4}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 905565393}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &851200229
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36615,7 +36650,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d1c64eaa0191e4380c7f78eef06d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CuttingCounter
-  placePoint: {fileID: 847624175}
+  foodPlacePoint: {fileID: 90567856}
+  knifePlacePoint: {fileID: 230101431}
 --- !u!1001 &907139377
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -59028,7 +59064,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9abbd0dee4c9d844f858dbc96e7f42a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SinkCounter
-  placePoint: {fileID: 0}
+  foodPlacePoint: {fileID: 0}
+  knifePlacePoint: {fileID: 0}
 --- !u!1001 &1473179704
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67875,7 +67912,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6410f0f92f5992f4c8d1677476356c85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoveCounter
-  placePoint: {fileID: 0}
+  foodPlacePoint: {fileID: 0}
+  knifePlacePoint: {fileID: 0}
 --- !u!1001 &1680652630
 PrefabInstance:
   m_ObjectHideFlags: 0

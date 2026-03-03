@@ -5,7 +5,7 @@ public class SinkCounter : BaseCounter
     private float washProgress = 0f;
     private float washTime = 2f;
 
-    public void Interact(PlayerInteraction player)
+    public override void Interact(PlayerInteraction player)
     {
         // Nếu có đồ trên bồn
         if (HasObject())

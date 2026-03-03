@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BaseCounter : MonoBehaviour
 {
-    [SerializeField] protected Transform placePoint;
+    [SerializeField] protected Transform foodPlacePoint;
+    [SerializeField] protected Transform knifePlacePoint;
 
     protected GameObject currentObject;
+    protected GameObject currentKnife;
 
     public virtual bool HasObject()
     {
@@ -13,9 +15,21 @@ public class BaseCounter : MonoBehaviour
 
     public virtual void PlaceObject(GameObject obj)
     {
+        // Nếu là Knife
+        if (obj.GetComponent<Knife>() != null)
+        {
+            currentKnife = obj;
+
+            obj.transform.SetParent(knifePlacePoint);
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localRotation = Quaternion.identity;
+            return;
+        }
+
+        // Nếu là Food
         currentObject = obj;
 
-        obj.transform.SetParent(placePoint);
+        obj.transform.SetParent(foodPlacePoint);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
 
@@ -38,5 +52,9 @@ public class BaseCounter : MonoBehaviour
         }
 
         return obj;
+    }
+
+    public virtual void Interact(PlayerInteraction player)
+    {
     }
 }

@@ -7,7 +7,7 @@ public class PlateCounter : BaseCounter
 
     private List<FoodType> ingredients = new List<FoodType>();
 
-    public void Interact(PlayerInteraction player)
+    public override void Interact(PlayerInteraction player)
     {
         // Nếu player đang cầm food
         if (player.IsHoldingObject())

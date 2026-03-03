@@ -25,6 +25,13 @@ public class PlayerInteraction : MonoBehaviour
     {
         HandleRaycast();
         HandlePrimaryAction();
+
+        // ===== PHÍM E INTERACT =====
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (selectedCounter != null)
+                selectedCounter.Interact(this);
+        }
     }
 
     // =====================================================
@@ -76,7 +83,7 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        // ===== PICK DIRECT OBJECT (FIX KHÔNG NHẶT GROUND) =====
+        // ===== PICK DIRECT OBJECT =====
         if (!IsHoldingAnything())
         {
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
@@ -84,7 +91,6 @@ public class PlayerInteraction : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, interactDistance))
             {
-                // Chỉ nhặt Food hoặc Knife
                 if (hit.collider.CompareTag("Food") ||
                     hit.collider.GetComponent<Knife>() != null)
                 {

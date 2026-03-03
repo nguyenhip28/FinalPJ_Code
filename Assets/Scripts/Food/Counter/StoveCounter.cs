@@ -2,7 +2,7 @@
 
 public class StoveCounter : BaseCounter
 {
-    public void Interact(PlayerInteraction player)
+    public override void Interact(PlayerInteraction player)
     {
         // Nếu bếp chưa có đồ
         if (!HasObject())
