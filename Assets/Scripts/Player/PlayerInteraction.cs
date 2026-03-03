@@ -107,7 +107,7 @@ public class PlayerInteraction : MonoBehaviour
     // =====================================================
     // PICK UP
     // =====================================================
-    void PickUp(GameObject obj)
+    public void PickUp(GameObject obj)
     {
         if (obj == null) return;
 

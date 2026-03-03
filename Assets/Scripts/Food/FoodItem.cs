@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public enum FoodType
 {
@@ -12,7 +13,6 @@ public enum FoodState
 {
     Raw,
     Chopped,
-    Cooking,
     Cooked,
     Burned
 }
@@ -21,66 +21,177 @@ public class FoodItem : MonoBehaviour
 {
     [Header("Food Info")]
     public FoodType foodType;
-    public FoodState currentState;
+    public FoodState currentState = FoodState.Raw;
 
-    [Header("Prefabs")]
-    public GameObject choppedPrefab;
-    public GameObject cookedPrefab;
-    public GameObject burnedPrefab;
+    [Header("Meshes (For vegetables)")]
+    [SerializeField] private Mesh rawMesh;
+    [SerializeField] private Mesh choppedMesh;
+    [SerializeField] private Mesh cookedMesh;
+    [SerializeField] private Mesh burnedMesh;
 
-    [Header("Cooking")]
-    public float cookTime = 5f;
-    public float burnTime = 8f;
+    [Header("Materials (For meat color change)")]
+    [SerializeField] private Material rawMaterial;
+    [SerializeField] private Material cookedMaterial;
+    [SerializeField] private Material burnedMaterial;
 
-    private float timer;
-    private bool isCooking;
+    [Header("Cooking Settings")]
+    [SerializeField] private float cookTime = 5f;
+    [SerializeField] private float burnTime = 10f;
 
-    void Update()
+    public Action<float> OnCookingProgress;
+
+    private MeshFilter meshFilter;
+    private MeshRenderer meshRenderer;
+
+    private float cookTimer = 0f;
+    private bool isCooking = false;
+
+    // =====================================================
+    // INITIALIZE
+    // =====================================================
+
+    private void Awake()
+    {
+        meshFilter = GetComponent<MeshFilter>();
+        meshRenderer = GetComponent<MeshRenderer>();
+
+        ApplyRawVisual();
+    }
+
+    // =====================================================
+    // UPDATE (COOK TIMER)
+    // =====================================================
+
+    private void Update()
     {
         if (!isCooking) return;
 
-        timer += Time.deltaTime;
+        cookTimer += Time.deltaTime;
 
-        if (currentState == FoodState.Cooking && timer >= cookTime)
+        float progress = Mathf.Clamp01(cookTimer / burnTime);
+        OnCookingProgress?.Invoke(progress);
+
+        // Burn
+        if (cookTimer >= burnTime)
         {
-            ReplaceWith(cookedPrefab, FoodState.Cooked);
+            Burn();
+            isCooking = false;
+            return;
         }
 
-        if (currentState == FoodState.Cooked && timer >= burnTime)
+        // Cook
+        if (cookTimer >= cookTime && currentState != FoodState.Cooked)
         {
-            ReplaceWith(burnedPrefab, FoodState.Burned);
+            Cook();
         }
     }
+
+    // =====================================================
+    // CHOP
+    // =====================================================
 
     public void Chop()
     {
-        if (currentState != FoodState.Raw) return;
+        // Meat chỉ chop sau khi đã cook
+        if (foodType == FoodType.Meat)
+        {
+            if (currentState != FoodState.Cooked) return;
+        }
+        else
+        {
+            if (currentState != FoodState.Raw) return;
+        }
 
-        ReplaceWith(choppedPrefab, FoodState.Chopped);
+        currentState = FoodState.Chopped;
+
+        if (choppedMesh != null)
+            meshFilter.mesh = choppedMesh;
+
+        Debug.Log(foodType + " chopped!");
     }
+
+    // =====================================================
+    // START COOKING
+    // =====================================================
 
     public void StartCooking()
     {
-        if (currentState == FoodState.Chopped)
+        if (currentState == FoodState.Raw || currentState == FoodState.Chopped)
         {
-            currentState = FoodState.Cooking;
+            cookTimer = 0f;
             isCooking = true;
-            timer = 0f;
         }
     }
 
-    void ReplaceWith(GameObject prefab, FoodState newState)
+    // =====================================================
+    // STOP COOKING
+    // =====================================================
+
+    public void StopCooking()
     {
-        if (prefab == null) return;
+        isCooking = false;
+    }
 
-        GameObject newObj = Instantiate(prefab, transform.position, transform.rotation);
-        FoodItem newFood = newObj.GetComponent<FoodItem>();
+    // =====================================================
+    // COOK
+    // =====================================================
 
-        if (newFood != null)
+    private void Cook()
+    {
+        if (currentState == FoodState.Cooked || currentState == FoodState.Burned)
+            return;
+
+        currentState = FoodState.Cooked;
+
+        if (foodType == FoodType.Meat)
         {
-            newFood.currentState = newState;
+            if (cookedMaterial != null)
+                meshRenderer.material = cookedMaterial;
+        }
+        else
+        {
+            if (cookedMesh != null)
+                meshFilter.mesh = cookedMesh;
         }
 
-        Destroy(gameObject);
+        Debug.Log(foodType + " cooked!");
+    }
+
+    // =====================================================
+    // BURN
+    // =====================================================
+
+    private void Burn()
+    {
+        if (currentState != FoodState.Cooked)
+            return;
+
+        currentState = FoodState.Burned;
+
+        if (foodType == FoodType.Meat)
+        {
+            if (burnedMaterial != null)
+                meshRenderer.material = burnedMaterial;
+        }
+        else
+        {
+            if (burnedMesh != null)
+                meshFilter.mesh = burnedMesh;
+        }
+
+        Debug.Log(foodType + " burned!");
+    }
+
+    // =====================================================
+    // VISUAL RESET
+    // =====================================================
+
+    private void ApplyRawVisual()
+    {
+        if (rawMesh != null)
+            meshFilter.mesh = rawMesh;
+
+        if (rawMaterial != null)
+            meshRenderer.material = rawMaterial;
     }
 }

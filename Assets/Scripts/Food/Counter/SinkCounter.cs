@@ -10,7 +10,7 @@ public class SinkCounter : BaseCounter
         // Nếu có đồ trên bồn
         if (HasObject())
         {
-            FoodItem food = currentObject.GetComponent<FoodItem>();
+            FoodItem food = currentFood.GetComponent<FoodItem>();
 
             if (food != null && food.currentState == FoodState.Raw)
             {
