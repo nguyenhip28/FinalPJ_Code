@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BaseCounter : MonoBehaviour
+public class BaseCounter : MonoBehaviour, IInteractable
 {
     [Header("Place Points")]
     [SerializeField] protected Transform foodPlacePoint;
@@ -25,7 +25,7 @@ public class BaseCounter : MonoBehaviour
 
     public virtual bool HasObject()
     {
-        return currentFood != null;
+        return currentFood != null || currentKnife != null;
     }
 
     // =====================================================
@@ -36,46 +36,25 @@ public class BaseCounter : MonoBehaviour
     {
         if (obj == null) return;
 
-        // ===== PLACE KNIFE =====
+        // ===== KNIFE =====
         Knife knife = obj.GetComponent<Knife>();
         if (knife != null)
         {
-            if (currentKnife != null) return; // Không cho đặt đè
+            if (currentKnife != null) return;
 
             currentKnife = obj;
-
-            obj.transform.SetParent(knifePlacePoint);
-            obj.transform.localPosition = Vector3.zero;
-            obj.transform.localRotation = Quaternion.identity;
-
-            Rigidbody rb = obj.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = true;
-                rb.useGravity = false;
-            }
-
+            PlaceAtPoint(obj, knifePlacePoint);
             return;
         }
 
-        // ===== PLACE FOOD =====
+        // ===== FOOD =====
         FoodItem food = obj.GetComponent<FoodItem>();
         if (food != null)
         {
-            if (currentFood != null) return; // Không cho đặt đè
+            if (currentFood != null) return;
 
             currentFood = obj;
-
-            obj.transform.SetParent(foodPlacePoint);
-            obj.transform.localPosition = Vector3.zero;
-            obj.transform.localRotation = Quaternion.identity;
-
-            Rigidbody rb = obj.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = true;
-                rb.useGravity = false;
-            }
+            PlaceAtPoint(obj, foodPlacePoint);
         }
     }
 
@@ -85,21 +64,12 @@ public class BaseCounter : MonoBehaviour
 
     public virtual GameObject TakeObject()
     {
+        if (currentFood == null) return null;
+
         GameObject obj = currentFood;
         currentFood = null;
 
-        if (obj != null)
-        {
-            obj.transform.SetParent(null);
-
-            Rigidbody rb = obj.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = false;
-                rb.useGravity = true;
-            }
-        }
-
+        DetachObject(obj);
         return obj;
     }
 
@@ -109,21 +79,12 @@ public class BaseCounter : MonoBehaviour
 
     public virtual GameObject TakeKnife()
     {
+        if (currentKnife == null) return null;
+
         GameObject obj = currentKnife;
         currentKnife = null;
 
-        if (obj != null)
-        {
-            obj.transform.SetParent(null);
-
-            Rigidbody rb = obj.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.isKinematic = false;
-                rb.useGravity = true;
-            }
-        }
-
+        DetachObject(obj);
         return obj;
     }
 
@@ -133,5 +94,36 @@ public class BaseCounter : MonoBehaviour
 
     public virtual void Interact(PlayerInteraction player)
     {
+        // BaseCounter mặc định không làm gì
+    }
+
+    // =====================================================
+    // HELPER FUNCTIONS
+    // =====================================================
+
+    protected void PlaceAtPoint(GameObject obj, Transform point)
+    {
+        obj.transform.SetParent(point);
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.identity;
+
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+    }
+
+    protected void DetachObject(GameObject obj)
+    {
+        obj.transform.SetParent(null);
+
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
     }
 }

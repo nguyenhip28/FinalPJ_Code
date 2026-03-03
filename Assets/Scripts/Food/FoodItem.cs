@@ -68,6 +68,8 @@ public class FoodItem : MonoBehaviour
 
         cookTimer += Time.deltaTime;
 
+        Debug.Log(foodType + " cooking... " + cookTimer);
+
         float progress = Mathf.Clamp01(cookTimer / burnTime);
         OnCookingProgress?.Invoke(progress);
 
