@@ -6,7 +6,11 @@ public class StoveCounter : BaseCounter
     [Header("Meat Slots")]
     [SerializeField] private List<Transform> meatPoints;
 
+    [Header("UI")]
+    [SerializeField] private CookingProgressUI progressUI;
+
     private List<FoodItem> cookingFoods = new List<FoodItem>();
+
 
     // =====================================================
     // INTERACT
@@ -36,14 +40,24 @@ public class StoveCounter : BaseCounter
             return;
         }
 
+        // đặt thịt lên bếp
         PlaceMeat(food, freeSlot);
 
+        // bỏ khỏi tay player
         player.ClearHeld();
 
+        // bắt đầu nấu
         food.StartCooking();
+
+        // UI progress
+        if (progressUI != null)
+        {
+            progressUI.SetFood(food);
+        }
 
         cookingFoods.Add(food);
     }
+
 
     // =====================================================
     // FIND EMPTY SLOT
@@ -54,14 +68,17 @@ public class StoveCounter : BaseCounter
         foreach (Transform slot in meatPoints)
         {
             if (slot.childCount == 0)
+            {
                 return slot;
+            }
         }
 
         return null;
     }
 
+
     // =====================================================
-    // PLACE MEAT (ANTI TELEPORT + ANTI SCALE BUG)
+    // PLACE MEAT
     // =====================================================
 
     private void PlaceMeat(FoodItem food, Transform slot)
@@ -76,34 +93,43 @@ public class StoveCounter : BaseCounter
             rb.angularVelocity = Vector3.zero;
         }
 
-        // CẮT KHỎI PARENT CŨ
+        // bỏ parent cũ
         food.transform.SetParent(null);
 
-        // Reset scale
+        // reset scale
         food.transform.localScale = Vector3.one;
 
-        // Đặt world position
+        // đặt vào vị trí slot
         food.transform.position = slot.position;
         food.transform.rotation = slot.rotation;
 
-        // Parent lại
+        // parent vào slot
         food.transform.SetParent(slot, true);
     }
 
+
     // =====================================================
-    // OPTIONAL: TAKE MEAT BACK
+    // TAKE MEAT BACK
     // =====================================================
 
     public GameObject TakeMeat(FoodItem food)
     {
+        if (food == null)
+            return null;
+
+        food.StopCooking();
+
         food.transform.SetParent(null);
 
         Rigidbody rb = food.GetComponent<Rigidbody>();
+
         if (rb != null)
         {
-            rb.isKinematic = false;   // bật lại
+            rb.isKinematic = false;
             rb.useGravity = true;
         }
+
+        cookingFoods.Remove(food);
 
         return food.gameObject;
     }

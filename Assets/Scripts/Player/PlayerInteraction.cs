@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class PlayerInteraction : MonoBehaviour
     private GameObject heldObject;
     private Knife heldKnife;
 
+    [Header("UI")]
+    public TextMeshProUGUI hintText;
+
     void Start()
     {
         if (knifeVisual != null)
@@ -24,13 +28,40 @@ public class PlayerInteraction : MonoBehaviour
     void Update()
     {
         HandleRaycast();
+
+        bool showHint = false;
+
+        // Check nếu đang cầm Meat và nhìn vào Stove
+        if (selectedCounter is StoveCounter && heldObject != null)
+        {
+            FoodItem food = heldObject.GetComponent<FoodItem>();
+
+            if (food != null && food.foodType == FoodType.Meat)
+            {
+                showHint = true;
+            }
+        }
+
+        // Update UI
+        if (hintText != null)
+        {
+            hintText.gameObject.SetActive(showHint);
+
+            if (showHint)
+            {
+                hintText.text = "[E] Cook Meat";
+            }
+        }
+
         HandlePrimaryAction();
 
         // ===== PHÍM E INTERACT =====
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (selectedCounter != null)
+            {
                 selectedCounter.Interact(this);
+            }
         }
     }
 
@@ -60,6 +91,23 @@ public class PlayerInteraction : MonoBehaviour
     void HandlePrimaryAction()
     {
         if (!Input.GetMouseButtonDown(0)) return;
+
+        // 🚫 Block chuột nếu cầm Meat và nhìn Stove
+        if (selectedCounter is StoveCounter && heldObject != null)
+        {
+            FoodItem food = heldObject.GetComponent<FoodItem>();
+
+            if (food != null && food.foodType == FoodType.Meat)
+            {
+                if (hintText != null)
+                {
+                    hintText.gameObject.SetActive(true);
+                    hintText.text = "Press E to cook meat";
+                }
+
+                return;
+            }
+        }
 
         // ===== INTERACT WITH COUNTER =====
         if (selectedCounter != null)

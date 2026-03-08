@@ -38,6 +38,10 @@ public class FoodItem : MonoBehaviour
     [SerializeField] private float cookTime = 5f;
     [SerializeField] private float burnTime = 10f;
 
+    [SerializeField] private GameObject cookingBarPrefab;
+
+    private CookingProgressUI progressUI;
+
     public Action<float> OnCookingProgress;
 
     private MeshFilter meshFilter;
@@ -94,7 +98,6 @@ public class FoodItem : MonoBehaviour
 
     public void Chop()
     {
-        // Meat chỉ chop sau khi đã cook
         if (foodType == FoodType.Meat)
         {
             if (currentState != FoodState.Cooked) return;
@@ -122,6 +125,21 @@ public class FoodItem : MonoBehaviour
         {
             cookTimer = 0f;
             isCooking = true;
+
+            if (progressUI == null && cookingBarPrefab != null)
+            {
+                Debug.Log("Cooking bar spawned");
+
+                GameObject bar = Instantiate(cookingBarPrefab);
+
+                bar.transform.SetParent(transform);
+                bar.transform.localPosition = new Vector3(0, 0.5f, 0);
+                bar.transform.localRotation = Quaternion.identity;
+                bar.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+                progressUI = bar.GetComponent<CookingProgressUI>();
+                progressUI.SetFood(this);
+            }
         }
     }
 
@@ -181,6 +199,9 @@ public class FoodItem : MonoBehaviour
                 meshFilter.mesh = burnedMesh;
         }
 
+        if (progressUI != null)
+            progressUI.gameObject.SetActive(false);
+
         Debug.Log(foodType + " burned!");
     }
 
@@ -195,5 +216,10 @@ public class FoodItem : MonoBehaviour
 
         if (rawMaterial != null)
             meshRenderer.material = rawMaterial;
+    }
+
+    void OnDestroy()
+    {
+        OnCookingProgress = null;
     }
 }
