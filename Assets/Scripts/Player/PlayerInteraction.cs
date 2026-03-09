@@ -31,7 +31,7 @@ public class PlayerInteraction : MonoBehaviour
 
         bool showHint = false;
 
-        // Check nếu đang cầm Meat và nhìn vào Stove
+        // Hiện hint khi cầm meat và nhìn vào stove
         if (selectedCounter is StoveCounter && heldObject != null)
         {
             FoodItem food = heldObject.GetComponent<FoodItem>();
@@ -42,20 +42,16 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
 
-        // Update UI
         if (hintText != null)
         {
             hintText.gameObject.SetActive(showHint);
 
             if (showHint)
-            {
                 hintText.text = "[E] Cook Meat";
-            }
         }
 
         HandlePrimaryAction();
 
-        // ===== PHÍM E INTERACT =====
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (selectedCounter != null)
@@ -68,6 +64,7 @@ public class PlayerInteraction : MonoBehaviour
     // =====================================================
     // RAYCAST
     // =====================================================
+
     void HandleRaycast()
     {
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
@@ -88,11 +85,12 @@ public class PlayerInteraction : MonoBehaviour
     // =====================================================
     // LEFT CLICK
     // =====================================================
+
     void HandlePrimaryAction()
     {
         if (!Input.GetMouseButtonDown(0)) return;
 
-        // 🚫 Block chuột nếu cầm Meat và nhìn Stove
+        // Block click nếu cầm meat và nhìn vào stove
         if (selectedCounter is StoveCounter && heldObject != null)
         {
             FoodItem food = heldObject.GetComponent<FoodItem>();
@@ -112,18 +110,21 @@ public class PlayerInteraction : MonoBehaviour
         // ===== INTERACT WITH COUNTER =====
         if (selectedCounter != null)
         {
-            if (!IsHoldingAnything())
+            // Nếu không cầm food
+            if (heldObject == null)
             {
-                if (selectedCounter.HasObject())
+                if (selectedCounter.HasFood())
                 {
                     PickUp(selectedCounter.TakeObject());
                 }
             }
             else
             {
-                if (!selectedCounter.HasObject())
+                FoodItem food = heldObject.GetComponent<FoodItem>();
+
+                if (food != null && !selectedCounter.HasFood())
                 {
-                    selectedCounter.PlaceObject(GetHeldGameObject());
+                    selectedCounter.PlaceObject(heldObject);
                     ClearHeld();
                 }
             }
@@ -132,7 +133,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         // ===== PICK DIRECT OBJECT =====
-        if (!IsHoldingAnything())
+        if (heldObject == null && heldKnife == null)
         {
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             RaycastHit hit;
@@ -155,6 +156,7 @@ public class PlayerInteraction : MonoBehaviour
     // =====================================================
     // PICK UP
     // =====================================================
+
     public void PickUp(GameObject obj)
     {
         if (obj == null) return;
@@ -178,6 +180,7 @@ public class PlayerInteraction : MonoBehaviour
         heldObject = obj;
 
         Rigidbody rb = obj.GetComponent<Rigidbody>();
+
         if (rb != null)
         {
             rb.isKinematic = true;
@@ -185,13 +188,16 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         obj.transform.SetParent(holdPoint);
+
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
+        obj.transform.localScale = Vector3.one;
     }
 
     // =====================================================
     // DROP
     // =====================================================
+
     void DropToGround()
     {
         // DROP KNIFE
@@ -212,6 +218,7 @@ public class PlayerInteraction : MonoBehaviour
             heldObject.transform.SetParent(null);
 
             Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+
             if (rb != null)
             {
                 rb.isKinematic = false;

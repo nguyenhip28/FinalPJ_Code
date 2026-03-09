@@ -8,60 +8,62 @@ public class CuttingCounter : BaseCounter
     public override void Interact(PlayerInteraction player)
     {
         // =========================
-        // 1️⃣ Nếu chưa có food trên board
+        // 1️⃣ Đặt food lên thớt
         // =========================
         if (!HasFood())
         {
-            if (player.IsHoldingObject())
-            {
-                GameObject held = player.GetHeldObject();
+            GameObject held = player.GetHeldObject();
 
+            if (held != null)
+            {
                 FoodItem food = held.GetComponent<FoodItem>();
-                if (food != null)
+
+                if (food != null && !HasFood())
                 {
                     PlaceObject(held);
                     player.ClearHeld();
+                    cutCount = 0;
                 }
             }
+
             return;
         }
 
         // =========================
-        // 2️⃣ Nếu có food và player KHÔNG cầm dao → lấy food xuống
+        // 2️⃣ Lấy food xuống
         // =========================
-        if (HasFood() && !player.HasKnife())
+        if (!player.HasKnife())
         {
-            if (!player.IsHoldingObject())
+            if (player.GetHeldObject() == null)
             {
                 GameObject food = TakeObject();
-                player.PickUp(food);
-                cutCount = 0;
+
+                if (food != null)
+                {
+                    player.PickUp(food);
+                    cutCount = 0;
+                }
             }
+
             return;
         }
 
         // =========================
-        // 3️⃣ Nếu có food và player có dao → cắt
+        // 3️⃣ Cắt food
         // =========================
-        if (HasFood() && player.HasKnife())
+        FoodItem foodItem = currentFood.GetComponent<FoodItem>();
+
+        if (foodItem == null)
+            return;
+
+        cutCount++;
+
+        Debug.Log("Cut progress: " + cutCount + "/" + requiredCuts);
+
+        if (cutCount >= requiredCuts)
         {
-            FoodItem food = currentFood.GetComponent<FoodItem>();
-
-            if (food == null)
-                return;
-
-            if (food.currentState != FoodState.Raw)
-                return;
-
-            cutCount++;
-
-            Debug.Log("Cut progress: " + cutCount + "/" + requiredCuts);
-
-            if (cutCount >= requiredCuts)
-            {
-                food.Chop();
-                cutCount = 0;
-            }
+            foodItem.Chop();
+            cutCount = 0;
         }
     }
 }

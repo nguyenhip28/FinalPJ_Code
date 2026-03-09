@@ -20,16 +20,36 @@ public class StoveCounter : BaseCounter
     {
         Debug.Log("Stove Interact Called");
 
+        // =====================================
+        // CASE 1: Player không cầm gì → lấy thịt
+        // =====================================
         if (!player.IsHoldingObject())
-            return;
+        {
+            if (cookingFoods.Count > 0)
+            {
+                FoodItem food = cookingFoods[0];
 
+                GameObject meat = TakeMeat(food);
+
+                if (meat != null)
+                {
+                    player.PickUp(meat);
+                }
+            }
+
+            return;
+        }
+
+        // =====================================
+        // CASE 2: Player đang cầm → đặt lên bếp
+        // =====================================
         GameObject obj = player.GetHeldObject();
-        FoodItem food = obj.GetComponent<FoodItem>();
+        FoodItem foodItem = obj.GetComponent<FoodItem>();
 
-        if (food == null)
+        if (foodItem == null)
             return;
 
-        if (food.foodType != FoodType.Meat)
+        if (foodItem.foodType != FoodType.Meat)
             return;
 
         Transform freeSlot = GetFreeSlot();
@@ -41,21 +61,20 @@ public class StoveCounter : BaseCounter
         }
 
         // đặt thịt lên bếp
-        PlaceMeat(food, freeSlot);
+        PlaceMeat(foodItem, freeSlot);
 
         // bỏ khỏi tay player
         player.ClearHeld();
 
         // bắt đầu nấu
-        food.StartCooking();
+        foodItem.StartCooking();
 
-        // UI progress
         if (progressUI != null)
         {
-            progressUI.SetFood(food);
+            progressUI.SetFood(foodItem);
         }
 
-        cookingFoods.Add(food);
+        cookingFoods.Add(foodItem);
     }
 
 
@@ -117,18 +136,27 @@ public class StoveCounter : BaseCounter
         if (food == null)
             return null;
 
+        // dừng nấu
         food.StopCooking();
 
+        // bỏ parent khỏi slot
         food.transform.SetParent(null);
 
-        Rigidbody rb = food.GetComponent<Rigidbody>();
+        // reset transform để tránh lỗi scale/rotation
+        food.transform.localScale = Vector3.one;
+        food.transform.rotation = Quaternion.identity;
 
+        // bật physics lại
+        Rigidbody rb = food.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.isKinematic = false;
             rb.useGravity = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
 
+        // remove khỏi list đang nấu
         cookingFoods.Remove(food);
 
         return food.gameObject;

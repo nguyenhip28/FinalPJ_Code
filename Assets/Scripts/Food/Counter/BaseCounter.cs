@@ -40,7 +40,7 @@ public class BaseCounter : MonoBehaviour, IInteractable
         Knife knife = obj.GetComponent<Knife>();
         if (knife != null)
         {
-            if (currentKnife != null) return;
+            if (currentKnife != null || knifePlacePoint == null) return;
 
             currentKnife = obj;
             PlaceAtPoint(obj, knifePlacePoint);
@@ -51,7 +51,7 @@ public class BaseCounter : MonoBehaviour, IInteractable
         FoodItem food = obj.GetComponent<FoodItem>();
         if (food != null)
         {
-            if (currentFood != null) return;
+            if (currentFood != null || foodPlacePoint == null) return;
 
             currentFood = obj;
             PlaceAtPoint(obj, foodPlacePoint);
@@ -89,12 +89,12 @@ public class BaseCounter : MonoBehaviour, IInteractable
     }
 
     // =====================================================
-    // INTERACT (Override ở class con)
+    // INTERACT
     // =====================================================
 
     public virtual void Interact(PlayerInteraction player)
     {
-        // BaseCounter mặc định không làm gì
+        // Override ở class con
     }
 
     // =====================================================
@@ -103,15 +103,21 @@ public class BaseCounter : MonoBehaviour, IInteractable
 
     protected void PlaceAtPoint(GameObject obj, Transform point)
     {
-        obj.transform.SetParent(point);
+        if (point == null) return;
+
+        obj.transform.SetParent(point, false);
+
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
+        obj.transform.localScale = Vector3.one;
 
         Rigidbody rb = obj.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.isKinematic = true;
             rb.useGravity = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
 

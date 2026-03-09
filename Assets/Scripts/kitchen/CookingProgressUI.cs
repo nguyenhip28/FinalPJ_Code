@@ -14,13 +14,19 @@ public class CookingProgressUI : MonoBehaviour
 
     public void SetFood(FoodItem food)
     {
+        if (currentFood != null)
+        {
+            currentFood.OnCookingProgress -= UpdateBar;
+        }
+
         currentFood = food;
 
         if (currentFood != null)
         {
             currentFood.OnCookingProgress += UpdateBar;
 
-            fillImage.fillAmount = 0f;
+            if (fillImage != null)
+                fillImage.fillAmount = 0f;
 
             gameObject.SetActive(true);
         }
@@ -28,6 +34,8 @@ public class CookingProgressUI : MonoBehaviour
 
     void UpdateBar(float progress)
     {
+        if (fillImage == null) return;
+
         fillImage.fillAmount = progress;
 
         if (progress >= 1f)
@@ -40,7 +48,8 @@ public class CookingProgressUI : MonoBehaviour
     {
         if (Camera.main != null)
         {
-            transform.forward = Camera.main.transform.forward;
+            transform.LookAt(Camera.main.transform);
+            transform.Rotate(0, 180, 0);
         }
     }
 

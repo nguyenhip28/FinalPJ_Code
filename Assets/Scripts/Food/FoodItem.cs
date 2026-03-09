@@ -38,9 +38,10 @@ public class FoodItem : MonoBehaviour
     [SerializeField] private float cookTime = 5f;
     [SerializeField] private float burnTime = 10f;
 
+    [Header("UI")]
     [SerializeField] private GameObject cookingBarPrefab;
 
-    private CookingProgressUI progressUI;
+    private CookingBar3D progressUI;
 
     public Action<float> OnCookingProgress;
 
@@ -63,7 +64,7 @@ public class FoodItem : MonoBehaviour
     }
 
     // =====================================================
-    // UPDATE (COOK TIMER)
+    // UPDATE COOK TIMER
     // =====================================================
 
     private void Update()
@@ -72,12 +73,11 @@ public class FoodItem : MonoBehaviour
 
         cookTimer += Time.deltaTime;
 
-        Debug.Log(foodType + " cooking... " + cookTimer);
-
         float progress = Mathf.Clamp01(cookTimer / burnTime);
         OnCookingProgress?.Invoke(progress);
 
-        // Burn
+        Debug.Log(foodType + " cooking... " + cookTimer);
+
         if (cookTimer >= burnTime)
         {
             Burn();
@@ -85,7 +85,6 @@ public class FoodItem : MonoBehaviour
             return;
         }
 
-        // Cook
         if (cookTimer >= cookTime && currentState != FoodState.Cooked)
         {
             Cook();
@@ -121,23 +120,27 @@ public class FoodItem : MonoBehaviour
 
     public void StartCooking()
     {
-        if (currentState == FoodState.Raw || currentState == FoodState.Chopped)
+        if (currentState != FoodState.Raw && currentState != FoodState.Chopped)
+            return;
+
+        cookTimer = 0f;
+        isCooking = true;
+
+        if (progressUI == null && cookingBarPrefab != null)
         {
-            cookTimer = 0f;
-            isCooking = true;
+            Debug.Log("Cooking bar spawned");
 
-            if (progressUI == null && cookingBarPrefab != null)
+            GameObject bar = Instantiate(
+                cookingBarPrefab,
+                transform.position + Vector3.up * 0.4f,
+                Quaternion.identity,
+                transform
+            );
+
+            progressUI = bar.GetComponent<CookingBar3D>();
+
+            if (progressUI != null)
             {
-                Debug.Log("Cooking bar spawned");
-
-                GameObject bar = Instantiate(cookingBarPrefab);
-
-                bar.transform.SetParent(transform);
-                bar.transform.localPosition = new Vector3(0, 0.5f, 0);
-                bar.transform.localRotation = Quaternion.identity;
-                bar.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-
-                progressUI = bar.GetComponent<CookingProgressUI>();
                 progressUI.SetFood(this);
             }
         }
@@ -206,7 +209,7 @@ public class FoodItem : MonoBehaviour
     }
 
     // =====================================================
-    // VISUAL RESET
+    // RAW VISUAL
     // =====================================================
 
     private void ApplyRawVisual()
@@ -218,7 +221,11 @@ public class FoodItem : MonoBehaviour
             meshRenderer.material = rawMaterial;
     }
 
-    void OnDestroy()
+    // =====================================================
+    // CLEANUP
+    // =====================================================
+
+    private void OnDestroy()
     {
         OnCookingProgress = null;
     }
