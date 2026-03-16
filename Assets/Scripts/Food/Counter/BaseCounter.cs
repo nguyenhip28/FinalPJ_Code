@@ -25,7 +25,7 @@ public class BaseCounter : MonoBehaviour, IInteractable
 
     public virtual bool HasObject()
     {
-        return currentFood != null || currentKnife != null;
+        return currentFood != null;
     }
 
     // =====================================================
@@ -37,8 +37,7 @@ public class BaseCounter : MonoBehaviour, IInteractable
         if (obj == null) return;
 
         // ===== KNIFE =====
-        Knife knife = obj.GetComponent<Knife>();
-        if (knife != null)
+        if (obj.TryGetComponent(out Knife knife))
         {
             if (currentKnife != null || knifePlacePoint == null) return;
 
@@ -48,8 +47,7 @@ public class BaseCounter : MonoBehaviour, IInteractable
         }
 
         // ===== FOOD =====
-        FoodItem food = obj.GetComponent<FoodItem>();
-        if (food != null)
+        if (obj.TryGetComponent(out FoodItem food))
         {
             if (currentFood != null || foodPlacePoint == null) return;
 
@@ -89,6 +87,15 @@ public class BaseCounter : MonoBehaviour, IInteractable
     }
 
     // =====================================================
+    // GET FOOD
+    // =====================================================
+
+    public GameObject GetFood()
+    {
+        return currentFood;
+    }
+
+    // =====================================================
     // INTERACT
     // =====================================================
 
@@ -105,19 +112,29 @@ public class BaseCounter : MonoBehaviour, IInteractable
     {
         if (point == null) return;
 
-        obj.transform.SetParent(point, false);
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            // reset velocity trước
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            // sau đó mới tắt physics
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+
+        obj.transform.SetParent(point);
 
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
         obj.transform.localScale = Vector3.one;
 
-        Rigidbody rb = obj.GetComponent<Rigidbody>();
-        if (rb != null)
+        Collider col = obj.GetComponent<Collider>();
+        if (col != null)
         {
-            rb.isKinematic = true;
-            rb.useGravity = false;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            col.enabled = false;
         }
     }
 
@@ -130,6 +147,15 @@ public class BaseCounter : MonoBehaviour, IInteractable
         {
             rb.isKinematic = false;
             rb.useGravity = true;
+
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        Collider col = obj.GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = true;
         }
     }
 }

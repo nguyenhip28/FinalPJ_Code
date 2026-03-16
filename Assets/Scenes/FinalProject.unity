@@ -386,7 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1569784}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MeatPoint_6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9754,7 +9754,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 90567856}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FoodPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11548,27 +11548,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4993542251363638568, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
   m_PrefabInstance: {fileID: 763645902}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &110966417
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 110966414}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
 --- !u!114 &110966418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11620,8 +11599,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!65 &110966422
-BoxCollider:
+--- !u!64 &110966425
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -11638,9 +11617,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
 --- !u!1001 &111236701
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13672,6 +13652,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ba514a6b61666cf4ea240772e76020d3, type: 3}
       propertyPath: m_Name
       value: Knife
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ba514a6b61666cf4ea240772e76020d3, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17905,6 +17889,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 077cd2d02327d1c4f8e7e945e7920950, type: 3}
       propertyPath: m_Name
       value: Table
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 077cd2d02327d1c4f8e7e945e7920950, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -24349,7 +24337,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 230101431}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: KnifePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32801,7 +32789,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 307863120}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Foodpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35969,6 +35957,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sink
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d6ddffa60c5fdee44ad7ef86732c05db, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -38988,6 +38980,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f98eff440ecc0a1489fa332256aa63ba, type: 3}
       propertyPath: m_Name
       value: Cutting Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f98eff440ecc0a1489fa332256aa63ba, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -44027,27 +44023,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4993542251363638568, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
   m_PrefabInstance: {fileID: 663167487}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &403399852
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 403399849}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
 --- !u!114 &403399853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44099,8 +44074,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!65 &403399857
-BoxCollider:
+--- !u!64 &403399860
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -44117,9 +44092,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
 --- !u!1001 &404854593
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -64215,6 +64191,10 @@ PrefabInstance:
       value: Food_Ground Meat Cooked
       objectReference: {fileID: 0}
     - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       propertyPath: m_TagString
       value: Food
       objectReference: {fileID: 0}
@@ -64235,9 +64215,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 865312595}
-    - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 865312594}
     - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 865312597}
@@ -64313,7 +64290,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 581398447}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MeatPoint_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70903,9 +70880,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7538267624208654864, guid: 0abc56718b739fb41bd375ab0f967522, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0abc56718b739fb41bd375ab0f967522, type: 3}
       propertyPath: m_Name
       value: Prop_Faucet (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0abc56718b739fb41bd375ab0f967522, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -73077,6 +73062,10 @@ PrefabInstance:
       value: Food_Ground Meat (1)
       objectReference: {fileID: 0}
     - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       propertyPath: m_TagString
       value: Food
       objectReference: {fileID: 0}
@@ -73092,10 +73081,7 @@ PrefabInstance:
       addedObject: {fileID: 403399853}
     - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 403399852}
-    - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 403399857}
+      addedObject: {fileID: 403399860}
   m_SourcePrefab: {fileID: 100100000, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
 --- !u!1001 &665327215
 PrefabInstance:
@@ -78716,7 +78702,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 738819187}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Food
   m_TagString: Food
   m_Icon: {fileID: 0}
@@ -80853,6 +80839,10 @@ PrefabInstance:
       value: Food_Ground Meat
       objectReference: {fileID: 0}
     - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       propertyPath: m_TagString
       value: Food
       objectReference: {fileID: 0}
@@ -80868,10 +80858,7 @@ PrefabInstance:
       addedObject: {fileID: 110966418}
     - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 110966417}
-    - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 110966422}
+      addedObject: {fileID: 110966425}
   m_SourcePrefab: {fileID: 100100000, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
 --- !u!1001 &768487612
 PrefabInstance:
@@ -87490,27 +87477,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8410645057074457521, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
   m_PrefabInstance: {fileID: 1644562502}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &826164058
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 826164056}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.23527719, y: 0.01297577, z: 0.23555735}
-  m_Center: {x: -0.0008824244, y: 0.0074440106, z: -0.00053342804}
 --- !u!114 &826164059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87581,7 +87547,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1822770742895863961, guid: 3eacfd3ff1e6b9245b0a3443ae852785, type: 3}
 --- !u!1001 &827031085
@@ -90776,27 +90742,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4993542251363638568, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
   m_PrefabInstance: {fileID: 579787919}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &865312594
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 865312592}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
 --- !u!114 &865312595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90867,7 +90812,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
 --- !u!4 &867774555 stripped
@@ -122252,7 +122197,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1164331115}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MeatPoint_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122444,6 +122389,10 @@ PrefabInstance:
       value: Food_Ground Meat (2)
       objectReference: {fileID: 0}
     - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       propertyPath: m_TagString
       value: Food
       objectReference: {fileID: 0}
@@ -122459,10 +122408,7 @@ PrefabInstance:
       addedObject: {fileID: 2100438177}
     - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2100438176}
-    - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2100438181}
+      addedObject: {fileID: 2100438184}
   m_SourcePrefab: {fileID: 100100000, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
 --- !u!1001 &1167212251
 PrefabInstance:
@@ -124339,7 +124285,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1184766580}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MeatPoint_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175793,12 +175739,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -2603142733084428951, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -2603142733084428951, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
       propertyPath: m_Name
       value: Stove
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4110262541551325907, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4110262541551325907, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
       propertyPath: m_IsActive
@@ -177783,27 +177741,6 @@ MonoBehaviour:
   cookTime: 5
   burnTime: 10
   cookingBarPrefab: {fileID: 0}
---- !u!65 &1329020369
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329020360}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.34838912, y: 0.11235337, z: 0.1528672}
-  m_Center: {x: -0.007261887, y: 0.03469594, z: -0.009935651}
 --- !u!64 &1329020370
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -177823,7 +177760,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3198151576726537507, guid: a529cef2f9cd2c4469a486205e48d172, type: 3}
 --- !u!1001 &1330492838
@@ -235293,6 +235230,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Plate
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7cc13f9ac2e060c4a961313f389e8329, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -238172,8 +238113,8 @@ MonoBehaviour:
   cookTime: 5
   burnTime: 10
   cookingBarPrefab: {fileID: 6285344942317773003, guid: 00e44a11b5d4ffe45abf65ed2abac5b5, type: 3}
---- !u!65 &1630602944
-BoxCollider:
+--- !u!64 &1630602951
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -238190,30 +238131,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
---- !u!65 &1630602948
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1630602935}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
 --- !u!1001 &1631405560
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -238920,27 +238841,6 @@ MonoBehaviour:
   cookTime: 5
   burnTime: 10
   cookingBarPrefab: {fileID: 0}
---- !u!65 &1634651586
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1634651577}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.27390665, y: 0.14907195, z: 0.20053361}
-  m_Center: {x: -0.0039060563, y: 0.064865254, z: 0.00891196}
 --- !u!64 &1634651587
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -238960,7 +238860,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3301885043010431249, guid: 59ec72c0f63004042b0ce461221b06ac, type: 3}
 --- !u!1001 &1634854243
@@ -240063,6 +239963,10 @@ PrefabInstance:
       value: Food_Tortilla_Cooked
       objectReference: {fileID: 0}
     - target: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
       propertyPath: m_TagString
       value: Food
       objectReference: {fileID: 0}
@@ -240117,9 +240021,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
       insertIndex: -1
       addedObject: {fileID: 826164059}
-    - targetCorrespondingSourceObject: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 826164058}
     - targetCorrespondingSourceObject: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
       insertIndex: -1
       addedObject: {fileID: 826164061}
@@ -252558,7 +252459,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1727208677}
   - component: {fileID: 1727208678}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Kitchen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313482,9 +313383,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7538267624208654864, guid: 0abc56718b739fb41bd375ab0f967522, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0abc56718b739fb41bd375ab0f967522, type: 3}
       propertyPath: m_Name
       value: Prop_Faucet
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0abc56718b739fb41bd375ab0f967522, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -318867,7 +318776,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2041173755}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MeatPoint_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319899,7 +319808,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2045142513}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MeatPoint_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -324306,27 +324215,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4993542251363638568, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
   m_PrefabInstance: {fileID: 1166281489}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &2100438176
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100438173}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
 --- !u!114 &2100438177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324378,8 +324266,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!65 &2100438181
-BoxCollider:
+--- !u!64 &2100438184
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -324396,9 +324284,10 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.19921198, y: 0.10700994, z: 0.2310095}
-  m_Center: {x: 0.003383059, y: 0.045563612, z: 0.0014164746}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
 --- !u!1001 &2103284448
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -328392,6 +328281,10 @@ PrefabInstance:
       value: Food_Meat_Cooked_Chopped
       objectReference: {fileID: 0}
     - target: {fileID: 5125873862350493443, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125873862350493443, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
       propertyPath: m_TagString
       value: Food
       objectReference: {fileID: 0}
@@ -328451,9 +328344,6 @@ PrefabInstance:
       addedObject: {fileID: 1329020366}
     - targetCorrespondingSourceObject: {fileID: 5125873862350493443, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1329020369}
-    - targetCorrespondingSourceObject: {fileID: 5125873862350493443, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1329020370}
   m_SourcePrefab: {fileID: 100100000, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
 --- !u!1001 &2468656358828810296
@@ -328467,6 +328357,10 @@ PrefabInstance:
     - target: {fileID: 4035983988789564176, guid: 3efa2d2dab4e1fd4a9adae660f8da21e, type: 3}
       propertyPath: m_Name
       value: Food_Tomato
+      objectReference: {fileID: 0}
+    - target: {fileID: 4035983988789564176, guid: 3efa2d2dab4e1fd4a9adae660f8da21e, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4035983988789564176, guid: 3efa2d2dab4e1fd4a9adae660f8da21e, type: 3}
       propertyPath: m_TagString
@@ -328512,8 +328406,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 540902780875255982, guid: 3efa2d2dab4e1fd4a9adae660f8da21e, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -328523,12 +328416,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4035983988789564176, guid: 3efa2d2dab4e1fd4a9adae660f8da21e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8373474037022513751}
-    - targetCorrespondingSourceObject: {fileID: 4035983988789564176, guid: 3efa2d2dab4e1fd4a9adae660f8da21e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8373474037022513754}
-    - targetCorrespondingSourceObject: {fileID: 4035983988789564176, guid: 3efa2d2dab4e1fd4a9adae660f8da21e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8373474037022513755}
   m_SourcePrefab: {fileID: 100100000, guid: 3efa2d2dab4e1fd4a9adae660f8da21e, type: 3}
 --- !u!1001 &3115742952399229819
 PrefabInstance:
@@ -328583,6 +328470,10 @@ PrefabInstance:
       value: Food_Ground Meat
       objectReference: {fileID: 0}
     - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       propertyPath: m_TagString
       value: Food
       objectReference: {fileID: 0}
@@ -328598,10 +328489,7 @@ PrefabInstance:
       addedObject: {fileID: 1630602941}
     - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1630602944}
-    - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1630602948}
+      addedObject: {fileID: 1630602951}
   m_SourcePrefab: {fileID: 100100000, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
 --- !u!54 &3498706538036726042
 Rigidbody:
@@ -328654,27 +328542,6 @@ MonoBehaviour:
   cookTime: 5
   burnTime: 10
   cookingBarPrefab: {fileID: 0}
---- !u!65 &3498706538036726050
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 894505721603513350}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.29179525, y: 0.13218822, z: 0.17655088}
-  m_Center: {x: 0.0045761093, y: 0.054207228, z: -0.000000007450581}
 --- !u!64 &3498706538036726051
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -328694,7 +328561,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -8775840353042319581, guid: 8ff312420ed65474da93634aceceefc1, type: 3}
 --- !u!1001 &3500244778226326248
@@ -328708,6 +328575,10 @@ PrefabInstance:
     - target: {fileID: 2256648949487425253, guid: ba4a0e7de6264664d838b047d389d96d, type: 3}
       propertyPath: m_Name
       value: Food_Lettuce
+      objectReference: {fileID: 0}
+    - target: {fileID: 2256648949487425253, guid: ba4a0e7de6264664d838b047d389d96d, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2256648949487425253, guid: ba4a0e7de6264664d838b047d389d96d, type: 3}
       propertyPath: m_TagString
@@ -328766,9 +328637,6 @@ PrefabInstance:
       addedObject: {fileID: 9121166135436196006}
     - targetCorrespondingSourceObject: {fileID: 2256648949487425253, guid: ba4a0e7de6264664d838b047d389d96d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 9121166135436196009}
-    - targetCorrespondingSourceObject: {fileID: 2256648949487425253, guid: ba4a0e7de6264664d838b047d389d96d, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 9121166135436196010}
   m_SourcePrefab: {fileID: 100100000, guid: ba4a0e7de6264664d838b047d389d96d, type: 3}
 --- !u!54 &3854847590635231202
@@ -328822,27 +328690,6 @@ MonoBehaviour:
   cookTime: 5
   burnTime: 10
   cookingBarPrefab: {fileID: 0}
---- !u!65 &3854847590635231208
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 692182480327410431}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.23527719, y: 0.01297577, z: 0.23555735}
-  m_Center: {x: -0.0008824244, y: 0.0074440106, z: -0.00053342804}
 --- !u!64 &3854847590635231209
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -328862,7 +328709,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1822770742895863961, guid: 3eacfd3ff1e6b9245b0a3443ae852785, type: 3}
 --- !u!1001 &3866343312625082913
@@ -328876,6 +328723,10 @@ PrefabInstance:
     - target: {fileID: 7045520663842082820, guid: 0dc2aa8cce0c03742bec7ddf18b44b84, type: 3}
       propertyPath: m_Name
       value: Food_Chopped Tomato
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045520663842082820, guid: 0dc2aa8cce0c03742bec7ddf18b44b84, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7045520663842082820, guid: 0dc2aa8cce0c03742bec7ddf18b44b84, type: 3}
       propertyPath: m_TagString
@@ -328933,9 +328784,6 @@ PrefabInstance:
       addedObject: {fileID: 1634651583}
     - targetCorrespondingSourceObject: {fileID: 7045520663842082820, guid: 0dc2aa8cce0c03742bec7ddf18b44b84, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1634651586}
-    - targetCorrespondingSourceObject: {fileID: 7045520663842082820, guid: 0dc2aa8cce0c03742bec7ddf18b44b84, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1634651587}
   m_SourcePrefab: {fileID: 100100000, guid: 0dc2aa8cce0c03742bec7ddf18b44b84, type: 3}
 --- !u!1001 &4022888951138971612
@@ -328989,6 +328837,10 @@ PrefabInstance:
     - target: {fileID: 5930128440120428051, guid: e444cbf776809ad4d8801c10b99c54ea, type: 3}
       propertyPath: m_Name
       value: Food_Taco
+      objectReference: {fileID: 0}
+    - target: {fileID: 5930128440120428051, guid: e444cbf776809ad4d8801c10b99c54ea, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5930128440120428051, guid: e444cbf776809ad4d8801c10b99c54ea, type: 3}
       propertyPath: m_TagString
@@ -329114,6 +328966,10 @@ PrefabInstance:
       value: Food_Chopped Lettuce
       objectReference: {fileID: 0}
     - target: {fileID: 376379826255399321, guid: 2866760101ee3e84f9f292fc7e8632a4, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 376379826255399321, guid: 2866760101ee3e84f9f292fc7e8632a4, type: 3}
       propertyPath: m_TagString
       value: Food
       objectReference: {fileID: 0}
@@ -329171,9 +329027,6 @@ PrefabInstance:
       addedObject: {fileID: 3498706538036726046}
     - targetCorrespondingSourceObject: {fileID: 376379826255399321, guid: 2866760101ee3e84f9f292fc7e8632a4, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3498706538036726050}
-    - targetCorrespondingSourceObject: {fileID: 376379826255399321, guid: 2866760101ee3e84f9f292fc7e8632a4, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3498706538036726051}
   m_SourcePrefab: {fileID: 100100000, guid: 2866760101ee3e84f9f292fc7e8632a4, type: 3}
 --- !u!1001 &6165958496986088291
@@ -329187,6 +329040,10 @@ PrefabInstance:
     - target: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
       propertyPath: m_Name
       value: Food_Tortilla
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
       propertyPath: m_TagString
@@ -329245,9 +329102,6 @@ PrefabInstance:
       addedObject: {fileID: 3854847590635231205}
     - targetCorrespondingSourceObject: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3854847590635231208}
-    - targetCorrespondingSourceObject: {fileID: 5269624190908454685, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3854847590635231209}
   m_SourcePrefab: {fileID: 100100000, guid: 6a3f0cc92967acf46b15a781aebe3021, type: 3}
 --- !u!54 &8373474037022513750
@@ -329301,49 +329155,6 @@ MonoBehaviour:
   cookTime: 5
   burnTime: 10
   cookingBarPrefab: {fileID: 0}
---- !u!65 &8373474037022513754
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5246840335456374603}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.20377308, y: 0.18308513, z: 0.20377314}
-  m_Center: {x: -0.000000014901161, y: 0.09170235, z: 0.000000007450581}
---- !u!64 &8373474037022513755
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5246840335456374603}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -7649481993019856452, guid: 86900e546c2cb31478f5b1f15b1ba6d8, type: 3}
 --- !u!4 &8587627219151454620 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4352355506885793716, guid: e444cbf776809ad4d8801c10b99c54ea, type: 3}
@@ -329440,7 +329251,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 8671434129105461426, guid: c8976fa490f93684699ad59eb80312d4, type: 3}
 --- !u!54 &9121166135436196003
@@ -329494,27 +329305,6 @@ MonoBehaviour:
   cookTime: 5
   burnTime: 10
   cookingBarPrefab: {fileID: 0}
---- !u!65 &9121166135436196009
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4787589736715808190}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.21515769, y: 0.15494487, z: 0.20602348}
-  m_Center: {x: -0.0016520806, y: 0.07718262, z: 0.0022225603}
 --- !u!64 &9121166135436196010
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -329534,7 +329324,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2294784638397189478, guid: a82f637f337ff5b4c8c78c61d989ebd1, type: 3}
 --- !u!1660057539 &9223372036854775807

@@ -70,7 +70,9 @@ public class PlayerInteraction : MonoBehaviour
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, interactDistance))
+        int counterLayer = LayerMask.GetMask("Counter");
+
+        if (Physics.Raycast(ray, out hit, interactDistance, counterLayer))
         {
             selectedCounter = hit.collider.GetComponentInParent<BaseCounter>();
         }
@@ -124,8 +126,11 @@ public class PlayerInteraction : MonoBehaviour
 
                 if (food != null && !selectedCounter.HasFood())
                 {
-                    selectedCounter.PlaceObject(heldObject);
-                    ClearHeld();
+                    GameObject obj = heldObject;
+
+                    selectedCounter.PlaceObject(obj);
+
+                    heldObject = null;
                 }
             }
 
