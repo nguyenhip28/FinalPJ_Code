@@ -9,6 +9,9 @@ public class StoveCounter : BaseCounter
     [Header("UI")]
     [SerializeField] private CookingProgressUI progressUI;
 
+    [Header("VFX")]
+    [SerializeField] private ParticleSystem smokeEffect;
+
     private List<FoodItem> cookingFoods = new List<FoodItem>();
 
 
@@ -68,6 +71,7 @@ public class StoveCounter : BaseCounter
         }
 
         cookingFoods.Add(foodItem);
+        UpdateSmoke();
     }
 
 
@@ -153,7 +157,24 @@ public class StoveCounter : BaseCounter
         }
 
         cookingFoods.Remove(food);
+        UpdateSmoke();
 
         return food.gameObject;
+    }
+
+    private void UpdateSmoke()
+    {
+        if (smokeEffect == null) return;
+
+        if (cookingFoods.Count > 0)
+        {
+            if (!smokeEffect.isPlaying)
+                smokeEffect.Play();
+        }
+        else
+        {
+            if (smokeEffect.isPlaying)
+                smokeEffect.Stop();
+        }
     }
 }

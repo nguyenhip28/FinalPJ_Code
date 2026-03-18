@@ -1,10 +1,11 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
     public GameObject settingsPanel;
     public GameObject darkOverlay;
+
+    public IntroManager introManager; // 🔥 THÊM DÒNG NÀY
 
     void Start()
     {
@@ -13,7 +14,15 @@ public class MainMenu : MonoBehaviour
 
     public void NewGame()
     {
-        SceneManager.LoadScene("FinalProject");
+        // 🔥 Tắt nhạc menu
+        MusicManager music = FindObjectOfType<MusicManager>();
+        if (music != null)
+        {
+            music.StopMusic();
+        }
+
+        // 🔥 Chạy intro
+        introManager.PlayIntro();
     }
 
     public void ContinueGame()

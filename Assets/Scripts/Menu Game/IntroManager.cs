@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.SceneManagement;
 
@@ -12,11 +12,17 @@ public class IntroManager : MonoBehaviour
 
     public void PlayIntro()
     {
+        // 🔥 TẮT NHẠC MENU
+        MusicManager music = FindObjectOfType<MusicManager>();
+        if (music != null)
+        {
+            music.StopMusic();
+        }
+
         introPanel.SetActive(true);
         videoPlayer.Play();
 
         introPlaying = true;
-
         videoPlayer.loopPointReached += EndVideo;
     }
 
