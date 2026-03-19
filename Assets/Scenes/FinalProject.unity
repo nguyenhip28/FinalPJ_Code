@@ -17617,9 +17617,10 @@ MonoBehaviour:
   foodType: 2
   currentState: 0
   rawMesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
-  choppedMesh: {fileID: 3198151576726537507, guid: a529cef2f9cd2c4469a486205e48d172, type: 3}
+  choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 1329020360}
   rawMaterial: {fileID: 2100000, guid: af4d82b9be49a48acb02a7dfda682aef, type: 2}
   cookedMaterial: {fileID: -1959299267490491647, guid: 70ea4865e2694944fa398c288da016d8, type: 3}
   burnedMaterial: {fileID: 0}
@@ -62219,9 +62220,10 @@ MonoBehaviour:
   foodType: 2
   currentState: 0
   rawMesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
-  choppedMesh: {fileID: 3198151576726537507, guid: a529cef2f9cd2c4469a486205e48d172, type: 3}
+  choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 1329020360}
   rawMaterial: {fileID: 2100000, guid: af4d82b9be49a48acb02a7dfda682aef, type: 2}
   cookedMaterial: {fileID: -1959299267490491647, guid: 70ea4865e2694944fa398c288da016d8, type: 3}
   burnedMaterial: {fileID: 0}
@@ -88311,10 +88313,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: fe6ba248f97095d49869fcb5611b50d4, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 4993542251363638568, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1329020361}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5622586444609439634, guid: 2d8640b0c31ca244d97cd8b8fbdbf39f, type: 3}
       insertIndex: -1
@@ -109376,6 +109375,104 @@ MonoBehaviour:
   - {fileID: 1828410886}
   progressUI: {fileID: 0}
   smokeEffect: {fileID: 1886636379}
+  sizzleSound: {fileID: 731334413}
+--- !u!82 &731334413
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731334408}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: a7bb643cb33c131478ce9037953c8f39, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &731530454
 GameObject:
   m_ObjectHideFlags: 0
@@ -110085,6 +110182,7 @@ Transform:
   - {fileID: 110966415}
   - {fileID: 403399850}
   - {fileID: 2100438174}
+  - {fileID: 1329020361}
   m_Father: {fileID: 922373773}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &739444243
@@ -122187,6 +122285,7 @@ MonoBehaviour:
   choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}
@@ -127078,6 +127177,7 @@ MonoBehaviour:
   choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}
@@ -239827,6 +239927,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1679565889}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1679565890}
   m_SourcePrefab: {fileID: 100100000, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
 --- !u!1001 &1303210620
 PrefabInstance:
@@ -243248,6 +243351,7 @@ MonoBehaviour:
   choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}
@@ -348599,9 +348703,10 @@ MonoBehaviour:
   foodType: 2
   currentState: 0
   rawMesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
-  choppedMesh: {fileID: 3198151576726537507, guid: a529cef2f9cd2c4469a486205e48d172, type: 3}
+  choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 1329020360}
   rawMaterial: {fileID: 2100000, guid: af4d82b9be49a48acb02a7dfda682aef, type: 2}
   cookedMaterial: {fileID: -1959299267490491647, guid: 70ea4865e2694944fa398c288da016d8, type: 3}
   burnedMaterial: {fileID: 0}
@@ -349454,6 +349559,7 @@ MonoBehaviour:
   choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}
@@ -354465,6 +354571,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
       insertIndex: -1
       addedObject: {fileID: 731334410}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 731334413}
   m_SourcePrefab: {fileID: 100100000, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
 --- !u!1001 &1676200984
 PrefabInstance:
@@ -355001,6 +355110,7 @@ MonoBehaviour:
   - {fileID: 1569784}
   progressUI: {fileID: 0}
   smokeEffect: {fileID: 490505355}
+  sizzleSound: {fileID: 731334413}
 --- !u!65 &1679565888
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -355044,6 +355154,103 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5156491258969019131, guid: a3b35c8f8e90fea479181dc44e5da883, type: 3}
+--- !u!82 &1679565890
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679565879}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: a7bb643cb33c131478ce9037953c8f39, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &1680652630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -452211,9 +452418,10 @@ MonoBehaviour:
   foodType: 2
   currentState: 0
   rawMesh: {fileID: 3505841725832905715, guid: a448a9c657fce0649b34729b5f1fdddb, type: 3}
-  choppedMesh: {fileID: 3198151576726537507, guid: a529cef2f9cd2c4469a486205e48d172, type: 3}
+  choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 1329020360}
   rawMaterial: {fileID: 2100000, guid: af4d82b9be49a48acb02a7dfda682aef, type: 2}
   cookedMaterial: {fileID: -1959299267490491647, guid: 70ea4865e2694944fa398c288da016d8, type: 3}
   burnedMaterial: {fileID: 0}
@@ -458823,7 +459031,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 865312593}
+    m_TransformParent: {fileID: 738819187}
     m_Modifications:
     - target: {fileID: 5125873862350493443, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
       propertyPath: m_Name
@@ -458839,15 +459047,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5505953675508190649, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.02290821
+      value: 4.641262
       objectReference: {fileID: 0}
     - target: {fileID: 5505953675508190649, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.013539314
+      value: 0.021480799
       objectReference: {fileID: 0}
     - target: {fileID: 5505953675508190649, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.49893188
+      value: 351.93207
       objectReference: {fileID: 0}
     - target: {fileID: 5505953675508190649, guid: 7e55baab778e66f4b8de54f0040edb78, type: 3}
       propertyPath: m_LocalRotation.w
@@ -459085,6 +459293,7 @@ MonoBehaviour:
   choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}
@@ -459233,6 +459442,7 @@ MonoBehaviour:
   choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}
@@ -459698,6 +459908,7 @@ MonoBehaviour:
   choppedMesh: {fileID: 3301885043010431249, guid: 59ec72c0f63004042b0ce461221b06ac, type: 3}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}
@@ -459754,6 +459965,7 @@ MonoBehaviour:
   choppedMesh: {fileID: 0}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}
@@ -459848,6 +460060,7 @@ MonoBehaviour:
   choppedMesh: {fileID: -8775840353042319581, guid: 8ff312420ed65474da93634aceceefc1, type: 3}
   cookedMesh: {fileID: 0}
   burnedMesh: {fileID: 0}
+  choppedPrefab: {fileID: 0}
   rawMaterial: {fileID: 0}
   cookedMaterial: {fileID: 0}
   burnedMaterial: {fileID: 0}

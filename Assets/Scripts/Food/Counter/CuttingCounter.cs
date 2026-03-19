@@ -18,8 +18,15 @@ public class CuttingCounter : BaseCounter
             {
                 FoodItem food = held.GetComponent<FoodItem>();
 
-                if (food != null && !HasFood())
+                if (food != null)
                 {
+                    // ❗ chặn đặt sai
+                    if (!food.CanBePlacedOnCuttingBoard())
+                    {
+                        Debug.Log("Không thể đặt lên thớt!");
+                        return;
+                    }
+
                     PlaceObject(held);
                     player.ClearHeld();
                     cutCount = 0;
@@ -56,13 +63,26 @@ public class CuttingCounter : BaseCounter
         if (foodItem == null)
             return;
 
+        // ❗ chặn cắt sai
+        if (!foodItem.CanBeChopped())
+        {
+            Debug.Log("Không thể cắt!");
+            return;
+        }
+
         cutCount++;
 
         Debug.Log("Cut progress: " + cutCount + "/" + requiredCuts);
 
         if (cutCount >= requiredCuts)
         {
-            foodItem.Chop();
+            GameObject newFood = foodItem.ChopAndReturnNew();
+
+            if (newFood != null)
+            {
+                currentFood = newFood;
+            }
+
             cutCount = 0;
         }
     }

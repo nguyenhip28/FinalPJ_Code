@@ -29,6 +29,9 @@ public class FoodItem : MonoBehaviour
     [SerializeField] private Mesh cookedMesh;
     [SerializeField] private Mesh burnedMesh;
 
+    [Header("Prefab Swap (For meat / special)")]
+    [SerializeField] private GameObject choppedPrefab;
+
     [Header("Materials (For meat color change)")]
     [SerializeField] private Material rawMaterial;
     [SerializeField] private Material cookedMaterial;
@@ -51,21 +54,12 @@ public class FoodItem : MonoBehaviour
     private float cookTimer = 0f;
     private bool isCooking = false;
 
-    // =====================================================
-    // INITIALIZE
-    // =====================================================
-
     private void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
-
         ApplyRawVisual();
     }
-
-    // =====================================================
-    // UPDATE COOK TIMER
-    // =====================================================
 
     private void Update()
     {
@@ -75,8 +69,6 @@ public class FoodItem : MonoBehaviour
 
         float progress = Mathf.Clamp01(cookTimer / burnTime);
         OnCookingProgress?.Invoke(progress);
-
-        Debug.Log(foodType + " cooking... " + cookTimer);
 
         if (cookTimer >= burnTime)
         {
@@ -91,32 +83,54 @@ public class FoodItem : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // CHOP
-    // =====================================================
+    // ===================== CHOP =====================
 
-    public void Chop()
+    public bool CanBeChopped()
     {
         if (foodType == FoodType.Meat)
-        {
-            if (currentState != FoodState.Cooked) return;
-        }
-        else
-        {
-            if (currentState != FoodState.Raw) return;
-        }
+            return currentState == FoodState.Cooked
+                || currentState == FoodState.Burned;
+
+        return currentState == FoodState.Raw;
+    }
+
+    public bool CanBePlacedOnCuttingBoard()
+    {
+        if (foodType == FoodType.Meat)
+            return currentState == FoodState.Cooked;
+
+        return currentState == FoodState.Raw;
+    }
+
+    public GameObject ChopAndReturnNew()
+    {
+        if (!CanBeChopped()) return null;
 
         currentState = FoodState.Chopped;
 
+        // 👉 Ưu tiên prefab (meat)
+        if (choppedPrefab != null)
+        {
+            GameObject newObj = Instantiate(
+                choppedPrefab,
+                transform.position,
+                transform.rotation
+            );
+
+            newObj.transform.SetParent(transform.parent);
+
+            Destroy(gameObject);
+            return newObj;
+        }
+
+        // 👉 fallback (vegetable)
         if (choppedMesh != null)
             meshFilter.mesh = choppedMesh;
 
-        Debug.Log(foodType + " chopped!");
+        return null;
     }
 
-    // =====================================================
-    // START COOKING
-    // =====================================================
+    // ===================== COOK =====================
 
     public void StartCooking()
     {
@@ -128,8 +142,6 @@ public class FoodItem : MonoBehaviour
 
         if (progressUI == null && cookingBarPrefab != null)
         {
-            Debug.Log("Cooking bar spawned");
-
             GameObject bar = Instantiate(
                 cookingBarPrefab,
                 transform.position + Vector3.up * 0.4f,
@@ -140,24 +152,14 @@ public class FoodItem : MonoBehaviour
             progressUI = bar.GetComponent<CookingBar3D>();
 
             if (progressUI != null)
-            {
                 progressUI.SetFood(this);
-            }
         }
     }
-
-    // =====================================================
-    // STOP COOKING
-    // =====================================================
 
     public void StopCooking()
     {
         isCooking = false;
     }
-
-    // =====================================================
-    // COOK
-    // =====================================================
 
     private void Cook()
     {
@@ -176,13 +178,7 @@ public class FoodItem : MonoBehaviour
             if (cookedMesh != null)
                 meshFilter.mesh = cookedMesh;
         }
-
-        Debug.Log(foodType + " cooked!");
     }
-
-    // =====================================================
-    // BURN
-    // =====================================================
 
     private void Burn()
     {
@@ -204,13 +200,7 @@ public class FoodItem : MonoBehaviour
 
         if (progressUI != null)
             progressUI.gameObject.SetActive(false);
-
-        Debug.Log(foodType + " burned!");
     }
-
-    // =====================================================
-    // RAW VISUAL
-    // =====================================================
 
     private void ApplyRawVisual()
     {
@@ -220,10 +210,6 @@ public class FoodItem : MonoBehaviour
         if (rawMaterial != null)
             meshRenderer.material = rawMaterial;
     }
-
-    // =====================================================
-    // CLEANUP
-    // =====================================================
 
     private void OnDestroy()
     {

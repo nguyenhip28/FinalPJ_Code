@@ -11,6 +11,8 @@ public class StoveCounter : BaseCounter
 
     [Header("VFX")]
     [SerializeField] private ParticleSystem smokeEffect;
+    [Header("Sound")]
+    [SerializeField] private AudioSource sizzleSound;
 
     private List<FoodItem> cookingFoods = new List<FoodItem>();
 
@@ -72,6 +74,7 @@ public class StoveCounter : BaseCounter
 
         cookingFoods.Add(foodItem);
         UpdateSmoke();
+        UpdateSound();
     }
 
 
@@ -158,6 +161,7 @@ public class StoveCounter : BaseCounter
 
         cookingFoods.Remove(food);
         UpdateSmoke();
+        UpdateSound();
 
         return food.gameObject;
     }
@@ -175,6 +179,21 @@ public class StoveCounter : BaseCounter
         {
             if (smokeEffect.isPlaying)
                 smokeEffect.Stop();
+        }
+    }
+    private void UpdateSound()
+    {
+        if (sizzleSound == null) return;
+
+        if (cookingFoods.Count > 0)
+        {
+            if (!sizzleSound.isPlaying)
+                sizzleSound.Play();
+        }
+        else
+        {
+            if (sizzleSound.isPlaying)
+                sizzleSound.Stop();
         }
     }
 }
