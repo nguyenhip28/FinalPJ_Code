@@ -1,49 +1,181 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class PlateCounter : BaseCounter
 {
-    public GameObject tacoPrefab;
+    [Header("Spawn Point")]
+    [SerializeField] private Transform holdPoint;
 
-    private List<FoodType> ingredients = new List<FoodType>();
+    [Header("Prefabs")]
+    [SerializeField] private GameObject tortillaPrefab;
+    [SerializeField] private GameObject saladPrefab;
+    [SerializeField] private GameObject tacoPrefab;
 
+    private GameObject currentVisual;
+
+    private enum PlateState
+    {
+        Empty,
+        HasTortilla,
+        HasSalad,
+        Complete
+    }
+
+    private PlateState state = PlateState.Empty;
+
+    // ===== TOPPING TRACK =====
+    private bool hasTomato = false;
+    private bool hasLettuce = false;
+
+    private int currentToppingCount = 0;
+    private const int totalTopping = 2;
+
+    // =====================================================
     public override void Interact(PlayerInteraction player)
     {
-        // Nếu player đang cầm food
-        if (player.IsHoldingObject())
+        // ===== KHÔNG CẦM GÌ → LẤY TACO =====
+        if (!player.IsHoldingObject())
         {
-            FoodItem food = player.GetHeldObject().GetComponent<FoodItem>();
-
-            if (food != null)
+            if (state == PlateState.Complete && currentVisual != null)
             {
-                if (food.currentState == FoodState.Chopped ||
-                    food.currentState == FoodState.Cooked)
-                {
-                    ingredients.Add(food.foodType);
-                    Destroy(food.gameObject);
-                    player.ClearHeld();
+                player.PickUp(currentVisual);
+                currentVisual = null;
 
-                    CheckRecipe();
-                }
+                Debug.Log("🎉 Taco picked up!");
+
+                ResetPlate();
             }
+            return;
+        }
+
+        // ===== PLAYER ĐANG CẦM FOOD =====
+        GameObject held = player.GetHeldObject();
+        FoodItem food = held.GetComponent<FoodItem>();
+
+        if (food == null) return;
+
+        if (TryAddIngredient(food))
+        {
+            Destroy(held);
+            player.ClearHeld();
         }
     }
 
-    void CheckRecipe()
+    // =====================================================
+    private bool TryAddIngredient(FoodItem food)
     {
-        if (ingredients.Contains(FoodType.Meat) &&
-            ingredients.Contains(FoodType.Tomato) &&
-            ingredients.Contains(FoodType.Lettuce) &&
-            ingredients.Contains(FoodType.Tortilla))
+        switch (state)
         {
-            Debug.Log("🌮 TACO COMPLETED!");
+            // =========================
+            case PlateState.Empty:
+                if (food.foodType == FoodType.Tortilla)
+                {
+                    Debug.Log("🌮 Add Tortilla");
 
-            if (tacoPrefab != null)
-            {
-                Instantiate(tacoPrefab, transform.position + Vector3.up, Quaternion.identity);
-            }
+                    SetState(PlateState.HasTortilla);
+                    return true;
+                }
+                break;
 
-            ingredients.Clear();
+            // =========================
+            case PlateState.HasTortilla:
+
+                // ADD TOMATO
+                if (food.foodType == FoodType.Tomato &&
+                    food.currentState == FoodState.Chopped &&
+                    !hasTomato)
+                {
+                    hasTomato = true;
+                    currentToppingCount++;
+
+                    Debug.Log($"🌮 Add Tomato ({currentToppingCount}/{totalTopping})");
+
+                    CheckVegComplete();
+                    return true;
+                }
+
+                // ADD LETTUCE
+                if (food.foodType == FoodType.Lettuce &&
+                    food.currentState == FoodState.Chopped &&
+                    !hasLettuce)
+                {
+                    hasLettuce = true;
+                    currentToppingCount++;
+
+                    Debug.Log($"🌮 Add Lettuce ({currentToppingCount}/{totalTopping})");
+
+                    CheckVegComplete();
+                    return true;
+                }
+
+                break;
+
+            // =========================
+            case PlateState.HasSalad:
+                if (food.foodType == FoodType.Meat &&
+                    food.currentState == FoodState.Chopped)
+                {
+                    Debug.Log("🔥 Add Meat → COMPLETE!");
+
+                    SetState(PlateState.Complete);
+                    return true;
+                }
+                break;
         }
+
+        return false;
+    }
+
+    // =====================================================
+    private void CheckVegComplete()
+    {
+        if (hasTomato && hasLettuce)
+        {
+            Debug.Log("✅ Veg complete! Ready for meat!");
+
+            SetState(PlateState.HasSalad);
+        }
+    }
+
+    // =====================================================
+    private void SetState(PlateState newState)
+    {
+        state = newState;
+
+        // Xoá visual cũ
+        if (currentVisual != null)
+        {
+            Destroy(currentVisual);
+            currentVisual = null;
+        }
+
+        switch (state)
+        {
+            case PlateState.HasTortilla:
+                currentVisual = Instantiate(tortillaPrefab, holdPoint);
+                break;
+
+            case PlateState.HasSalad:
+                currentVisual = Instantiate(saladPrefab, holdPoint);
+                break;
+
+            case PlateState.Complete:
+                currentVisual = Instantiate(tacoPrefab, holdPoint);
+                break;
+        }
+
+        if (currentVisual != null)
+        {
+            currentVisual.transform.localPosition = Vector3.zero;
+            currentVisual.transform.localRotation = Quaternion.identity;
+        }
+    }
+
+    // =====================================================
+    private void ResetPlate()
+    {
+        hasTomato = false;
+        hasLettuce = false;
+        currentToppingCount = 0;
+        state = PlateState.Empty;
     }
 }
