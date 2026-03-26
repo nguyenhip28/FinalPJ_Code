@@ -19,6 +19,8 @@ public class PlayerInteraction : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI hintText;
 
+
+
     void Start()
     {
         if (knifeVisual != null)
@@ -278,4 +280,5 @@ public class PlayerInteraction : MonoBehaviour
 
         heldObject = null;
     }
+
 }

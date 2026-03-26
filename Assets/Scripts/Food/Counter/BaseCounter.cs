@@ -158,4 +158,9 @@ public class BaseCounter : MonoBehaviour, IInteractable
             col.enabled = true;
         }
     }
+
+    public virtual void InteractAlternate(PlayerInteraction player)
+    {
+        // để trống
+    }
 }
