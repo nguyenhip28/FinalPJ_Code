@@ -19,6 +19,8 @@ public class PlayerInteraction : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI hintText;
 
+    private Transform currentHoldPoint;
+    private float holdDistance = 1.5f;
 
 
     void Start()
@@ -56,13 +58,50 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            // ===== CẦM BOX + NHÌN TRAY =====
+            if (heldObject != null && heldObject.GetComponent<FoodBox>() != null)
+            {
+                if (selectedCounter is TrayCounter tray)
+                {
+                    FoodBox box = heldObject.GetComponent<FoodBox>();
+
+                    if (box.HasFood() && !tray.IsFull())
+                    {
+                        tray.AddFood(box.foodPrefab);
+                        box.UseOne();
+                    }
+
+                    return; // ❗ chặn E mặc định
+                }
+            }
+
+            // ===== CHẶN E VỚI FOODBOX =====
+            Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, interactDistance))
+            {
+                if (hit.collider.GetComponent<FoodBox>() != null)
+                {
+                    return;
+                }
+            }
+
+            // ===== LOGIC CŨ =====
             if (selectedCounter != null)
             {
                 selectedCounter.Interact(this);
             }
         }
     }
-
+    void LateUpdate()
+    {
+        if (heldObject != null && currentHoldPoint != null)
+        {
+            heldObject.transform.position = currentHoldPoint.position;
+            heldObject.transform.rotation = currentHoldPoint.rotation;
+        }
+    }
     // =====================================================
     // RAYCAST
     // =====================================================
@@ -72,9 +111,9 @@ public class PlayerInteraction : MonoBehaviour
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
-        int counterLayer = LayerMask.GetMask("Counter");
+        int interactLayer = LayerMask.GetMask("Counter", "HoldItem");
 
-        if (Physics.Raycast(ray, out hit, interactDistance, counterLayer))
+        if (Physics.Raycast(ray, out hit, interactDistance, interactLayer))
         {
             selectedCounter = hit.collider.GetComponentInParent<BaseCounter>();
         }
@@ -94,7 +133,10 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (!Input.GetMouseButtonDown(0)) return;
 
-        // Block click nếu cầm meat và nhìn vào stove
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        RaycastHit hit;
+
+        // ===== BLOCK COOK =====
         if (selectedCounter is StoveCounter && heldObject != null)
         {
             FoodItem food = heldObject.GetComponent<FoodItem>();
@@ -106,15 +148,44 @@ public class PlayerInteraction : MonoBehaviour
                     hintText.gameObject.SetActive(true);
                     hintText.text = "Press E to cook meat";
                 }
-
                 return;
             }
         }
 
-        // ===== INTERACT WITH COUNTER =====
+        // ===== CLICK OBJECT (BOX / FOOD / KNIFE) =====
+        if (Physics.Raycast(ray, out hit, interactDistance))
+        {
+            GameObject target = hit.collider.gameObject;
+
+            // 👉 Ưu tiên lấy FoodBox parent
+            FoodBox box = hit.collider.GetComponentInParent<FoodBox>();
+            if (box != null)
+            {
+                target = box.gameObject;
+            }
+
+            // ===== PICK OR DROP =====
+            if (heldObject == null && heldKnife == null)
+            {
+                if (target.CompareTag("Food") ||
+                    target.CompareTag("Pickup") ||
+                    target.GetComponent<Knife>() != null ||
+                    box != null)
+                {
+                    PickUp(target);
+                    return;
+                }
+            }
+            else
+            {
+                DropToGround();
+                return;
+            }
+        }
+
+        // ===== INTERACT COUNTER =====
         if (selectedCounter != null)
         {
-            // Nếu không cầm food
             if (heldObject == null)
             {
                 if (selectedCounter.HasFood())
@@ -135,34 +206,14 @@ public class PlayerInteraction : MonoBehaviour
                     heldObject = null;
                 }
             }
-
-            return;
-        }
-
-        // ===== PICK DIRECT OBJECT =====
-        if (heldObject == null && heldKnife == null)
-        {
-            Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, interactDistance))
-            {
-                if (hit.collider.CompareTag("Food") ||
-                    hit.collider.GetComponent<Knife>() != null)
-                {
-                    PickUp(hit.collider.gameObject);
-                }
-            }
-        }
-        else
-        {
-            DropToGround();
         }
     }
 
     // =====================================================
     // PICK UP
     // =====================================================
+
+    public Transform boxPoint; // kéo trong Inspector
 
     public void PickUp(GameObject obj)
     {
@@ -183,31 +234,40 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        // ===== PICK FOOD =====
+        // ===== PICK OBJECT =====
         heldObject = obj;
 
         Rigidbody rb = obj.GetComponent<Rigidbody>();
 
         if (rb != null)
         {
-            rb.isKinematic = true;
+            rb.isKinematic = true;   // ✅ FIX rung
             rb.useGravity = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
 
-        obj.transform.SetParent(holdPoint);
+        // ===== CHỌN HOLD POINT =====
+        Transform targetPoint = holdPoint;
 
+        if (obj.GetComponent<FoodBox>() != null && boxPoint != null)
+        {
+            targetPoint = boxPoint;
+        }
+
+        currentHoldPoint = targetPoint;
+
+        // ✅ FIX: gắn vào point
+        obj.transform.SetParent(currentHoldPoint);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
-        obj.transform.localScale = Vector3.one;
     }
-
     // =====================================================
     // DROP
     // =====================================================
 
     void DropToGround()
     {
-        // DROP KNIFE
         if (heldKnife != null)
         {
             heldKnife.gameObject.SetActive(true);
@@ -219,20 +279,22 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        // DROP FOOD
         if (heldObject != null)
         {
-            heldObject.transform.SetParent(null);
-
             Rigidbody rb = heldObject.GetComponent<Rigidbody>();
 
             if (rb != null)
             {
                 rb.isKinematic = false;
                 rb.useGravity = true;
+                rb.linearVelocity = Vector3.zero;
             }
 
+            // ✅ FIX: bỏ parent
+            heldObject.transform.SetParent(null);
+
             heldObject = null;
+            currentHoldPoint = null;
         }
     }
 

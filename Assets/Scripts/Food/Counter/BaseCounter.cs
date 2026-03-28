@@ -116,21 +116,24 @@ public class BaseCounter : MonoBehaviour, IInteractable
 
         if (rb != null)
         {
-            // reset velocity trước
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
 
-            // sau đó mới tắt physics
             rb.isKinematic = true;
             rb.useGravity = false;
         }
 
-        obj.transform.SetParent(point);
+        // ===== FIX SCALE =====
+        Vector3 originalScale = obj.transform.localScale;
 
-        obj.transform.localPosition = Vector3.zero;
-        obj.transform.localRotation = Quaternion.identity;
-        obj.transform.localScale = Vector3.one;
+        obj.transform.SetParent(point, true);
 
+        obj.transform.position = point.position;
+        obj.transform.rotation = point.rotation;
+
+        obj.transform.localScale = originalScale;
+
+        // ===== DISABLE COLLIDER =====
         Collider col = obj.GetComponent<Collider>();
         if (col != null)
         {
