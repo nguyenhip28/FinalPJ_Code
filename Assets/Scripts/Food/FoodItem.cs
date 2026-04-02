@@ -159,6 +159,9 @@ public class FoodItem : MonoBehaviour
     public void StopCooking()
     {
         isCooking = false;
+
+        if (progressUI != null)
+            progressUI.Hide();
     }
 
     private void Cook()

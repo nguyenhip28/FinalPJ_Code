@@ -1,8 +1,14 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CookingBar3D : MonoBehaviour
 {
-    [SerializeField] private Transform fill;
+    [SerializeField] private Renderer barRenderer;
+
+    [Header("Colors")]
+    [SerializeField] private Color rawColor = Color.white;
+    [SerializeField] private Color midColor = Color.yellow;
+    [SerializeField] private Color cookedColor = Color.green;
+    [SerializeField] private Color burnedColor = Color.red;
 
     private FoodItem food;
 
@@ -14,8 +20,30 @@ public class CookingBar3D : MonoBehaviour
 
     void UpdateBar(float progress)
     {
-        fill.localScale = new Vector3(progress, 1, 1);
-        fill.localPosition = new Vector3(progress / 2 - 0.5f, 0, 0);
+        if (food == null) return;
+
+        // 🔥 Chia mốc theo thời gian
+        if (progress < 0.3f)
+        {
+            SetColor(rawColor);
+        }
+        else if (progress < 0.6f)
+        {
+            SetColor(midColor);
+        }
+        else if (progress < 1f)
+        {
+            SetColor(cookedColor);
+        }
+        else
+        {
+            SetColor(burnedColor);
+        }
+    }
+
+    void SetColor(Color color)
+    {
+        barRenderer.material.color = color;
     }
 
     void LateUpdate()
@@ -24,6 +52,11 @@ public class CookingBar3D : MonoBehaviour
         {
             transform.forward = Camera.main.transform.forward;
         }
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
     }
 
     void OnDestroy()
