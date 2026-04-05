@@ -21,7 +21,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private Transform currentHoldPoint;
     private float holdDistance = 1.5f;
-
+    public LayerMask computerLayer;
 
     void Start()
     {
@@ -58,6 +58,22 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            // ===== COMPUTER INTERACTION (ƯU TIÊN CAO NHẤT) =====
+            Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+            RaycastHit hit;
+
+            // 👇 CHỈ BẮN VÀO LAYER COMPUTER
+            if (Physics.Raycast(ray, out hit, interactDistance, computerLayer))
+            {
+                ComputerInteractionAdvanced computer = hit.collider.GetComponentInParent<ComputerInteractionAdvanced>();
+
+                if (computer != null)
+                {
+                    computer.TryInteract();
+                    return;
+                }
+            }
+
             // ===== CẦM BOX + NHÌN TRAY =====
             if (heldObject != null && heldObject.GetComponent<FoodBox>() != null)
             {
@@ -71,14 +87,11 @@ public class PlayerInteraction : MonoBehaviour
                         box.UseOne();
                     }
 
-                    return; // ❗ chặn E mặc định
+                    return;
                 }
             }
 
             // ===== CHẶN E VỚI FOODBOX =====
-            Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-            RaycastHit hit;
-
             if (Physics.Raycast(ray, out hit, interactDistance))
             {
                 if (hit.collider.GetComponent<FoodBox>() != null)
