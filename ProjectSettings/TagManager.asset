@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Food
   - Pickup
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - PlayerHead
   - HoldItem
   - Computer
-  - 
+  - Road
   - 
   - 
   - 
