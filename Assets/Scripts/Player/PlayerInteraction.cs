@@ -23,6 +23,8 @@ public class PlayerInteraction : MonoBehaviour
     private float holdDistance = 1.5f;
     public LayerMask computerLayer;
 
+    public LayerMask shelfLayer;
+
     void Start()
     {
         if (knifeVisual != null)
@@ -71,6 +73,44 @@ public class PlayerInteraction : MonoBehaviour
                 {
                     computer.TryInteract();
                     return;
+                }
+            }
+
+            // ===== SHELF STORAGE =====
+            if (heldObject != null)
+            {
+                if (Physics.Raycast(ray, out hit, interactDistance, shelfLayer))
+                {
+                    ShelfManager shelf = hit.collider.GetComponentInParent<ShelfManager>();
+
+                    if (shelf != null)
+                    {
+                        GameObject obj = heldObject;
+
+                        bool stored = shelf.TryStore(obj);
+
+                        if (stored)
+                        {
+                            // ❗ detach khỏi tay trước
+                            obj.transform.SetParent(null);
+
+                            // reset rigidbody
+                            Rigidbody rb = obj.GetComponent<Rigidbody>();
+                            if (rb != null)
+                            {
+                                rb.isKinematic = true;
+                                rb.useGravity = false;
+                                rb.linearVelocity = Vector3.zero;
+                                rb.angularVelocity = Vector3.zero;
+                            }
+
+                            // clear state player
+                            heldObject = null;
+                            currentHoldPoint = null;
+                        }
+
+                        return; // ❗ chặn toàn bộ logic dưới
+                    }
                 }
             }
 
@@ -230,6 +270,14 @@ public class PlayerInteraction : MonoBehaviour
 
     public void PickUp(GameObject obj)
     {
+        ShelfItem shelfItem = obj.GetComponent<ShelfItem>();
+        if (shelfItem != null && shelfItem.shelf != null)
+        {
+            shelfItem.shelf.ClearSlot(shelfItem.index);
+
+            Destroy(shelfItem); // 💥 xóa luôn component
+        }
+
         if (obj == null) return;
 
         Knife knife = obj.GetComponent<Knife>();
