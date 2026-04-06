@@ -34,4 +34,14 @@ public class ItemUI : MonoBehaviour
     {
         return quantity * price;
     }
+    public int GetQuantity()
+    {
+        return quantity;
+    }
+
+    public void ResetItem()
+    {
+        quantity = 0;
+        UpdateUI();
+    }
 }
