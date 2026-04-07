@@ -144,7 +144,7 @@ public class FoodItem : MonoBehaviour
         {
             GameObject bar = Instantiate(
                 cookingBarPrefab,
-                transform.position + Vector3.up * 0.4f,
+                transform.position + Vector3.up * 0.2f,
                 Quaternion.identity,
                 transform
             );

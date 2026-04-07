@@ -243,6 +243,23 @@ public class PlayerInteraction : MonoBehaviour
             {
                 if (selectedCounter.HasFood())
                 {
+                    if (Physics.Raycast(ray, out hit, interactDistance))
+                    {
+                        FoodItem food = hit.collider.GetComponentInParent<FoodItem>();
+
+                        if (food != null && selectedCounter is TrayCounter tray)
+                        {
+                            GameObject picked = tray.TakeSpecific(food.gameObject);
+
+                            if (picked != null)
+                            {
+                                PickUp(picked);
+                                return;
+                            }
+                        }
+                    }
+
+                    // fallback
                     PickUp(selectedCounter.TakeObject());
                 }
             }
@@ -316,9 +333,15 @@ public class PlayerInteraction : MonoBehaviour
             targetPoint = boxPoint;
         }
 
+        if (targetPoint == null)
+        {
+            Debug.LogError("HoldPoint chưa được gán!");
+            return;
+        }
+
         currentHoldPoint = targetPoint;
 
-        // ✅ FIX: gắn vào point
+        // ✅ an toàn
         obj.transform.SetParent(currentHoldPoint);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;

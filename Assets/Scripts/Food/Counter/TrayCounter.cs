@@ -65,15 +65,31 @@ public class TrayCounter : BaseCounter
     // TAKE FOOD (lấy ra 1 cái - LIFO)
     // =====================================================
 
-    public override GameObject TakeObject()
+    public GameObject TakeObjectByPlayer(Transform player)
     {
         if (currentFoods.Count == 0) return null;
 
-        GameObject obj = currentFoods[currentFoods.Count - 1];
-        currentFoods.RemoveAt(currentFoods.Count - 1);
+        GameObject closest = null;
+        float minDist = float.MaxValue;
 
-        DetachObject(obj);
-        return obj;
+        foreach (var food in currentFoods)
+        {
+            float dist = Vector3.Distance(player.position, food.transform.position);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = food;
+            }
+        }
+
+        if (closest != null)
+        {
+            currentFoods.Remove(closest);
+            DetachObject(closest);
+        }
+
+        return closest;
     }
 
     // =====================================================
@@ -83,5 +99,18 @@ public class TrayCounter : BaseCounter
     public override void Interact(PlayerInteraction player)
     {
         Debug.Log("TrayCounter Interact");
+    }
+    public GameObject TakeSpecific(GameObject target)
+    {
+        if (target == null) return null;
+
+        if (currentFoods.Contains(target))
+        {
+            currentFoods.Remove(target);
+            DetachObject(target);
+            return target;
+        }
+
+        return null;
     }
 }
