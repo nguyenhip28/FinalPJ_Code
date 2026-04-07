@@ -21,30 +21,26 @@ public class ShelfManager : MonoBehaviour
         {
             if (storedItems[i] == null)
             {
-                // lưu item vào slot
                 storedItems[i] = item;
 
-                // đặt vị trí
-                item.transform.position = points[i].position;
-
-                // quay mặt logo ra ngoài (offset -90 như bạn test)
-                item.transform.rotation =
-                    Quaternion.LookRotation(points[i].forward) *
-                    Quaternion.Euler(0, -90, 0);
-
-                // gắn vào point
-                item.transform.SetParent(points[i]);
-
-                // fix physics
+                // 👉 Physics trước
                 Rigidbody rb = item.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
+                    rb.linearVelocity = Vector3.zero;          // FIX
+                    rb.angularVelocity = Vector3.zero;
                     rb.isKinematic = true;
                     rb.useGravity = false;
                 }
 
-                // 👉 gắn thông tin slot vào item
+                // 👉 Parent đúng cách
+                item.transform.SetParent(points[i], false);
+                item.transform.localPosition = Vector3.zero;
+                item.transform.localRotation = Quaternion.Euler(0, -90, 0);
+
+                // ✅ GẮN ShelfItem ĐÚNG CHỖ
                 ShelfItem shelfItem = item.GetComponent<ShelfItem>();
+
                 if (shelfItem == null)
                 {
                     shelfItem = item.AddComponent<ShelfItem>();
@@ -60,6 +56,7 @@ public class ShelfManager : MonoBehaviour
         Debug.Log("Shelf Full!");
         return false;
     }
+
 
     // =====================================================
     // CLEAR SLOT (khi lấy item)

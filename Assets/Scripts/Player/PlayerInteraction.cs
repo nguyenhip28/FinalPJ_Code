@@ -25,6 +25,12 @@ public class PlayerInteraction : MonoBehaviour
 
     public LayerMask shelfLayer;
 
+    [Header("Highlight")]
+    public LayerMask highlightLayer;
+
+    private Outline currentOutline;
+
+
     void Start()
     {
         if (knifeVisual != null)
@@ -33,6 +39,7 @@ public class PlayerInteraction : MonoBehaviour
 
     void Update()
     {
+        HandleHighlight();
         HandleRaycast();
 
         bool showHint = false;
@@ -91,20 +98,19 @@ public class PlayerInteraction : MonoBehaviour
 
                         if (stored)
                         {
-                            // ❗ detach khỏi tay trước
-                            obj.transform.SetParent(null);
+                            // ✅ KHÔNG detach nữa (ShelfManager đã parent rồi)
 
-                            // reset rigidbody
+                            // ✅ reset rigidbody đúng cách
                             Rigidbody rb = obj.GetComponent<Rigidbody>();
                             if (rb != null)
                             {
                                 rb.isKinematic = true;
                                 rb.useGravity = false;
-                                rb.linearVelocity = Vector3.zero;
+                                rb.linearVelocity = Vector3.zero;         // FIX
                                 rb.angularVelocity = Vector3.zero;
                             }
 
-                            // clear state player
+                            // ✅ clear state player
                             heldObject = null;
                             currentHoldPoint = null;
                         }
@@ -155,6 +161,42 @@ public class PlayerInteraction : MonoBehaviour
             heldObject.transform.rotation = currentHoldPoint.rotation;
         }
     }
+
+    void HandleHighlight()
+    {
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, interactDistance, highlightLayer))
+        {
+            Outline outline = hit.collider.GetComponentInParent<Outline>();
+
+            if (outline != currentOutline)
+            {
+                ClearHighlight();
+
+                if (outline != null)
+                {
+                    outline.enabled = true;   // 👈 bật
+                    currentOutline = outline;
+                }
+            }
+        }
+        else
+        {
+            ClearHighlight();
+        }
+    }
+
+    void ClearHighlight()
+    {
+        if (currentOutline != null)
+        {
+            currentOutline.enabled = false;  // 👈 tắt
+            currentOutline = null;
+        }
+    }
+
     // =====================================================
     // RAYCAST
     // =====================================================
@@ -206,7 +248,18 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         // ===== CLICK OBJECT (BOX / FOOD / KNIFE) =====
-        if (Physics.Raycast(ray, out hit, interactDistance))
+
+        // 👉 TRƯỜNG HỢP ĐANG CẦM → CLICK LÀ DROP LUÔN
+        if (heldObject != null || heldKnife != null)
+        {
+            DropToGround();
+            return;
+        }
+
+        // 👉 KHÔNG CẦM GÌ → MỚI ĐI PICK
+        int pickLayer = LayerMask.GetMask("HoldItem");
+
+        if (Physics.Raycast(ray, out hit, interactDistance, pickLayer))
         {
             GameObject target = hit.collider.gameObject;
 
@@ -217,21 +270,13 @@ public class PlayerInteraction : MonoBehaviour
                 target = box.gameObject;
             }
 
-            // ===== PICK OR DROP =====
-            if (heldObject == null && heldKnife == null)
+            // 👉 CHECK ĐÚNG LOẠI OBJECT
+            if (target.CompareTag("Food") ||
+                target.CompareTag("Pickup") ||
+                target.GetComponent<Knife>() != null ||
+                box != null)
             {
-                if (target.CompareTag("Food") ||
-                    target.CompareTag("Pickup") ||
-                    target.GetComponent<Knife>() != null ||
-                    box != null)
-                {
-                    PickUp(target);
-                    return;
-                }
-            }
-            else
-            {
-                DropToGround();
+                PickUp(target);
                 return;
             }
         }
@@ -243,6 +288,7 @@ public class PlayerInteraction : MonoBehaviour
             {
                 if (selectedCounter.HasFood())
                 {
+                    // 👉 Ưu tiên lấy đúng object mình click
                     if (Physics.Raycast(ray, out hit, interactDistance))
                     {
                         FoodItem food = hit.collider.GetComponentInParent<FoodItem>();
@@ -259,8 +305,17 @@ public class PlayerInteraction : MonoBehaviour
                         }
                     }
 
-                    // fallback
-                    PickUp(selectedCounter.TakeObject());
+                    // 👉 fallback an toàn (KHÔNG BAO GIỜ CRASH)
+                    GameObject fallback = selectedCounter.TakeObject();
+
+                    if (fallback != null)
+                    {
+                        PickUp(fallback);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("TakeObject trả về NULL");
+                    }
                 }
             }
             else
@@ -287,19 +342,30 @@ public class PlayerInteraction : MonoBehaviour
 
     public void PickUp(GameObject obj)
     {
-        ShelfItem shelfItem = obj.GetComponent<ShelfItem>();
-        if (shelfItem != null && shelfItem.shelf != null)
+        // ===== SAFETY CHECK =====
+        if (obj == null)
         {
-            shelfItem.shelf.ClearSlot(shelfItem.index);
-
-            Destroy(shelfItem); // 💥 xóa luôn component
+            Debug.LogError("PickUp nhận obj NULL");
+            return;
         }
 
-        if (obj == null) return;
+        // ===== CLEAR SHELF (nếu có) =====
+        ShelfItem shelfItem = obj.GetComponent<ShelfItem>();
 
-        Knife knife = obj.GetComponent<Knife>();
+        if (shelfItem != null)
+        {
+            if (shelfItem.shelf != null)
+            {
+                shelfItem.shelf.ClearSlot(shelfItem.index);
+            }
+
+            // delay destroy để tránh lỗi frame
+            Destroy(shelfItem, 0.01f);
+        }
 
         // ===== PICK KNIFE =====
+        Knife knife = obj.GetComponent<Knife>();
+
         if (knife != null)
         {
             heldKnife = knife;
@@ -315,11 +381,12 @@ public class PlayerInteraction : MonoBehaviour
         // ===== PICK OBJECT =====
         heldObject = obj;
 
+        // ===== RESET PHYSICS =====
         Rigidbody rb = obj.GetComponent<Rigidbody>();
 
         if (rb != null)
         {
-            rb.isKinematic = true;   // ✅ FIX rung
+            rb.isKinematic = true;
             rb.useGravity = false;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
@@ -335,16 +402,21 @@ public class PlayerInteraction : MonoBehaviour
 
         if (targetPoint == null)
         {
-            Debug.LogError("HoldPoint chưa được gán!");
+            Debug.LogError("HoldPoint NULL");
             return;
         }
 
         currentHoldPoint = targetPoint;
 
-        // ✅ an toàn
-        obj.transform.SetParent(currentHoldPoint);
+        // ===== DETACH TRƯỚC KHI GẮN =====
+        obj.transform.SetParent(null, false);
+
+        // ===== GẮN VÀO TAY =====
+        obj.transform.SetParent(currentHoldPoint, false);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
+
+        obj.transform.localScale = Vector3.one;
     }
     // =====================================================
     // DROP

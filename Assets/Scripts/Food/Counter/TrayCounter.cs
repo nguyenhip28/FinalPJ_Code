@@ -113,4 +113,17 @@ public class TrayCounter : BaseCounter
 
         return null;
     }
+    public override GameObject TakeObject()
+    {
+        if (currentFoods.Count == 0) return null;
+
+        // lấy item cuối (LIFO)
+        GameObject obj = currentFoods[currentFoods.Count - 1];
+
+        currentFoods.RemoveAt(currentFoods.Count - 1);
+
+        DetachObject(obj);
+
+        return obj;
+    }
 }
