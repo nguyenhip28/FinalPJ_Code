@@ -13,7 +13,7 @@ public class ComputerInteractionAdvanced : MonoBehaviour
     public MonoBehaviour playerMovement;
     public MonoBehaviour playerLook;
 
-    private bool isUsingComputer = false;
+    public bool isUsingComputer = false;
 
     public void TryInteract()
     {

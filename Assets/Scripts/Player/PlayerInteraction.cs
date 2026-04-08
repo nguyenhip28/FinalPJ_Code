@@ -27,14 +27,18 @@ public class PlayerInteraction : MonoBehaviour
 
     [Header("Highlight")]
     public LayerMask highlightLayer;
-
     private Outline currentOutline;
 
+    [Header("UI Layer")]
+    public LayerMask uiInteractLayer;
 
     void Start()
     {
         if (knifeVisual != null)
             knifeVisual.SetActive(false);
+
+        if (hintText != null)
+            hintText.gameObject.SetActive(false); // 👈 thêm dòng này
     }
 
     void Update()
@@ -42,31 +46,74 @@ public class PlayerInteraction : MonoBehaviour
         HandleHighlight();
         HandleRaycast();
 
+        Ray rayUI = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        RaycastHit hitUI;
+
         bool showHint = false;
+        string hinte = "";
 
-        // Hiện hint khi cầm meat và nhìn vào stove
-        if (selectedCounter is StoveCounter && heldObject != null)
+        // ===== CHECK COMPUTER MODE =====
+        ComputerInteractionAdvanced computerMain = FindObjectOfType<ComputerInteractionAdvanced>();
+
+        if (computerMain != null && computerMain.isUsingComputer)
         {
-            FoodItem food = heldObject.GetComponent<FoodItem>();
+            if (hintText != null)
+                hintText.gameObject.SetActive(false);
 
-            if (food != null && food.foodType == FoodType.Meat)
-            {
-                showHint = true;
-            }
+            // ❗ KHÔNG return nếu bên dưới còn logic quan trọng
         }
-
-        if (hintText != null)
+        else
         {
-            hintText.gameObject.SetActive(showHint);
+            // ===== ƯU TIÊN: COOK =====
+            if (selectedCounter is StoveCounter && heldObject != null)
+            {
+                FoodItem food = heldObject.GetComponent<FoodItem>();
 
-            if (showHint)
-                hintText.text = "[E] Cook Meat";
+                if (food != null && food.foodType == FoodType.Meat)
+                {
+                    showHint = true;
+                    hinte = "[E] Cook Meat";
+                }
+            }
+
+            // ===== DEFAULT INTERACTION =====
+            else if (Physics.Raycast(rayUI, out hitUI, interactDistance, uiInteractLayer))
+            {
+                BaseCounter counter = hitUI.collider.GetComponentInParent<BaseCounter>();
+                FoodItem food = hitUI.collider.GetComponentInParent<FoodItem>();
+                ComputerInteractionAdvanced computerHit = hitUI.collider.GetComponentInParent<ComputerInteractionAdvanced>();
+
+                if (counter != null || food != null || computerHit != null)
+                {
+                    showHint = true;
+
+                    if (heldObject == null)
+                    {
+                        hinte = "[E] Interact\n[Click] Pick up";
+                    }
+                    else
+                    {
+                        hinte = "[E] Interact\n[Click] Drop";
+                    }
+                }
+            }
+
+            // ===== HIỂN THỊ =====
+            if (hintText != null)
+            {
+                hintText.gameObject.SetActive(showHint);
+                hintText.text = hinte;
+            }
         }
 
         HandlePrimaryAction();
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            if (hintText != null)
+            {
+                hintText.gameObject.SetActive(false);
+            }
             // ===== COMPUTER INTERACTION (ƯU TIÊN CAO NHẤT) =====
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             RaycastHit hit;
