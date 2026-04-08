@@ -2,21 +2,21 @@
 
 public class MouseLook : MonoBehaviour
 {
-    public float mouseSensitivity;
+    public float mouseSensitivity = 100f;
     public Transform playerBody;
 
     float xRotation = 0f;
 
     void Start()
     {
-        mouseSensitivity = PlayerPrefs.GetFloat("sensitivity", 100f);
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
+
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
@@ -25,5 +25,23 @@ public class MouseLook : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * mouseX);
+    }
+
+    public void UpdateSensitivity(float value)
+    {
+        mouseSensitivity = value;
+    }
+
+    // 🔥 THÊM
+    public float GetXRotation()
+    {
+        return xRotation;
+    }
+
+    // 🔥 THÊM
+    public void SetRotation(float xRot)
+    {
+        xRotation = xRot;
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 }

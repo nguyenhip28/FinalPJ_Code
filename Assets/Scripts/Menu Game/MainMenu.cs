@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -14,20 +15,28 @@ public class MainMenu : MonoBehaviour
 
     public void NewGame()
     {
-        // 🔥 Tắt nhạc menu
-        MusicManager music = FindObjectOfType<MusicManager>();
+        SaveSystem.DeleteSave();
+        PlayerPrefs.DeleteAll();
+
+        // 🔥 Đánh dấu là New Game
+        PlayerPrefs.SetInt("NewGame", 1);
+
+        MusicManager music = Object.FindFirstObjectByType<MusicManager>();
         if (music != null)
         {
             music.StopMusic();
         }
 
-        // 🔥 Chạy intro
-        introManager.PlayIntro();
+        SceneManager.LoadScene("FinalProject");
     }
 
     public void ContinueGame()
     {
-        Debug.Log("Continue Game");
+        if (SaveSystem.HasSave())
+        {
+            PlayerPrefs.SetInt("NewGame", 0); // 🔥 QUAN TRỌNG
+            SceneManager.LoadScene("FinalProject");
+        }
     }
 
     public void OpenSettings()

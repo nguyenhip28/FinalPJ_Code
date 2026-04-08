@@ -10,6 +10,8 @@ public class SettingsMenu : MonoBehaviour
     public TMP_Text volumeValueText;
     public TMP_Text sensitivityValueText;
 
+    public MouseLook mouseLook;
+
     void Start()
     {
         float volume = PlayerPrefs.GetFloat("volume", 1f);
@@ -35,6 +37,9 @@ public class SettingsMenu : MonoBehaviour
     public void SetSensitivity(float sensitivity)
     {
         PlayerPrefs.SetFloat("sensitivity", sensitivity);
+
+        if (mouseLook != null)
+            mouseLook.UpdateSensitivity(sensitivity);
 
         UpdateSensitivityText(sensitivity);
     }
