@@ -369,17 +369,36 @@ public class PlayerInteraction : MonoBehaviour
                         }
                     }
 
-                    // ✅ Tray → lấy đúng cái nhìn
-                    if (targetFood != null && selectedCounter is TrayCounter tray)
+                    // ✅ Tray → lấy đúng cái crosshair nhìn vào
+                    if (selectedCounter is TrayCounter tray)
                     {
-                        GameObject picked = tray.TakeSpecific(targetFood.gameObject);
-
-                        if (picked != null)
+                        if (tray.HasFood())
                         {
-                            PickUp(picked);
-                            return;
-                        }
+                            RaycastHit[] hites = Physics.RaycastAll(ray, interactDistance);
 
+                            FoodItem closestFood = null;
+                            float minDist = float.MaxValue;
+
+                            foreach (var h in hites)
+                            {
+                                FoodItem f = h.collider.GetComponentInParent<FoodItem>();
+                                if (f != null && h.distance < minDist)
+                                {
+                                    minDist = h.distance;
+                                    closestFood = f;
+                                }
+                            }
+
+                            if (closestFood != null)
+                            {
+                                GameObject picked = tray.TakeSpecific(closestFood.gameObject);
+                                if (picked != null)
+                                {
+                                    PickUp(picked);
+                                    return;
+                                }
+                            }
+                        }
                         return;
                     }
 
@@ -457,17 +476,9 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         // ===== PICK OBJECT =====
+        // ✅ Khi cầm → đổi sang layer "Ignore Raycast" để không bị raycast hit
         heldObject = obj;
-        FoodItem food = obj.GetComponent<FoodItem>();
-
-        if (food != null)
-        {
-            obj.layer = LayerMask.NameToLayer("Food");
-        }
-        else
-        {
-            obj.layer = LayerMask.NameToLayer("HoldItem");
-        }
+        obj.layer = LayerMask.NameToLayer("Ignore Raycast");
 
         // ===== RESET PHYSICS =====
         Rigidbody rb = obj.GetComponent<Rigidbody>();

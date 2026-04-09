@@ -133,11 +133,12 @@ public class BaseCounter : MonoBehaviour, IInteractable
 
         obj.transform.localScale = originalScale;
 
-        // ===== DISABLE COLLIDER =====
+        // ===== GIỮ COLLIDER để raycast vẫn hit được =====
         Collider col = obj.GetComponent<Collider>();
         if (col != null)
         {
-            col.enabled = false;
+            col.enabled = true;
+            col.isTrigger = false; // trigger để không bị va chạm vật lý, nhưng vẫn raycast được
         }
     }
 

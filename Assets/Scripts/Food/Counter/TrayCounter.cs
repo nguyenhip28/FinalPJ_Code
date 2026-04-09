@@ -105,17 +105,22 @@ public class TrayCounter : BaseCounter
     {
         if (target == null) return null;
 
+        FoodItem targetFood = target.GetComponent<FoodItem>()
+                           ?? target.GetComponentInParent<FoodItem>();
+
         foreach (var food in currentFoods)
         {
-            // ✅ FIX: check cả parent chain
-            if (target == food || target.transform.IsChildOf(food.transform))
+            FoodItem f = food.GetComponent<FoodItem>();
+
+            if (food == target ||
+                target.transform.IsChildOf(food.transform) ||
+                (f != null && targetFood != null && f == targetFood))
             {
                 currentFoods.Remove(food);
                 DetachObject(food);
                 return food;
             }
         }
-
         return null;
     }
     public override GameObject TakeObject()
