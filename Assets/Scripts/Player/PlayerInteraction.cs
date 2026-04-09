@@ -253,7 +253,7 @@ public class PlayerInteraction : MonoBehaviour
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
-        int interactLayer = LayerMask.GetMask("Counter", "HoldItem");
+        int interactLayer = LayerMask.GetMask("Counter", "HoldItem", "Food");
 
         if (Physics.Raycast(ray, out hit, interactDistance, interactLayer))
         {
@@ -304,7 +304,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         // 👉 KHÔNG CẦM GÌ → MỚI ĐI PICK
-        int pickLayer = LayerMask.GetMask("HoldItem");
+        int pickLayer = LayerMask.GetMask("HoldItem", "Food");
 
         if (Physics.Raycast(ray, out hit, interactDistance, pickLayer))
         {
@@ -427,6 +427,16 @@ public class PlayerInteraction : MonoBehaviour
 
         // ===== PICK OBJECT =====
         heldObject = obj;
+        FoodItem food = obj.GetComponent<FoodItem>();
+
+        if (food != null)
+        {
+            obj.layer = LayerMask.NameToLayer("Food");
+        }
+        else
+        {
+            obj.layer = LayerMask.NameToLayer("HoldItem");
+        }
 
         // ===== RESET PHYSICS =====
         Rigidbody rb = obj.GetComponent<Rigidbody>();
@@ -484,17 +494,40 @@ public class PlayerInteraction : MonoBehaviour
 
         if (heldObject != null)
         {
-            Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+            GameObject obj = heldObject;
+
+            Rigidbody rb = obj.GetComponent<Rigidbody>();
 
             if (rb != null)
             {
                 rb.isKinematic = false;
                 rb.useGravity = true;
                 rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
             }
 
-            // ✅ FIX: bỏ parent
-            heldObject.transform.SetParent(null);
+            // ✅ QUAN TRỌNG: bỏ parent
+            obj.transform.SetParent(null);
+
+            // ✅ RESET LAYER (để raycast lại được)
+            FoodItem food = obj.GetComponent<FoodItem>();
+
+            if (food != null)
+            {
+                obj.layer = LayerMask.NameToLayer("Food");
+            }
+            else
+            {
+                obj.layer = LayerMask.NameToLayer("HoldItem");
+            }
+
+            // ✅ đảm bảo collider bật
+            Collider col = obj.GetComponent<Collider>();
+            if (col != null)
+            {
+                col.enabled = true;
+                col.isTrigger = false;
+            }
 
             heldObject = null;
             currentHoldPoint = null;
