@@ -100,15 +100,20 @@ public class TrayCounter : BaseCounter
     {
         Debug.Log("TrayCounter Interact");
     }
+
     public GameObject TakeSpecific(GameObject target)
     {
         if (target == null) return null;
 
-        if (currentFoods.Contains(target))
+        foreach (var food in currentFoods)
         {
-            currentFoods.Remove(target);
-            DetachObject(target);
-            return target;
+            // ✅ FIX: check cả parent chain
+            if (target == food || target.transform.IsChildOf(food.transform))
+            {
+                currentFoods.Remove(food);
+                DetachObject(food);
+                return food;
+            }
         }
 
         return null;

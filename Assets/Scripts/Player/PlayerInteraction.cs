@@ -130,7 +130,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // ===== SHELF STORAGE =====
+            // ===== SHELF STORAGE =====    
             if (heldObject != null)
             {
                 if (Physics.Raycast(ray, out hit, interactDistance, shelfLayer))
@@ -318,53 +318,84 @@ public class PlayerInteraction : MonoBehaviour
             }
 
             // 👉 CHECK ĐÚNG LOẠI OBJECT
-            if (target.CompareTag("Food") ||
-                target.CompareTag("Pickup") ||
-                target.GetComponent<Knife>() != null ||
-                box != null)
+            // ❗ Nếu đang nhìn tray thì KHÔNG pick trực tiếp
+            if (selectedCounter is TrayCounter)
             {
-                PickUp(target);
-                return;
+                // bỏ qua → xử lý phía dưới
+            }
+            else
+            {
+                if (target.CompareTag("Food") ||
+                    target.CompareTag("Pickup") ||
+                    target.GetComponent<Knife>() != null ||
+                    box != null)
+                {
+                    PickUp(target);
+                    return;
+                }
             }
         }
 
         // ===== INTERACT COUNTER =====
+
         if (selectedCounter != null)
         {
+            // ===== KHÔNG CẦM → LẤY =====
             if (heldObject == null)
             {
                 if (selectedCounter.HasFood())
                 {
-                    // 👉 Ưu tiên lấy đúng object mình click
-                    if (Physics.Raycast(ray, out hit, interactDistance))
+                    RaycastHit[] hits = Physics.RaycastAll(ray, interactDistance);
+
+                    FoodItem targetFood = null;
+                    float closest = float.MaxValue;
+
+                    foreach (var h in hits)
                     {
-                        FoodItem food = hit.collider.GetComponentInParent<FoodItem>();
+                        FoodItem f = h.collider.GetComponentInParent<FoodItem>();
 
-                        if (food != null && selectedCounter is TrayCounter tray)
+                        if (f != null)
                         {
-                            GameObject picked = tray.TakeSpecific(food.gameObject);
+                            // 👉 luôn lấy ROOT object của food
+                            GameObject rootFood = f.gameObject;
 
-                            if (picked != null)
+                            float dist = Vector3.Distance(ray.origin, h.point);
+
+                            if (dist < closest)
                             {
-                                PickUp(picked);
-                                return;
+                                closest = dist;
+                                targetFood = f;
                             }
                         }
                     }
 
-                    // 👉 fallback an toàn (KHÔNG BAO GIỜ CRASH)
-                    GameObject fallback = selectedCounter.TakeObject();
+                    // ✅ Tray → lấy đúng cái nhìn
+                    if (targetFood != null && selectedCounter is TrayCounter tray)
+                    {
+                        GameObject picked = tray.TakeSpecific(targetFood.gameObject);
 
-                    if (fallback != null)
-                    {
-                        PickUp(fallback);
+                        if (picked != null)
+                        {
+                            PickUp(picked);
+                            return;
+                        }
+
+                        return;
                     }
-                    else
+
+                    // fallback nếu KHÔNG phải tray
+                    if (!(selectedCounter is TrayCounter))
                     {
-                        Debug.LogWarning("TakeObject trả về NULL");
+                        GameObject fallback = selectedCounter.TakeObject();
+
+                        if (fallback != null)
+                        {
+                            PickUp(fallback);
+                        }
                     }
                 }
             }
+            // ===== ĐANG CẦM → ĐẶT =====
             else
             {
                 FoodItem food = heldObject.GetComponent<FoodItem>();
