@@ -5,6 +5,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
     public Transform player;
+    public static bool isNewGame = false;
     public MouseLook mouseLook;
 
     private CharacterController cc;
@@ -18,17 +19,23 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // 🔥 Nếu là New Game → KHÔNG load save
-        if (PlayerPrefs.GetInt("NewGame", 0) == 1)
+        int newGameFlag = PlayerPrefs.GetInt("NewGame", 0);
+
+        Debug.Log("NewGame flag = " + newGameFlag);
+
+        if (newGameFlag == 1)
         {
+            Debug.Log("NEW GAME → SKIP LOAD");
+
             PlayerPrefs.SetInt("NewGame", 0);
-            Debug.Log("New Game Started");
-            return;
+            PlayerPrefs.Save();
+
+            return; // 🔥 CHẶN
         }
 
-        // 🔥 Continue thì mới load
         if (SaveSystem.HasSave())
         {
+            Debug.Log("CONTINUE → LOAD");
             StartCoroutine(LoadAfterFrame());
         }
     }
@@ -68,6 +75,12 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
+        if (PlayerPrefs.GetInt("NewGame", 0) == 1)
+        {
+            Debug.Log("BLOCK LOAD (NEW GAME)");
+            return;
+        }
+
         GameData data = SaveSystem.Load();
 
         if (data == null)

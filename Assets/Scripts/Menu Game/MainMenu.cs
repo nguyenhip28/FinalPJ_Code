@@ -16,10 +16,8 @@ public class MainMenu : MonoBehaviour
     public void NewGame()
     {
         SaveSystem.DeleteSave();
-        PlayerPrefs.DeleteAll();
 
-        // 🔥 Đánh dấu là New Game
-        PlayerPrefs.SetInt("NewGame", 1);
+        GameManager.isNewGame = true; // 🔥 QUAN TRỌNG
 
         MusicManager music = Object.FindFirstObjectByType<MusicManager>();
         if (music != null)

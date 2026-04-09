@@ -12,6 +12,13 @@ public class IntroManager : MonoBehaviour
 
     public void PlayIntro()
     {
+        Debug.Log("START NEW GAME INTRO");
+
+        // 🔥 SET NEW GAME TẠI ĐÂY
+        SaveSystem.DeleteSave();
+        PlayerPrefs.SetInt("NewGame", 1);
+        PlayerPrefs.Save();
+
         // 🔥 TẮT NHẠC MENU
         MusicManager music = FindObjectOfType<MusicManager>();
         if (music != null)
