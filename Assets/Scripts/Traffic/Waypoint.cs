@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Waypoint : MonoBehaviour
 {
+    [Header("Connections")]
     public List<Waypoint> nextPoints = new List<Waypoint>();
 
     public enum WaypointType
@@ -15,13 +16,20 @@ public class Waypoint : MonoBehaviour
 
     public Waypoint GetNextWaypoint()
     {
-        if (nextPoints.Count == 0) return null;
-        return nextPoints[Random.Range(0, nextPoints.Count)];
+        if (nextPoints == null || nextPoints.Count == 0)
+            return null;
+
+        if (type == WaypointType.Intersection)
+        {
+            return nextPoints[Random.Range(0, nextPoints.Count)];
+        }
+
+        return nextPoints[0];
     }
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
+        Gizmos.color = (type == WaypointType.Intersection) ? Color.yellow : Color.green;
 
         foreach (var wp in nextPoints)
         {

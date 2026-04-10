@@ -6,7 +6,7 @@ public class CarAI : MonoBehaviour
     [Header("Movement")]
     public float speed = 8f;
     public float rotationSpeed = 6f;
-    public float reachDistance = 1.5f;
+    public float reachDistance = 2.5f;
 
     [Header("Detection")]
     public float detectDistance = 5f;
@@ -19,12 +19,18 @@ public class CarAI : MonoBehaviour
 
     void Start()
     {
-        // 👉 Đảm bảo xe không bị gravity kéo xuống
+        // ✅ Fix vật lý
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.useGravity = false;
             rb.isKinematic = true;
+        }
+
+        // ✅ Auto tìm waypoint gần nhất nếu chưa gán
+        if (currentWaypoint == null)
+        {
+            FindNearestWaypoint();
         }
     }
 
@@ -36,14 +42,15 @@ public class CarAI : MonoBehaviour
         Move();
     }
 
+    // 🚗 DI CHUYỂN CHUẨN THEO WAYPOINT
     void Move()
     {
         if (isStopped) return;
 
-        Vector3 targetPos = currentWaypoint.transform.position;
+        Transform wpTransform = currentWaypoint.transform;
 
-        // ✅ hướng chuẩn: từ xe → waypoint
-        Vector3 direction = (targetPos - transform.position).normalized;
+        // ✅ HƯỚNG ĐÚNG: từ xe → waypoint
+        Vector3 direction = (wpTransform.position - transform.position).normalized;
 
         // 👉 di chuyển
         transform.position += direction * speed * Time.deltaTime;
@@ -51,12 +58,12 @@ public class CarAI : MonoBehaviour
         // 👉 xoay mượt theo hướng di chuyển
         if (direction != Vector3.zero)
         {
-            Quaternion targetRot = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
-        // 👉 tới waypoint
-        float distance = Vector3.Distance(transform.position, targetPos);
+        // 👉 kiểm tra tới waypoint
+        float distance = Vector3.Distance(transform.position, wpTransform.position);
         if (distance < reachDistance)
         {
             ChooseNextWaypoint();
@@ -66,20 +73,20 @@ public class CarAI : MonoBehaviour
     // 🔀 CHỌN WAYPOINT TIẾP THEO
     void ChooseNextWaypoint()
     {
-        if (currentWaypoint.nextPoints == null || currentWaypoint.nextPoints.Count == 0)
-            return;
+        if (currentWaypoint == null) return;
 
-        if (currentWaypoint.type == Waypoint.WaypointType.Intersection)
+        Waypoint next = currentWaypoint.GetNextWaypoint();
+
+        if (next == null)
         {
-            // 👉 random rẽ trái / phải / thẳng
-            int rand = Random.Range(0, currentWaypoint.nextPoints.Count);
-            currentWaypoint = currentWaypoint.nextPoints[rand];
+            Debug.LogWarning("Waypoint không có next!", currentWaypoint);
+            return;
         }
-        else
-        {
-            // 👉 lane thường chỉ có 1 hướng
-            currentWaypoint = currentWaypoint.nextPoints[0];
-        }
+
+        currentWaypoint = next;
+
+        // 🧪 Debug
+        // Debug.Log("Next WP: " + currentWaypoint.name);
     }
 
     // 🚧 PHÁT HIỆN XE PHÍA TRƯỚC
@@ -98,15 +105,46 @@ public class CarAI : MonoBehaviour
         }
     }
 
+    // 🔍 AUTO TÌM WAYPOINT GẦN NHẤT
+    void FindNearestWaypoint()
+    {
+        Waypoint[] allWaypoints = FindObjectsOfType<Waypoint>();
+
+        float minDist = Mathf.Infinity;
+        Waypoint nearest = null;
+
+        foreach (Waypoint wp in allWaypoints)
+        {
+            float dist = Vector3.Distance(transform.position, wp.transform.position);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = wp;
+            }
+        }
+
+        currentWaypoint = nearest;
+
+        if (nearest != null)
+        {
+            Debug.Log("Auto assigned waypoint: " + nearest.name);
+        }
+        else
+        {
+            Debug.LogError("Không tìm thấy waypoint nào trong scene!");
+        }
+    }
+
     // 🧪 DEBUG
     void OnDrawGizmos()
     {
-        // Ray phía trước
+        // 🔴 Ray phía trước
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position + Vector3.up * 0.5f,
                         transform.position + Vector3.up * 0.5f + transform.forward * detectDistance);
 
-        // waypoint hiện tại
+        // 🔵 Line tới waypoint hiện tại
         if (currentWaypoint != null)
         {
             Gizmos.color = Color.blue;
