@@ -12,6 +12,12 @@ public class PlateCounter : BaseCounter
 
     private GameObject currentVisual;
 
+    private TaskManager taskManager;
+
+    void Start()
+    {
+        taskManager = FindObjectOfType<TaskManager>();
+    }
     private enum PlateState
     {
         Empty,
@@ -72,6 +78,11 @@ public class PlateCounter : BaseCounter
                     Debug.Log("🌮 Add Tortilla");
 
                     SetState(PlateState.HasTortilla);
+
+                    // ✅ TASK 1
+                    if (taskManager != null)
+                        taskManager.AddTacoStep();
+
                     return true;
                 }
                 break;
@@ -87,6 +98,9 @@ public class PlateCounter : BaseCounter
                     hasTomato = true;
                     currentToppingCount++;
 
+                    if (taskManager != null)
+                        taskManager.AddTacoStep();
+
                     Debug.Log($"🌮 Add Tomato ({currentToppingCount}/{totalTopping})");
 
                     CheckVegComplete();
@@ -100,6 +114,9 @@ public class PlateCounter : BaseCounter
                 {
                     hasLettuce = true;
                     currentToppingCount++;
+
+                    if (taskManager != null)
+                        taskManager.AddTacoStep();
 
                     Debug.Log($"🌮 Add Lettuce ({currentToppingCount}/{totalTopping})");
 
@@ -117,6 +134,12 @@ public class PlateCounter : BaseCounter
                     Debug.Log("🔥 Add Meat → COMPLETE!");
 
                     SetState(PlateState.Complete);
+
+                    // ✅ TASK 4
+                    if (taskManager != null)
+                        taskManager.AddTacoStep();
+
+
                     return true;
                 }
                 break;

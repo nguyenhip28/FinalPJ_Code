@@ -10,6 +10,7 @@ public class CartManager : MonoBehaviour
     public TextMeshProUGUI totalText;
     public Transform spawnPoint;
     public GameObject[] itemPrefabs;
+    public TaskManager taskManager;
 
     void Awake()
     {
@@ -36,20 +37,22 @@ public class CartManager : MonoBehaviour
             total += item.GetTotalPrice();
         }
 
-        // check tiền
         if (!PlayerMoney.Instance.CanAfford(total))
         {
             Debug.Log("Not enough money!");
             return;
         }
 
-        // trừ tiền
         PlayerMoney.Instance.Spend(total);
 
-        // spawn item
         SpawnItems();
 
-        // reset giỏ hàng
+        // ✅ gọi task
+        if (taskManager != null)
+        {
+            taskManager.CompleteOrder();
+        }
+
         foreach (ItemUI item in items)
         {
             item.ResetItem();
