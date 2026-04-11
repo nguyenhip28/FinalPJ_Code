@@ -4,30 +4,38 @@
 public class CarAI : MonoBehaviour
 {
     [Header("Movement")]
-    public float speed = 8f;
+    public float maxSpeed = 8f;
     public float rotationSpeed = 6f;
     public float reachDistance = 2.5f;
 
-    [Header("Detection")]
-    public float detectDistance = 5f;
+    [Header("Vehicle Detection")]
+    public float detectDistance = 8f;
+    public float stopDistance = 2.2f;
+    public float slowDistance = 5f;
+    public float detectRadius = 0.8f;
     public LayerMask vehicleLayer;
+
+    [Header("Traffic Light")]
+    public float lightDetectDistance = 6f;
+    public LayerMask trafficLightLayer;
 
     [Header("Waypoint")]
     public Waypoint currentWaypoint;
 
-    private bool isStopped = false;
+    private float currentSpeed;
 
     void Start()
     {
-        // ✅ Fix vật lý
+        currentSpeed = maxSpeed;
+
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.useGravity = false;
             rb.isKinematic = true;
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         }
 
-        // ✅ Auto tìm waypoint gần nhất nếu chưa gán
         if (currentWaypoint == null)
         {
             FindNearestWaypoint();
@@ -39,116 +47,107 @@ public class CarAI : MonoBehaviour
         if (currentWaypoint == null) return;
 
         DetectVehicle();
+        DetectTrafficLight();
         Move();
     }
 
-    // 🚗 DI CHUYỂN CHUẨN THEO WAYPOINT
     void Move()
     {
-        if (isStopped) return;
+        Vector3 dir = (currentWaypoint.transform.position - transform.position).normalized;
 
-        Transform wpTransform = currentWaypoint.transform;
+        transform.position += dir * currentSpeed * Time.deltaTime;
 
-        // ✅ HƯỚNG ĐÚNG: từ xe → waypoint
-        Vector3 direction = (wpTransform.position - transform.position).normalized;
-
-        // 👉 di chuyển
-        transform.position += direction * speed * Time.deltaTime;
-
-        // 👉 xoay mượt theo hướng di chuyển
-        if (direction != Vector3.zero)
+        if (dir != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            Quaternion rot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rot, rotationSpeed * Time.deltaTime);
         }
 
-        // 👉 kiểm tra tới waypoint
-        float distance = Vector3.Distance(transform.position, wpTransform.position);
-        if (distance < reachDistance)
+        if (Vector3.Distance(transform.position, currentWaypoint.transform.position) < reachDistance)
         {
             ChooseNextWaypoint();
         }
     }
 
-    // 🔀 CHỌN WAYPOINT TIẾP THEO
     void ChooseNextWaypoint()
     {
-        if (currentWaypoint == null) return;
-
         Waypoint next = currentWaypoint.GetNextWaypoint();
-
-        if (next == null)
-        {
-            Debug.LogWarning("Waypoint không có next!", currentWaypoint);
-            return;
-        }
-
-        currentWaypoint = next;
-
-        // 🧪 Debug
-        // Debug.Log("Next WP: " + currentWaypoint.name);
+        if (next != null) currentWaypoint = next;
     }
 
-    // 🚧 PHÁT HIỆN XE PHÍA TRƯỚC
+    // 🚧 tránh xe
     void DetectVehicle()
     {
-        Ray ray = new Ray(transform.position + Vector3.up * 0.5f, transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, detectDistance, vehicleLayer))
+        if (Physics.SphereCast(transform.position + Vector3.up * 0.5f,
+                               detectRadius,
+                               transform.forward,
+                               out hit,
+                               detectDistance,
+                               vehicleLayer))
         {
-            isStopped = true;
-        }
-        else
-        {
-            isStopped = false;
-        }
-    }
+            if (hit.collider.gameObject == gameObject) return;
 
-    // 🔍 AUTO TÌM WAYPOINT GẦN NHẤT
-    void FindNearestWaypoint()
-    {
-        Waypoint[] allWaypoints = FindObjectsOfType<Waypoint>();
+            float dist = hit.distance;
 
-        float minDist = Mathf.Infinity;
-        Waypoint nearest = null;
-
-        foreach (Waypoint wp in allWaypoints)
-        {
-            float dist = Vector3.Distance(transform.position, wp.transform.position);
-
-            if (dist < minDist)
+            if (dist <= stopDistance)
             {
-                minDist = dist;
-                nearest = wp;
+                currentSpeed = 0f;
+            }
+            else if (dist <= slowDistance)
+            {
+                float t = (dist - stopDistance) / (slowDistance - stopDistance);
+                float target = Mathf.Lerp(0f, maxSpeed, t);
+                currentSpeed = Mathf.Lerp(currentSpeed, target, Time.deltaTime * 6f);
             }
         }
-
-        currentWaypoint = nearest;
-
-        if (nearest != null)
-        {
-            Debug.Log("Auto assigned waypoint: " + nearest.name);
-        }
         else
         {
-            Debug.LogError("Không tìm thấy waypoint nào trong scene!");
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, Time.deltaTime * 3f);
         }
     }
 
-    // 🧪 DEBUG
-    void OnDrawGizmos()
+    // 🚦 detect đèn
+    void DetectTrafficLight()
     {
-        // 🔴 Ray phía trước
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position + Vector3.up * 0.5f,
-                        transform.position + Vector3.up * 0.5f + transform.forward * detectDistance);
+        RaycastHit hit;
 
-        // 🔵 Line tới waypoint hiện tại
-        if (currentWaypoint != null)
+        if (Physics.Raycast(transform.position + Vector3.up * 0.5f,
+                            transform.forward,
+                            out hit,
+                            lightDetectDistance,
+                            trafficLightLayer))
         {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, currentWaypoint.transform.position);
+            TrafficLight light = hit.collider.GetComponent<TrafficLight>();
+
+            if (light != null)
+            {
+                if (light.currentState == TrafficLight.LightState.Red)
+                {
+                    currentSpeed = 0f;
+                }
+                else if (light.currentState == TrafficLight.LightState.Yellow)
+                {
+                    currentSpeed = Mathf.Lerp(currentSpeed, 2f, Time.deltaTime * 5f);
+                }
+            }
+        }
+    }
+
+    void FindNearestWaypoint()
+    {
+        Waypoint[] all = FindObjectsOfType<Waypoint>();
+
+        float min = Mathf.Infinity;
+        foreach (var wp in all)
+        {
+            float d = Vector3.Distance(transform.position, wp.transform.position);
+            if (d < min)
+            {
+                min = d;
+                currentWaypoint = wp;
+            }
         }
     }
 }
