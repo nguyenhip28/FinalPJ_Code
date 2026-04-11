@@ -8,21 +8,18 @@ public class CarAI : MonoBehaviour
     public float rotationSpeed = 6f;
     public float reachDistance = 2.5f;
 
-    [Header("Vehicle Detection")]
+    [Header("Detection - Vehicle")]
     public float detectDistance = 8f;
     public float stopDistance = 2.2f;
     public float slowDistance = 5f;
     public float detectRadius = 0.8f;
     public LayerMask vehicleLayer;
 
-    [Header("Traffic Light")]
-    public float lightDetectDistance = 6f;
-    public LayerMask trafficLightLayer;
-
     [Header("Waypoint")]
     public Waypoint currentWaypoint;
 
     private float currentSpeed;
+    private bool isWaitingForLight = false;
 
     void Start()
     {
@@ -46,41 +43,52 @@ public class CarAI : MonoBehaviour
     {
         if (currentWaypoint == null) return;
 
-        DetectVehicle();
-        DetectTrafficLight();
-        Move();
+        DetectTrafficLight(); // 🚦 check intersection
+        DetectVehicle();      // 🚗 check xe
+        Move();               // 🚀 di chuyển
     }
 
+    // 🚗 MOVE
     void Move()
     {
-        Vector3 dir = (currentWaypoint.transform.position - transform.position).normalized;
+        Transform wp = currentWaypoint.transform;
 
-        transform.position += dir * currentSpeed * Time.deltaTime;
+        Vector3 direction = (wp.position - transform.position).normalized;
 
-        if (dir != Vector3.zero)
+        transform.position += direction * currentSpeed * Time.deltaTime;
+
+        if (direction != Vector3.zero)
         {
-            Quaternion rot = Quaternion.LookRotation(dir);
+            Quaternion rot = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Lerp(transform.rotation, rot, rotationSpeed * Time.deltaTime);
         }
 
-        if (Vector3.Distance(transform.position, currentWaypoint.transform.position) < reachDistance)
+        if (Vector3.Distance(transform.position, wp.position) < reachDistance)
         {
             ChooseNextWaypoint();
         }
     }
 
+    // 🔀 NEXT WAYPOINT
     void ChooseNextWaypoint()
     {
         Waypoint next = currentWaypoint.GetNextWaypoint();
-        if (next != null) currentWaypoint = next;
+
+        if (next != null)
+        {
+            currentWaypoint = next;
+        }
     }
 
-    // 🚧 tránh xe
+    // 🚧 AVOID VEHICLE
     void DetectVehicle()
     {
-        RaycastHit hit;
+        if (isWaitingForLight) return;
 
-        if (Physics.SphereCast(transform.position + Vector3.up * 0.5f,
+        RaycastHit hit;
+        Vector3 origin = transform.position + Vector3.up * 0.5f;
+
+        if (Physics.SphereCast(origin,
                                detectRadius,
                                transform.forward,
                                out hit,
@@ -98,8 +106,9 @@ public class CarAI : MonoBehaviour
             else if (dist <= slowDistance)
             {
                 float t = (dist - stopDistance) / (slowDistance - stopDistance);
-                float target = Mathf.Lerp(0f, maxSpeed, t);
-                currentSpeed = Mathf.Lerp(currentSpeed, target, Time.deltaTime * 6f);
+                float targetSpeed = Mathf.Lerp(0f, maxSpeed, t);
+
+                currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * 6f);
             }
         }
         else
@@ -108,46 +117,103 @@ public class CarAI : MonoBehaviour
         }
     }
 
-    // 🚦 detect đèn
+    // 🚦 CHECK INTERSECTION (KHÔNG CẦN RAYCAST)
     void DetectTrafficLight()
     {
-        RaycastHit hit;
+        if (currentWaypoint == null) return;
 
-        if (Physics.Raycast(transform.position + Vector3.up * 0.5f,
-                            transform.forward,
-                            out hit,
-                            lightDetectDistance,
-                            trafficLightLayer))
+        Waypoint next = currentWaypoint.GetNextWaypoint();
+        if (next == null) return;
+
+        if (next.type == Waypoint.WaypointType.Intersection && next.trafficLight != null)
         {
-            TrafficLight light = hit.collider.GetComponent<TrafficLight>();
+            TrafficLight light = next.trafficLight;
 
-            if (light != null)
+            float dist = Vector3.Distance(transform.position, next.transform.position);
+
+            switch (light.currentState)
             {
-                if (light.currentState == TrafficLight.LightState.Red)
-                {
-                    currentSpeed = 0f;
-                }
-                else if (light.currentState == TrafficLight.LightState.Yellow)
-                {
-                    currentSpeed = Mathf.Lerp(currentSpeed, 2f, Time.deltaTime * 5f);
-                }
+                case TrafficLight.LightState.Red:
+                    if (dist < 6f)
+                    {
+                        currentSpeed = 0f;
+                        isWaitingForLight = true;
+                        return;
+                    }
+                    break;
+
+                case TrafficLight.LightState.Yellow:
+                    currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed * 0.3f, Time.deltaTime * 5f);
+                    return;
+
+                case TrafficLight.LightState.Green:
+                    isWaitingForLight = false;
+                    break;
             }
+        }
+
+        if (isWaitingForLight)
+        {
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, Time.deltaTime * 2f);
+            isWaitingForLight = false;
         }
     }
 
+    // 🔍 FIND NEAREST TRAFFIC LIGHT
+    TrafficLight FindNearestTrafficLight(Vector3 position)
+    {
+        TrafficLight[] lights = FindObjectsOfType<TrafficLight>();
+
+        float minDist = Mathf.Infinity;
+        TrafficLight nearest = null;
+
+        foreach (var light in lights)
+        {
+            float dist = Vector3.Distance(position, light.transform.position);
+
+            if (dist < minDist)
+            {
+                minDist = dist;
+                nearest = light;
+            }
+        }
+
+        return nearest;
+    }
+
+    // 🔍 FIND WAYPOINT
     void FindNearestWaypoint()
     {
         Waypoint[] all = FindObjectsOfType<Waypoint>();
 
         float min = Mathf.Infinity;
+        Waypoint nearest = null;
+
         foreach (var wp in all)
         {
             float d = Vector3.Distance(transform.position, wp.transform.position);
             if (d < min)
             {
                 min = d;
-                currentWaypoint = wp;
+                nearest = wp;
             }
+        }
+
+        currentWaypoint = nearest;
+    }
+
+    // 🧪 DEBUG
+    void OnDrawGizmos()
+    {
+        Vector3 origin = transform.position + Vector3.up * 0.5f;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(origin + transform.forward * detectDistance, detectRadius);
+
+        if (currentWaypoint != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, currentWaypoint.transform.position);
         }
     }
 }

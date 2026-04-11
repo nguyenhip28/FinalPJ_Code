@@ -1,8 +1,14 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TrafficLight : MonoBehaviour
 {
-    public enum LightState { Green, Yellow, Red }
+    public enum LightState
+    {
+        Red,
+        Yellow,
+        Green
+    }
+
     public LightState currentState;
 
     [Header("Renderers")]
@@ -11,28 +17,31 @@ public class TrafficLight : MonoBehaviour
     public Renderer greenLight;
 
     [Header("Materials")]
-    public Material onMat;
-    public Material offMat;
+    public Material redOn;
+    public Material yellowOn;
+    public Material greenOn;
+    public Material lightOff;
 
-    public void SetState(LightState state)
+    void Start()
     {
-        currentState = state;
-        UpdateVisual();
+        UpdateLights();
     }
 
-    void UpdateVisual()
+    public void SetState(LightState newState)
     {
-        redLight.material = offMat;
-        yellowLight.material = offMat;
-        greenLight.material = offMat;
+        currentState = newState;
+        UpdateLights();
+    }
 
-        if (currentState == LightState.Red)
-            redLight.material = onMat;
+    void UpdateLights()
+    {
+        // 🔴 RED
+        redLight.material = (currentState == LightState.Red) ? redOn : lightOff;
 
-        else if (currentState == LightState.Yellow)
-            yellowLight.material = onMat;
+        // 🟡 YELLOW
+        yellowLight.material = (currentState == LightState.Yellow) ? yellowOn : lightOff;
 
-        else if (currentState == LightState.Green)
-            greenLight.material = onMat;
+        // 🟢 GREEN
+        greenLight.material = (currentState == LightState.Green) ? greenOn : lightOff;
     }
 }

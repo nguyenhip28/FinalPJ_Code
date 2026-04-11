@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Waypoint : MonoBehaviour
@@ -13,6 +13,9 @@ public class Waypoint : MonoBehaviour
     }
 
     public WaypointType type = WaypointType.Normal;
+
+    [Header("Traffic Light")]
+    public TrafficLight trafficLight; // 🔥 thêm dòng này
 
     public Waypoint GetNextWaypoint()
     {
