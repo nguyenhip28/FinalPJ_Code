@@ -16,6 +16,8 @@ public class Waypoint : MonoBehaviour
 
     [Header("Traffic Light")]
     public TrafficLight trafficLight; // 🔥 thêm dòng này
+    
+    public bool isStopPoint = false;
 
     public Waypoint GetNextWaypoint()
     {

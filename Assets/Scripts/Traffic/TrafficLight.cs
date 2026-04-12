@@ -12,9 +12,9 @@ public class TrafficLight : MonoBehaviour
     public LightState currentState;
 
     [Header("Renderers")]
-    public Renderer redLight;
-    public Renderer yellowLight;
-    public Renderer greenLight;
+    public MeshRenderer redLight;
+    public MeshRenderer yellowLight;
+    public MeshRenderer greenLight;
 
     [Header("Materials")]
     public Material redOn;
@@ -22,26 +22,16 @@ public class TrafficLight : MonoBehaviour
     public Material greenOn;
     public Material lightOff;
 
-    void Start()
+    public void SetState(LightState state)
     {
-        UpdateLights();
+        currentState = state;
+        UpdateVisual();
     }
 
-    public void SetState(LightState newState)
+    void UpdateVisual()
     {
-        currentState = newState;
-        UpdateLights();
-    }
-
-    void UpdateLights()
-    {
-        // 🔴 RED
         redLight.material = (currentState == LightState.Red) ? redOn : lightOff;
-
-        // 🟡 YELLOW
         yellowLight.material = (currentState == LightState.Yellow) ? yellowOn : lightOff;
-
-        // 🟢 GREEN
         greenLight.material = (currentState == LightState.Green) ? greenOn : lightOff;
     }
 }

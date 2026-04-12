@@ -18,21 +18,21 @@ public class IntersectionManager : MonoBehaviour
     {
         while (true)
         {
-            // 👉 ngang xanh
+            // ngang xanh
             horizontalLight.SetState(TrafficLight.LightState.Green);
             verticalLight.SetState(TrafficLight.LightState.Red);
             yield return new WaitForSeconds(greenTime);
 
-            // 👉 ngang vàng
+            // ngang vàng
             horizontalLight.SetState(TrafficLight.LightState.Yellow);
             yield return new WaitForSeconds(yellowTime);
 
-            // 👉 ngang đỏ - dọc xanh
+            // dọc xanh
             horizontalLight.SetState(TrafficLight.LightState.Red);
             verticalLight.SetState(TrafficLight.LightState.Green);
             yield return new WaitForSeconds(greenTime);
 
-            // 👉 dọc vàng
+            // dọc vàng
             verticalLight.SetState(TrafficLight.LightState.Yellow);
             yield return new WaitForSeconds(yellowTime);
         }
