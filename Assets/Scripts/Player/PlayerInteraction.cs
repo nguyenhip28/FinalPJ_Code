@@ -145,19 +145,36 @@ public class PlayerInteraction : MonoBehaviour
 
                         if (stored)
                         {
-                            // ✅ KHÔNG detach nữa (ShelfManager đã parent rồi)
-
-                            // ✅ reset rigidbody đúng cách
                             Rigidbody rb = obj.GetComponent<Rigidbody>();
                             if (rb != null)
                             {
                                 rb.isKinematic = true;
                                 rb.useGravity = false;
-                                rb.linearVelocity = Vector3.zero;         // FIX
+                                rb.linearVelocity = Vector3.zero;
                                 rb.angularVelocity = Vector3.zero;
                             }
 
-                            // ✅ clear state player
+                            // ✅ reset layer
+                            if (obj.GetComponent<FoodItem>() != null)
+                            {
+                                obj.layer = LayerMask.NameToLayer("Food");
+                            }
+                            else
+                            {
+                                obj.layer = LayerMask.NameToLayer("HoldItem");
+                            }
+
+                            // ✅ collider
+                            Collider col = obj.GetComponent<Collider>();
+                            if (col != null)
+                            {
+                                col.enabled = true;
+                                col.isTrigger = false;
+                            }
+
+                            // (optional nhưng an toàn)
+                            obj.transform.SetParent(null);
+
                             heldObject = null;
                             currentHoldPoint = null;
                         }
