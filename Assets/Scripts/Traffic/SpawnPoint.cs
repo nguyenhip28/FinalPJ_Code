@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SpawnPoint : MonoBehaviour
 {
-    public int maxCars = 3;
+    public int maxCars = 2;
     public List<GameObject> currentCars = new List<GameObject>();
 
     public bool CanSpawn()
