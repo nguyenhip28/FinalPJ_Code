@@ -9,9 +9,9 @@ public class CarAI : MonoBehaviour
     public float reachDistance = 2.5f;
 
     [Header("Detection")]
-    public float detectDistance = 8f;
-    public float stopDistance = 2.2f;
-    public float slowDistance = 5f;
+    public float detectDistance = 10f;
+    public float stopDistance = 3.5f;
+    public float slowDistance = 7f;
     public float detectRadius = 0.8f;
     public LayerMask vehicleLayer;
 
@@ -23,6 +23,9 @@ public class CarAI : MonoBehaviour
     // 🚧 trạng thái
     private bool isWaitingAtLight = false;
     private bool isYielding = false;
+
+    private bool hasDecision = false;
+    private int priority; // số random
 
     void Start()
     {
@@ -111,31 +114,54 @@ public class CarAI : MonoBehaviour
             // =========================
             if (IsInIntersection() && otherCar != null)
             {
-                if (!isYielding && Random.value < 0.5f)
+                // 👉 mỗi xe chỉ random 1 lần khi vào ngã tư
+                if (!hasDecision)
                 {
-                    isYielding = true;
+                    priority = Random.Range(0, 100);
+                    hasDecision = true;
                 }
 
-                if (isYielding)
+                // đảm bảo xe kia cũng có priority
+                if (!otherCar.hasDecision)
                 {
-                    currentSpeed = 0;
+                    otherCar.priority = Random.Range(0, 100);
+                    otherCar.hasDecision = true;
+                }
+
+                // 👉 so sánh quyền ưu tiên
+                if (priority < otherCar.priority)
+                {
+                    currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 6f);
                     return;
                 }
             }
 
             // =========================
-            // 🚗 NORMAL FOLLOW
+            // 🚗 ADVANCED FOLLOW (FIX DÍNH XE)
             // =========================
-            if (dist <= stopDistance)
-            {
-                currentSpeed = 0;
-            }
-            else if (dist <= slowDistance)
-            {
-                float t = (dist - stopDistance) / (slowDistance - stopDistance);
-                float targetSpeed = Mathf.Lerp(0f, maxSpeed, t);
 
-                currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * 6f);
+            // 🔥 trừ chiều dài xe (rất quan trọng)
+            dist -= 1.5f;
+
+            // khoảng cách an toàn
+            float safeGap = 4f;
+
+            // tính speed theo khoảng cách (mượt)
+            float ratio = dist / detectDistance;
+            float targetSpeed = maxSpeed * ratio;
+
+            // clamp lại
+            targetSpeed = Mathf.Clamp(targetSpeed, 0f, maxSpeed);
+
+            // ❌ quá gần → dừng hẳn
+            if (dist < safeGap)
+            {
+                currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 8f);
+            }
+            else
+            {
+                // ✅ chạy mượt theo xe trước
+                currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * 4f);
             }
         }
         else
@@ -167,6 +193,11 @@ public class CarAI : MonoBehaviour
         if (Vector3.Distance(transform.position, wp.position) < reachDistance)
         {
             ChooseNextWaypoint();
+        }
+
+        if (!IsInIntersection())
+        {
+            hasDecision = false;
         }
     }
 
