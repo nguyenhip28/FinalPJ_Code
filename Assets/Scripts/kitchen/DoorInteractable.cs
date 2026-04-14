@@ -2,9 +2,11 @@
 
 public class DoorInteractable : MonoBehaviour
 {
+    [Header("Door Parts")]
     public Transform leftDoor;
     public Transform rightDoor;
 
+    [Header("Settings")]
     public float openAngle = 90f;
     public float speed = 3f;
 
@@ -18,12 +20,13 @@ public class DoorInteractable : MonoBehaviour
 
     void Start()
     {
-        leftClosed = leftDoor.rotation;
-        rightClosed = rightDoor.rotation;
+        // Lấy rotation ban đầu
+        leftClosed = leftDoor.localRotation;
+        rightClosed = rightDoor.localRotation;
 
-        // 👉 mở ngược nhau
-        leftOpen = Quaternion.Euler(0, leftDoor.eulerAngles.y - openAngle, 0);
-        rightOpen = Quaternion.Euler(0, rightDoor.eulerAngles.y + openAngle, 0);
+        // Tính góc mở
+        leftOpen = leftClosed * Quaternion.Euler(0, -openAngle, 0);
+        rightOpen = rightClosed * Quaternion.Euler(0, openAngle, 0);
     }
 
     void Update()
@@ -31,19 +34,28 @@ public class DoorInteractable : MonoBehaviour
         Quaternion leftTarget = isOpen ? leftOpen : leftClosed;
         Quaternion rightTarget = isOpen ? rightOpen : rightClosed;
 
-        leftDoor.rotation = Quaternion.Slerp(leftDoor.rotation, leftTarget, Time.deltaTime * speed);
-        rightDoor.rotation = Quaternion.Slerp(rightDoor.rotation, rightTarget, Time.deltaTime * speed);
+        leftDoor.localRotation = Quaternion.Slerp(
+            leftDoor.localRotation,
+            leftTarget,
+            Time.deltaTime * speed
+        );
+
+        rightDoor.localRotation = Quaternion.Slerp(
+            rightDoor.localRotation,
+            rightTarget,
+            Time.deltaTime * speed
+        );
     }
 
-    public void Interact(Transform player, bool isSignOpen)
+    // 👉 Toggle cửa (QUAN TRỌNG)
+    public void Toggle()
     {
-        if (isSignOpen)
-        {
-            isOpen = true;
-        }
-        else
-        {
-            isOpen = false;
-        }
+        isOpen = !isOpen;
+    }
+
+    // 👉 Cho script khác biết trạng thái
+    public bool IsOpen()
+    {
+        return isOpen;
     }
 }
