@@ -32,6 +32,8 @@ public class PlayerInteraction : MonoBehaviour
     [Header("UI Layer")]
     public LayerMask uiInteractLayer;
 
+    public LayerMask doorLayer;
+
     void Start()
     {
         if (knifeVisual != null)
@@ -114,6 +116,22 @@ public class PlayerInteraction : MonoBehaviour
             {
                 hintText.gameObject.SetActive(false);
             }
+
+            // ===== DOOR INTERACTION =====
+            Ray rayDoor = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+            RaycastHit hitDoor;
+
+            if (Physics.Raycast(rayDoor, out hitDoor, interactDistance, doorLayer))
+            {
+                DoorSign sign = hitDoor.collider.GetComponentInParent<DoorSign>();
+
+                if (sign != null)
+                {
+                    sign.Interact(transform);
+                    return; // ❗ chặn luôn logic dưới
+                }
+            }
+
             // ===== COMPUTER INTERACTION (ƯU TIÊN CAO NHẤT) =====
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             RaycastHit hit;
