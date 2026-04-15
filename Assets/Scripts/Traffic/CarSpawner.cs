@@ -8,6 +8,9 @@ public class CarSpawner : MonoBehaviour
 
     public float spawnInterval = 3f;
 
+    public int maxTotalCars = 80;
+    private List<GameObject> allCars = new List<GameObject>();
+
     void Start()
     {
         InvokeRepeating(nameof(SpawnCar), 1f, spawnInterval);
@@ -15,6 +18,12 @@ public class CarSpawner : MonoBehaviour
 
     void SpawnCar()
     {
+        // 🔥 dọn xe đã bị destroy
+        allCars.RemoveAll(car => car == null);
+
+        // ❌ đạt giới hạn → không spawn nữa
+        if (allCars.Count >= maxTotalCars) return;
+
         if (spawnPoints.Count == 0 || carPrefabs.Count == 0) return;
 
         SpawnPoint sp = spawnPoints[Random.Range(0, spawnPoints.Count)];
@@ -26,9 +35,7 @@ public class CarSpawner : MonoBehaviour
         Waypoint wp = sp.GetComponent<Waypoint>();
         if (wp == null || wp.nextPoints.Count == 0) return;
 
-        // 🎯 LẤY HƯỚNG ĐẾN WAYPOINT TIẾP THEO
         Vector3 dir = (wp.nextPoints[0].transform.position - sp.transform.position).normalized;
-
         Quaternion rot = Quaternion.LookRotation(dir);
 
         GameObject car = Instantiate(prefab, sp.transform.position, rot);
@@ -40,5 +47,8 @@ public class CarSpawner : MonoBehaviour
         }
 
         sp.RegisterCar(car);
+
+        // 🔥 thêm vào danh sách global
+        allCars.Add(car);
     }
 }

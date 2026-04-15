@@ -2,37 +2,53 @@
 
 public class NPCSpawner : MonoBehaviour
 {
-    public GameObject npcPrefab;
+    public GameObject[] npcPrefabs;
     public WaypointManager path;
 
     public bool spawnFromStart = true;
-    public float spawnRate = 2f;
 
-    // 🔥 THÊM 2 DÒNG NÀY
-    public int maxNPC = 10;
-    private int currentNPC = 0;
+    [Header("Spawn Settings")]
+    public float spawnDelay = 2f;   // ⏱️ thời gian giữa mỗi lần spawn
+    public int spawnPerWave = 1;    // số NPC mỗi lần spawn
 
-    void Start()
+    private float timer;
+
+    void Update()
     {
-        InvokeRepeating(nameof(SpawnNPC), 1f, spawnRate);
+        timer += Time.deltaTime;
+
+        if (timer >= spawnDelay)
+        {
+            timer = 0f;
+
+            for (int i = 0; i < spawnPerWave; i++)
+            {
+                SpawnNPC();
+            }
+        }
     }
 
     void SpawnNPC()
     {
-        if (currentNPC >= maxNPC) return;
+        if (npcPrefabs.Length == 0) return;
 
-        Vector3 offset = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+        GameObject prefab = npcPrefabs[Random.Range(0, npcPrefabs.Length)];
 
-        GameObject npc = Instantiate(npcPrefab, transform.position + offset, Quaternion.identity);
+        Vector3 offset = new Vector3(
+            Random.Range(-1.5f, 1.5f),
+            0,
+            Random.Range(-1.5f, 1.5f)
+        );
+
+        GameObject npc = Instantiate(prefab, transform.position + offset, Quaternion.identity);
 
         NPCMovement move = npc.GetComponent<NPCMovement>();
-        move.path = path;
 
-        move.SetStart(spawnFromStart);
-        move.speed = Random.Range(1.5f, 2.5f);
-
-        currentNPC++;
-
-        npc.GetComponent<NPCMovement>().OnDestroyCallback = () => currentNPC--;
+        if (move != null)
+        {
+            move.path = path;
+            move.SetStart(spawnFromStart);
+            move.speed = Random.Range(1.5f, 2.5f);
+        }
     }
 }

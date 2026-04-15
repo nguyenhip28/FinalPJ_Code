@@ -7,23 +7,26 @@ public class NPCMovement : MonoBehaviour
 
     public float speed = 2f;
     public float rotationSpeed = 5f;
-    public float stoppingDistance = 0.3f;
+    public float stoppingDistance = 0.2f;
 
     private int currentIndex;
     private int direction = 1;
 
     private CharacterController controller;
-    private Animator animator; // 🎬 Animation
+    private Animator animator;
 
     private bool isInitialized = false;
 
     // Avoidance
     public float avoidRadius = 1.5f;
-    public float avoidForce = 2f;
+    public float avoidForce = 3f;
 
     // Gravity
     private float gravity = -9.8f;
     private float yVelocity = 0;
+
+    // Offset tránh đâm nhau
+    private Vector3 randomOffset;
 
     public System.Action OnDestroyCallback;
 
@@ -51,16 +54,19 @@ public class NPCMovement : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>(); // 🔥 LẤY ANIMATOR
+        animator = GetComponent<Animator>();
+
+        // random offset mỗi NPC
+        randomOffset = new Vector3(
+            Random.Range(-0.5f, 0.5f),
+            0,
+            Random.Range(-0.5f, 0.5f)
+        );
 
         if (!isInitialized)
         {
             direction = (Random.value > 0.5f) ? 1 : -1;
-
-            if (direction == 1)
-                currentIndex = 0;
-            else
-                currentIndex = path.Count() - 1;
+            currentIndex = (direction == 1) ? 0 : path.Count() - 1;
         }
     }
 
@@ -70,7 +76,10 @@ public class NPCMovement : MonoBehaviour
 
         Transform target = path.GetWaypoint(currentIndex);
 
-        Vector3 dir = (target.position - transform.position);
+        // offset tránh đâm nhau
+        Vector3 targetPos = target.position + randomOffset;
+
+        Vector3 dir = (targetPos - transform.position);
         dir.y = 0;
 
         // ===== AVOID NPC =====
@@ -84,7 +93,7 @@ public class NPCMovement : MonoBehaviour
                 Vector3 diff = transform.position - hit.transform.position;
                 float distance = diff.magnitude;
 
-                if (distance > 0)
+                if (distance > 0.01f)
                     avoidDir += diff.normalized / distance;
             }
         }
@@ -94,7 +103,7 @@ public class NPCMovement : MonoBehaviour
         // ===== GRAVITY =====
         if (controller.isGrounded && yVelocity < 0)
         {
-            yVelocity = -2f; // giữ chân chạm đất
+            yVelocity = -2f;
         }
 
         yVelocity += gravity * Time.deltaTime;
@@ -105,22 +114,27 @@ public class NPCMovement : MonoBehaviour
         controller.Move(move * Time.deltaTime);
 
         // ===== ROTATE =====
-        if (finalDir != Vector3.zero)
+        if (finalDir.sqrMagnitude > 0.01f)
         {
             Quaternion rot = Quaternion.LookRotation(finalDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot, rotationSpeed * Time.deltaTime);
         }
 
-        // ===== 🎬 ANIMATION =====
-        float moveAmount = new Vector3(move.x, 0, move.z).magnitude;
-
+        // ===== ANIMATION =====
         if (animator != null)
         {
-            animator.SetFloat("Speed", moveAmount);
+            float actualSpeed = new Vector3(controller.velocity.x, 0, controller.velocity.z).magnitude;
+            animator.SetFloat("Speed", actualSpeed);
         }
 
         // ===== NEXT WAYPOINT =====
-        if (Vector3.Distance(transform.position, target.position) < stoppingDistance)
+        Vector3 flatPos = transform.position;
+        Vector3 flatTarget = target.position;
+
+        flatPos.y = 0;
+        flatTarget.y = 0;
+
+        if (Vector3.Distance(flatPos, flatTarget) < stoppingDistance)
         {
             currentIndex += direction;
 

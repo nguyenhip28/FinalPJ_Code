@@ -114,21 +114,28 @@ public class CarAI : MonoBehaviour
             // =========================
             if (IsInIntersection() && otherCar != null)
             {
-                // 👉 mỗi xe chỉ random 1 lần khi vào ngã tư
+                // 🔥 chỉ random cho chính mình
                 if (!hasDecision)
                 {
                     priority = Random.Range(0, 100);
                     hasDecision = true;
                 }
 
-                // đảm bảo xe kia cũng có priority
+                // 🔥 nếu xe kia chưa có decision → KHÔNG xử lý vội
                 if (!otherCar.hasDecision)
                 {
-                    otherCar.priority = Random.Range(0, 100);
-                    otherCar.hasDecision = true;
+                    currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 4f);
+                    return;
                 }
 
-                // 👉 so sánh quyền ưu tiên
+                // 🔥 giữ khoảng cách trước khi vào giao nhau
+                if (hit.distance < 5f)
+                {
+                    currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 6f);
+                    return;
+                }
+
+                // 🔥 so priority
                 if (priority < otherCar.priority)
                 {
                     currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 6f);
