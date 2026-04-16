@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+﻿using SojaExiles;
 using TMPro;
+using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -121,14 +122,27 @@ public class PlayerInteraction : MonoBehaviour
             Ray rayDoor = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             RaycastHit hitDoor;
 
-            if (Physics.Raycast(rayDoor, out hitDoor, interactDistance, doorLayer))
+            if (Physics.Raycast(rayDoor, out hitDoor, interactDistance))
             {
-                DoorSign sign = hitDoor.collider.GetComponentInParent<DoorSign>();
-
-                if (sign != null)
+                // 👉 Nếu nhìn vào bảng OPEN
+                if (hitDoor.collider.CompareTag("DoorSwitch"))
                 {
-                    sign.Interact(transform);
-                    return; // ❗ chặn luôn logic dưới
+                    DoorSwitch switcher = hitDoor.collider.GetComponent<DoorSwitch>();
+
+                    if (switcher != null)
+                    {
+                        switcher.ToggleBothDoors();
+                        return;
+                    }
+                }
+
+                // 👉 Nếu nhìn trực tiếp vào cửa
+                opencloseDoor door = hitDoor.collider.GetComponentInParent<opencloseDoor>();
+
+                if (door != null)
+                {
+                    door.ToggleDoor();
+                    return;
                 }
             }
 

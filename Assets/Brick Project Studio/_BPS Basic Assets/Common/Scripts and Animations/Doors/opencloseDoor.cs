@@ -51,22 +51,28 @@ namespace SojaExiles
 
 		}
 
-		IEnumerator opening()
-		{
+        public IEnumerator opening()
+        {
 			print("you are opening the door");
 			openandclose.Play("Opening");
 			open = true;
 			yield return new WaitForSeconds(.5f);
 		}
 
-		IEnumerator closing()
-		{
+        public IEnumerator closing()
+        {
 			print("you are closing the door");
 			openandclose.Play("Closing");
 			open = false;
 			yield return new WaitForSeconds(.5f);
 		}
 
-
-	}
+        public void ToggleDoor()
+        {
+            if (!open)
+                StartCoroutine(opening());
+            else
+                StartCoroutine(closing());
+        }
+    }
 }
