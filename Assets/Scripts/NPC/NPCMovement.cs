@@ -129,7 +129,7 @@ public class NPCMovement : MonoBehaviour
 
         // ===== NEXT WAYPOINT =====
         Vector3 flatPos = transform.position;
-        Vector3 flatTarget = target.position;
+        Vector3 flatTarget = targetPos;
 
         flatPos.y = 0;
         flatTarget.y = 0;
