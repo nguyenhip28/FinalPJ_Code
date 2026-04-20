@@ -20,6 +20,15 @@ public class TimeManager : MonoBehaviour
 
     private Color lastSkyColor;
 
+    public int GetDay() => day;
+    public float GetTime() => gameTime;
+
+    public void LoadTime(int d, float t)
+    {
+        day = d;
+        gameTime = t;
+    }
+
     void Start()
     {
         RenderSettings.skybox = new Material(RenderSettings.skybox);

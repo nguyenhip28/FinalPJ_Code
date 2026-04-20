@@ -1,15 +1,24 @@
-﻿[System.Serializable]
+﻿using System.Collections.Generic;
+
+[System.Serializable]
 public class GameData
 {
-    public float playerX;
-    public float playerY;
-    public float playerZ;
-
-    public float rotY;
-    public float rotX;
+    // Player
+    public float playerX, playerY, playerZ;
+    public float rotY, rotX;
 
     public int money;
 
     public float volume;
     public float sensitivity;
+
+    // 🕒 TIME
+    public int day;
+    public float timeOfDay;
+
+    // 🍔 FOOD
+    public List<FoodSaveData> foods;
+
+    // 📦 BOX
+    public List<BoxData> boxes;
 }

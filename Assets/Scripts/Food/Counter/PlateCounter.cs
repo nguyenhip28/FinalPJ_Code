@@ -16,7 +16,7 @@ public class PlateCounter : BaseCounter
 
     void Start()
     {
-        taskManager = FindObjectOfType<TaskManager>();
+        taskManager = UnityEngine.Object.FindFirstObjectByType<TaskManager>();      
     }
     private enum PlateState
     {

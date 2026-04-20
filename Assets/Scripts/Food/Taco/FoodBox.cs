@@ -7,6 +7,7 @@ public class FoodBox : MonoBehaviour
     public int maxAmount = 10;
 
     private int currentAmount;
+    public int boxID;
 
     void Start()
     {
@@ -44,5 +45,20 @@ public class FoodBox : MonoBehaviour
     public int GetCurrentAmount()
     {
         return currentAmount;
+    }
+
+    public BoxData GetData()
+    {
+        BoxData data = new BoxData();
+
+        data.boxID = boxID;
+        data.amount = currentAmount;
+
+        return data;
+    }
+
+    public void LoadFromData(BoxData data)
+    {
+        currentAmount = data.amount;
     }
 }

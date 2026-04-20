@@ -218,4 +218,60 @@ public class FoodItem : MonoBehaviour
     {
         OnCookingProgress = null;
     }
+
+    public FoodSaveData GetData()
+    {
+        FoodSaveData data = new FoodSaveData();
+
+        data.foodType = (int)foodType;
+        data.state = (int)currentState;
+
+        data.posX = transform.position.x;
+        data.posY = transform.position.y;
+        data.posZ = transform.position.z;
+
+        data.rotY = transform.eulerAngles.y;
+
+        data.isCooking = isCooking;
+        data.cookTimer = cookTimer;
+
+        return data;
+    }
+
+    public void LoadFromData(FoodSaveData data)
+    {
+        foodType = (FoodType)data.foodType;
+        currentState = (FoodState)data.state;
+
+        transform.position = new Vector3(data.posX, data.posY, data.posZ);
+        transform.rotation = Quaternion.Euler(0, data.rotY, 0);
+
+        cookTimer = data.cookTimer;
+        isCooking = data.isCooking;
+
+        ApplyStateVisual();
+    }
+
+    void ApplyStateVisual()
+    {
+        switch (currentState)
+        {
+            case FoodState.Raw:
+                ApplyRawVisual();
+                break;
+
+            case FoodState.Chopped:
+                if (choppedMesh != null)
+                    meshFilter.mesh = choppedMesh;
+                break;
+
+            case FoodState.Cooked:
+                Cook();
+                break;
+
+            case FoodState.Burned:
+                Burn();
+                break;
+        }
+    }
 }

@@ -22,7 +22,6 @@ public class CarAI : MonoBehaviour
 
     // 🚧 trạng thái
     private bool isWaitingAtLight = false;
-    private bool isYielding = false;
 
     private bool hasDecision = false;
     private int priority; // số random
@@ -173,7 +172,6 @@ public class CarAI : MonoBehaviour
         }
         else
         {
-            isYielding = false;
             currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, Time.deltaTime * 3f);
         }
     }
