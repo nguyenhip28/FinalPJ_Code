@@ -2,57 +2,30 @@
 
 public class FoodBox : MonoBehaviour
 {
-    [Header("Food Settings")]
-    public GameObject foodPrefab;   // loại food spawn
+    public BoxType boxType;
+
+    public GameObject foodPrefab;
     public int maxAmount = 10;
 
     private int currentAmount;
-    public int boxID;
 
-    void Start()
+    void Awake()
     {
         currentAmount = maxAmount;
-    }
-
-    // ===== CHECK CÒN FOOD =====
-    public bool HasFood()
-    {
-        return currentAmount > 0;
-    }
-
-    // ===== DÙNG 1 ITEM =====
-    public void UseOne()
-    {
-        if (currentAmount <= 0)
-        {
-            Debug.Log("Box đã hết đồ!");
-            return;
-        }
-
-        currentAmount--;
-
-        Debug.Log("Còn lại: " + currentAmount);
-    }
-
-    // ===== OPTIONAL: CLICK VÀO BOX =====
-    // (giữ lại để KHÔNG bị lỗi Interact)
-    public void Interact(PlayerInteraction player)
-    {
-        Debug.Log("Click vào box");
-    }
-
-    // ===== OPTIONAL: LẤY SỐ LƯỢNG HIỆN TẠI =====
-    public int GetCurrentAmount()
-    {
-        return currentAmount;
     }
 
     public BoxData GetData()
     {
         BoxData data = new BoxData();
 
-        data.boxID = boxID;
+        data.boxType = (int)boxType;
         data.amount = currentAmount;
+
+        data.posX = transform.position.x;
+        data.posY = transform.position.y;
+        data.posZ = transform.position.z;
+
+        data.rotY = transform.eulerAngles.y;
 
         return data;
     }
@@ -60,5 +33,24 @@ public class FoodBox : MonoBehaviour
     public void LoadFromData(BoxData data)
     {
         currentAmount = data.amount;
+
+        transform.position = new Vector3(data.posX, data.posY, data.posZ);
+        transform.rotation = Quaternion.Euler(0, data.rotY, 0);
+    }
+
+    public bool HasFood()
+    {
+        return currentAmount > 0;
+    }
+
+    public void UseOne()
+    {
+        if (currentAmount <= 0)
+        {
+            Debug.Log("Box hết đồ!");
+            return;
+        }
+
+        currentAmount--;
     }
 }

@@ -17,7 +17,8 @@ public class MainMenu : MonoBehaviour
     {
         SaveSystem.DeleteSave();
 
-        GameManager.isNewGame = true; // 🔥 QUAN TRỌNG
+        PlayerPrefs.SetInt("NewGame", 1); // 🔥 FIX CHUẨN
+        PlayerPrefs.Save();
 
         MusicManager music = Object.FindFirstObjectByType<MusicManager>();
         if (music != null)

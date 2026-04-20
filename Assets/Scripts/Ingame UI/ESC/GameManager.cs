@@ -6,7 +6,6 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
     public Transform player;
-    public static bool isNewGame = false;
     public MouseLook mouseLook;
 
     private CharacterController cc;
@@ -22,12 +21,8 @@ public class GameManager : MonoBehaviour
     {
         int newGameFlag = PlayerPrefs.GetInt("NewGame", 0);
 
-        Debug.Log("NewGame flag = " + newGameFlag);
-
         if (newGameFlag == 1)
         {
-            Debug.Log("NEW GAME → SKIP LOAD");
-
             PlayerPrefs.SetInt("NewGame", 0);
             PlayerPrefs.Save();
             return;
@@ -35,7 +30,6 @@ public class GameManager : MonoBehaviour
 
         if (SaveSystem.HasSave())
         {
-            Debug.Log("CONTINUE → LOAD");
             StartCoroutine(LoadAfterFrame());
         }
     }
@@ -52,49 +46,47 @@ public class GameManager : MonoBehaviour
     {
         GameData data = new GameData();
 
-        // 📍 PLAYER POSITION
+        // ===== PLAYER =====
         data.playerX = player.position.x;
         data.playerY = player.position.y;
         data.playerZ = player.position.z;
 
-        // 🎥 ROTATION
         data.rotY = player.eulerAngles.y;
         data.rotX = mouseLook.GetXRotation();
 
-        // 💰 MONEY
+        // ===== MONEY =====
         data.money = PlayerMoney.Instance.money;
 
-        // 🔊 SETTINGS
+        // ===== SETTINGS =====
         data.volume = AudioListener.volume;
         data.sensitivity = mouseLook.mouseSensitivity;
 
-        // ================= 🕒 TIME =================
+        // ===== TIME =====
         TimeManager tm = UnityEngine.Object.FindFirstObjectByType<TimeManager>();
-        data.day = tm.GetDay();
-        data.timeOfDay = tm.GetTime();
+        if (tm != null)
+        {
+            data.day = tm.GetDay();
+            data.timeOfDay = tm.GetTime();
+        }
 
-        // ================= 🍔 FOOD =================
+        // ===== FOOD =====
         data.foods = new List<FoodSaveData>();
-
-        FoodItem[] foods = UnityEngine.Object.FindObjectsByType<FoodItem>(FindObjectsSortMode.None);
-        foreach (var food in foods)
+        foreach (var food in UnityEngine.Object.FindObjectsByType<FoodItem>(FindObjectsSortMode.None))
         {
             data.foods.Add(food.GetData());
         }
 
-        // ================= 📦 BOX =================
+        // ===== BOX =====
         data.boxes = new List<BoxData>();
-
-        FoodBox[] boxes = UnityEngine.Object.FindObjectsByType<FoodBox>(FindObjectsSortMode.None);
-        foreach (var box in boxes)
+        foreach (var box in UnityEngine.Object.FindObjectsByType<FoodBox>(FindObjectsSortMode.None))
         {
             data.boxes.Add(box.GetData());
         }
 
-        // ================= SAVE FILE =================
+        // ===== SAVE FILE =====
         SaveSystem.Save(data);
 
-        Debug.Log("Saved!");
+        Debug.Log("GAME SAVED");
 
         SceneManager.LoadScene("MainMenu");
     }
@@ -103,12 +95,6 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
-        if (PlayerPrefs.GetInt("NewGame", 0) == 1)
-        {
-            Debug.Log("BLOCK LOAD (NEW GAME)");
-            return;
-        }
-
         GameData data = SaveSystem.Load();
 
         if (data == null)
@@ -117,68 +103,64 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // 🔥 Disable controller
+        // ===== DISABLE PLAYER =====
         if (cc != null) cc.enabled = false;
         if (rb != null) rb.isKinematic = true;
 
-        // 📍 POSITION
+        // ===== PLAYER POSITION =====
         player.position = new Vector3(data.playerX, data.playerY, data.playerZ);
-
-        // 🎥 ROTATION
         player.rotation = Quaternion.Euler(0f, data.rotY, 0f);
         mouseLook.SetRotation(data.rotX);
 
-        // 🔥 Enable lại
+        // ===== ENABLE PLAYER =====
         if (cc != null) cc.enabled = true;
         if (rb != null) rb.isKinematic = false;
 
-        // 💰 MONEY
+        // ===== MONEY =====
         if (PlayerMoney.Instance != null)
             PlayerMoney.Instance.SetMoney(data.money);
 
-        // 🔊 SETTINGS
+        // ===== SETTINGS =====
         AudioListener.volume = data.volume;
         mouseLook.UpdateSensitivity(data.sensitivity);
 
-        // ================= 🕒 TIME =================
+        // ===== TIME =====
         TimeManager tm = UnityEngine.Object.FindFirstObjectByType<TimeManager>();
-        tm.LoadTime(data.day, data.timeOfDay);
+        if (tm != null)
+        {
+            tm.LoadTime(data.day, data.timeOfDay);
+        }
 
-        // ================= 🍔 FOOD =================
-
-        // Xoá toàn bộ food cũ
+        // ===== CLEAR OLD FOOD =====
         foreach (var f in UnityEngine.Object.FindObjectsByType<FoodItem>(FindObjectsSortMode.None))
         {
             Destroy(f.gameObject);
         }
 
-        // Spawn lại
+        // ===== CLEAR OLD BOX =====
+        foreach (var b in UnityEngine.Object.FindObjectsByType<FoodBox>(FindObjectsSortMode.None))
+        {
+            Destroy(b.gameObject);
+        }
+
+        // ===== SPAWN FOOD =====
         foreach (var f in data.foods)
         {
             GameObject prefab = FoodDatabase.Instance.GetPrefab((FoodType)f.foodType);
 
             GameObject obj = Instantiate(prefab);
-            FoodItem food = obj.GetComponent<FoodItem>();
-
-            food.LoadFromData(f);
+            obj.GetComponent<FoodItem>().LoadFromData(f);
         }
 
-        // ================= 📦 BOX =================
-
-        FoodBox[] boxes = UnityEngine.Object.FindObjectsByType<FoodBox>(FindObjectsSortMode.None);
-
-        foreach (var box in boxes)
+        // ===== SPAWN BOX =====
+        foreach (var b in data.boxes)
         {
-            foreach (var saved in data.boxes)
-            {
-                if (box.boxID == saved.boxID)
-                {
-                    box.LoadFromData(saved);
-                    break;
-                }
-            }
+            GameObject prefab = BoxDatabase.Instance.GetPrefab((BoxType)b.boxType);
+
+            GameObject obj = Instantiate(prefab);
+            obj.GetComponent<FoodBox>().LoadFromData(b);
         }
 
-        Debug.Log("Game Loaded!");
+        Debug.Log("GAME LOADED");
     }
 }
