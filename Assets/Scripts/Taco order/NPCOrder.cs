@@ -8,8 +8,8 @@ public class NPCOrder
 
     public NPCOrder()
     {
-        meat = Random.value > 0.5f;
-        lettuce = Random.value > 0.5f;
-        tomato = Random.value > 0.5f;
+        meat = true;
+        lettuce = true;
+        tomato = true;
     }
 }

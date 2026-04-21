@@ -57,9 +57,19 @@ public class NPCQueueManager : MonoBehaviour
 
         foreach (var npc in queue)
         {
-            if (index < queuePoints.Length)
+            if (index == 0)
             {
-                npc.SetQueuePosition(queuePoints[index]);
+                // 🔥 NPC đầu → đi order
+                npc.GoToOrder(orderPoint);
+            }
+            else
+            {
+                int queueIndex = index - 1;
+
+                if (queueIndex < queuePoints.Length)
+                {
+                    npc.SetQueuePosition(queuePoints[queueIndex]);
+                }
             }
 
             index++;

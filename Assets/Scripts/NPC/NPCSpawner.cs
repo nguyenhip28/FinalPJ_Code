@@ -15,6 +15,9 @@ public class NPCSpawner : MonoBehaviour
     public float spawnCheckRadius = 3f;   // 🔥 tăng lên
     public int maxNearbyNPC = 2;          // 🔥 giảm xuống
 
+    [Header("Global Limit")]
+    public int maxTotalNPC = 5;
+
     private float timer;
 
     void Update()

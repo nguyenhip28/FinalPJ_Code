@@ -102,6 +102,12 @@ public class NPCMovement : MonoBehaviour
         isOrderingDone = true;
     }
 
+    public void GoToOrder(Transform orderPos)
+    {
+        queueTarget = orderPos;
+        currentState = NPCState.GoingToQueue;
+    }
+
     // ================= INIT =================
 
     void Start()
