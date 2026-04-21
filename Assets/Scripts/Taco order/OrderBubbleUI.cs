@@ -16,18 +16,20 @@ public class OrderBubbleUI : MonoBehaviour
     public void Setup(NPCOrder order)
     {
         // HIỆN ICON LUÔN
-        meatIcon.SetActive(true);
-        lettuceIcon.SetActive(true);
-        tomatoIcon.SetActive(true);
+        meatIcon?.SetActive(true);
+        lettuceIcon?.SetActive(true);
+        tomatoIcon?.SetActive(true);
 
         // CHECKMARK nếu có chọn
-        meatCheck.SetActive(order.meat);
-        lettuceCheck.SetActive(order.lettuce);
-        tomatoCheck.SetActive(order.tomato);
+        meatCheck?.SetActive(order != null && order.meat);
+        lettuceCheck?.SetActive(order != null && order.lettuce);
+        tomatoCheck?.SetActive(order != null && order.tomato);
     }
 
     void LateUpdate()
     {
-        transform.forward = Camera.main.transform.forward;
+        Camera cam = Camera.main;
+        if (cam == null) return; // Guard against missing MainCamera
+        transform.forward = cam.transform.forward;
     }
 }
