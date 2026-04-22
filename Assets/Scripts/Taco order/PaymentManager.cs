@@ -4,6 +4,8 @@ public class PaymentManager : MonoBehaviour
 {
     public TacoOrderUI tacoUI;
 
+    public NPCMovement currentNPC; // 🔥 thêm
+
     public void Pay()
     {
         int total = tacoUI.CalculateTotal();
@@ -14,14 +16,22 @@ public class PaymentManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Customer paid: " + total + "$");
+        // 💰 cộng tiền
+        PlayerMoney.Instance.Add(total);
 
-        // Reset order sau khi thanh toán
+        Debug.Log("Paid: " + total);
+
+        // 👉 báo NPC đã order xong
+        if (currentNPC != null)
+        {
+            currentNPC.CompleteOrder();
+        }
+
         ResetOrder();
     }
 
     void ResetOrder()
     {
-        tacoUI.SendMessage("Decrease"); // hoặc reset quantity về 0
+        tacoUI.ResetUI();
     }
 }

@@ -1,9 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class TacoOrderUI : MonoBehaviour
 {
+    public static TacoOrderUI Instance;
+
     public TMP_Text quantityText;
     public TMP_Text totalText;
 
@@ -11,20 +13,29 @@ public class TacoOrderUI : MonoBehaviour
     public Toggle tomatoToggle;
     public Toggle meatToggle;
 
-    private int quantity = 0;
-
+    private int quantity = 1;
     private int basePrice = 25;
 
-    public void Increase()
+    private NPCOrder currentOrder;
+
+    void Awake()
     {
-        quantity++;
-        UpdateUI();
+        Instance = this;
     }
 
-    public void Decrease()
+    // 👉 nhận order từ NPC
+    public void SetupFromNPC(NPCOrder order)
     {
-        if (quantity > 0)
-            quantity--;
+        currentOrder = order;
+
+        lettuceToggle.isOn = order.lettuce;
+        tomatoToggle.isOn = order.tomato;
+        meatToggle.isOn = order.meat;
+
+        // khóa toggle
+        lettuceToggle.interactable = false;
+        tomatoToggle.interactable = false;
+        meatToggle.interactable = false;
 
         UpdateUI();
     }
@@ -37,19 +48,42 @@ public class TacoOrderUI : MonoBehaviour
 
     public int CalculateTotal()
     {
-        int toppingPrice = 0;
+        int price = basePrice;
 
-        if (lettuceToggle.isOn)
-            toppingPrice += 5;
+        if (lettuceToggle.isOn) price += 5;
+        if (tomatoToggle.isOn) price += 5;
+        if (meatToggle.isOn) price += 10;
 
-        if (tomatoToggle.isOn)
-            toppingPrice += 5;
+        return price * quantity;
+    }
 
-        if (meatToggle.isOn)
-            toppingPrice += 10;
+    public void OnClickPayment()
+    {
+        int total = CalculateTotal();
+        PlayerMoney.Instance.Add(total);
 
-        int pricePerTaco = basePrice + toppingPrice;
+        Debug.Log("Paid: " + total);
+    }
 
-        return pricePerTaco * quantity;
+    public NPCOrder GetOrder()
+    {
+        return currentOrder;
+    }
+
+    public void ResetUI()
+    {
+        quantity = 1;
+
+        lettuceToggle.isOn = false;
+        tomatoToggle.isOn = false;
+        meatToggle.isOn = false;
+
+        lettuceToggle.interactable = true;
+        tomatoToggle.interactable = true;
+        meatToggle.interactable = true;
+
+        currentOrder = null;
+
+        UpdateUI();
     }
 }

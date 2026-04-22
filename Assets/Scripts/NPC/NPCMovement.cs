@@ -24,6 +24,9 @@ public class NPCMovement : MonoBehaviour
     [Header("Order System")]
     public GameObject orderBubblePrefab;
 
+    public GameObject likeEffect;
+    public GameObject dislikeEffect;
+
     private NPCOrder currentOrder;
     private GameObject currentBubble;
     private bool hasCreatedOrder = false;
@@ -215,19 +218,26 @@ public class NPCMovement : MonoBehaviour
     {
         if (orderBubblePrefab == null) return;
 
-        // 👉 tạo data riêng
         currentOrder = new NPCOrder();
 
-        // 👉 tạo UI riêng
+        // tạo UI bubble
         currentBubble = Instantiate(orderBubblePrefab, transform);
         currentBubble.transform.localPosition = new Vector3(0, 3.5f, 0.8f);
 
-        // 👉 setup UI
         OrderBubbleUI ui = currentBubble.GetComponent<OrderBubbleUI>();
         if (ui != null)
         {
             ui.Setup(currentOrder);
         }
+
+        PaymentManager pm = FindObjectOfType<PaymentManager>();
+        if (pm != null)
+        {
+            pm.currentNPC = this;
+        }
+
+        // 🔥 QUAN TRỌNG: gửi order lên máy tính
+        TacoOrderUI.Instance.SetupFromNPC(currentOrder);
     }
 
     void ClearOrder()
@@ -249,6 +259,37 @@ public class NPCMovement : MonoBehaviour
         {
             animator.SetFloat("Speed", 0);
         }
+    }
+
+    public NPCOrder GetCurrentOrder()
+    {
+        return currentOrder;
+    }
+
+    public void OnCorrectOrder()
+    {
+        Debug.Log("Correct Order!");
+
+        if (currentBubble != null)
+            Destroy(currentBubble);
+
+        if (likeEffect != null)
+            Instantiate(likeEffect, transform.position + Vector3.up * 2, Quaternion.identity);
+
+        isOrderingDone = true;
+    }
+
+    public void OnWrongOrder()
+    {
+        Debug.Log("Wrong Order!");
+
+        if (currentBubble != null)
+            Destroy(currentBubble);
+
+        if (dislikeEffect != null)
+            Instantiate(dislikeEffect, transform.position + Vector3.up * 2, Quaternion.identity);
+
+        // ❗ KHÔNG set isOrderingDone → NPC vẫn đứng chờ
     }
 
     // ================= MOVE =================
