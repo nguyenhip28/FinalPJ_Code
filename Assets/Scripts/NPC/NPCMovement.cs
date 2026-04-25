@@ -222,7 +222,7 @@ public class NPCMovement : MonoBehaviour
 
         // tạo UI bubble
         currentBubble = Instantiate(orderBubblePrefab, transform);
-        currentBubble.transform.localPosition = new Vector3(0, 3.5f, 0.8f);
+        currentBubble.transform.localPosition = new Vector3(0, 1.8f, 0.3f);
 
         OrderBubbleUI ui = currentBubble.GetComponent<OrderBubbleUI>();
         if (ui != null)
@@ -266,6 +266,15 @@ public class NPCMovement : MonoBehaviour
         return currentOrder;
     }
 
+    public void HideOrderBubble()
+    {
+        if (currentBubble != null)
+        {
+            Destroy(currentBubble);
+            currentBubble = null;
+        }
+    }
+
     public void OnCorrectOrder()
     {
         Debug.Log("Correct Order!");
@@ -283,13 +292,9 @@ public class NPCMovement : MonoBehaviour
     {
         Debug.Log("Wrong Order!");
 
-        if (currentBubble != null)
-            Destroy(currentBubble);
-
         if (dislikeEffect != null)
             Instantiate(dislikeEffect, transform.position + Vector3.up * 2, Quaternion.identity);
 
-        // ❗ KHÔNG set isOrderingDone → NPC vẫn đứng chờ
     }
 
     // ================= MOVE =================

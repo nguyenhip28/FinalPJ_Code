@@ -13,6 +13,8 @@ public class TacoOrderUI : MonoBehaviour
     public Toggle tomatoToggle;
     public Toggle meatToggle;
 
+    public Button payButton;
+
     private int quantity = 1;
     private int basePrice = 25;
 
@@ -36,6 +38,8 @@ public class TacoOrderUI : MonoBehaviour
         lettuceToggle.interactable = false;
         tomatoToggle.interactable = false;
         meatToggle.interactable = false;
+
+        payButton.interactable = true;
 
         UpdateUI();
     }
@@ -81,6 +85,8 @@ public class TacoOrderUI : MonoBehaviour
         lettuceToggle.interactable = true;
         tomatoToggle.interactable = true;
         meatToggle.interactable = true;
+
+        payButton.interactable = false; 
 
         currentOrder = null;
 

@@ -16,15 +16,14 @@ public class PaymentManager : MonoBehaviour
             return;
         }
 
-        // 💰 cộng tiền
         PlayerMoney.Instance.Add(total);
 
         Debug.Log("Paid: " + total);
 
-        // 👉 báo NPC đã order xong
+        // ✅ Ẩn bubble của NPC
         if (currentNPC != null)
         {
-            currentNPC.CompleteOrder();
+            currentNPC.HideOrderBubble();
         }
 
         ResetOrder();
