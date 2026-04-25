@@ -183,6 +183,18 @@ public class PlateCounter : BaseCounter
 
             case PlateState.Complete:
                 currentVisual = Instantiate(tacoPrefab, holdPoint);
+                // 🔥 GÁN DATA CHO TACO
+                TacoItem tacoItem = currentVisual.GetComponent<TacoItem>();
+
+                if (tacoItem != null)
+                {
+                    tacoItem.data = new TacoData()
+                    {
+                        meat = 1, // vì bạn chỉ add 1 lần meat
+                        lettuce = hasLettuce,
+                        tomato = hasTomato
+                    };
+                }
                 break;
         }
 

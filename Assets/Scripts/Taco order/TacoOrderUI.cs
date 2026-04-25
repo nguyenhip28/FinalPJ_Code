@@ -92,4 +92,15 @@ public class TacoOrderUI : MonoBehaviour
 
         UpdateUI();
     }
+
+    public TacoData GetOrderData()
+    {
+        TacoData data = new TacoData();
+
+        data.meat = meatToggle.isOn ? 1 : 0;
+        data.lettuce = lettuceToggle.isOn;
+        data.tomato = tomatoToggle.isOn;
+
+        return data;
+    }
 }

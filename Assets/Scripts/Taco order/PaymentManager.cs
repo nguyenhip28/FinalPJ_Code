@@ -6,6 +6,8 @@ public class PaymentManager : MonoBehaviour
 
     public NPCMovement currentNPC; // 🔥 thêm
 
+    public ServingTray tray;
+
     public void Pay()
     {
         int total = tacoUI.CalculateTotal();
@@ -18,9 +20,15 @@ public class PaymentManager : MonoBehaviour
 
         PlayerMoney.Instance.Add(total);
 
-        Debug.Log("Paid: " + total);
+        // 🔥 LẤY DATA TỪ UI
+        TacoData orderData = tacoUI.GetOrderData();
 
-        // ✅ Ẩn bubble của NPC
+        // 🔥 GỬI SANG TRAY
+        if (tray != null)
+        {
+            tray.SetOrder(orderData);
+        }
+
         if (currentNPC != null)
         {
             currentNPC.HideOrderBubble();
