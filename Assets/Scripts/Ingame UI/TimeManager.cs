@@ -81,15 +81,17 @@ public class TimeManager : MonoBehaviour
 
     void UpdateUI()
     {
+        if (isDayEnded)
+        {
+            // 🔥 chỉ hiện thông báo, ẩn giờ
+            timeText.text = $"Day {day}\n<color=yellow>Press ENTER to end day</color>";
+            return;
+        }
+
         int hour = Mathf.FloorToInt(gameTime);
         int minute = Mathf.FloorToInt((gameTime - hour) * 60);
 
         timeText.text = $"Day {day} - {hour:00}:{minute:00}";
-
-        if (isDayEnded)
-        {
-            timeText.text += "\n<color=yellow>Press ENTER to end day</color>";
-        }
     }
 
     void UpdateLighting()
