@@ -3,10 +3,9 @@
 public class PaymentManager : MonoBehaviour
 {
     public TacoOrderUI tacoUI;
-
-    public NPCMovement currentNPC; // 🔥 thêm
-
+    public NPCMovement currentNPC;
     public ServingTray tray;
+    public TimeManager timeManager;
 
     public void Pay()
     {
@@ -20,10 +19,17 @@ public class PaymentManager : MonoBehaviour
 
         PlayerMoney.Instance.Add(total);
 
-        // 🔥 LẤY DATA TỪ UI
         TacoData orderData = tacoUI.GetOrderData();
 
-        // 🔥 GỬI SANG TRAY
+        // 🔥 mỗi order = 1 taco
+        int tacoCount = 1;
+
+        // 🔥 gửi sang TimeManager
+        if (timeManager != null)
+        {
+            timeManager.AddSale(tacoCount, total);
+        }
+
         if (tray != null)
         {
             tray.SetOrder(orderData);

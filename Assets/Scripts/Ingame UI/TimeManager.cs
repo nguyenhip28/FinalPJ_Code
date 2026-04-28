@@ -14,6 +14,13 @@ public class TimeManager : MonoBehaviour
 
     // 🔥 chỉ cho bấm Enter khi vừa hết ngày
     private bool canPressEnter = false;
+    private int tacosSoldToday = 0;
+    private int moneyEarnedToday = 0;
+
+    [Header("End Day UI")]
+    public GameObject endDayPanel;
+    public TextMeshProUGUI tacoText;
+    public TextMeshProUGUI moneyText;
 
     [Header("Lighting")]
     public Light sun;
@@ -32,6 +39,8 @@ public class TimeManager : MonoBehaviour
     void Start()
     {
         RenderSettings.skybox = new Material(RenderSettings.skybox);
+
+        endDayPanel.SetActive(false);
     }
 
     void Update()
@@ -64,7 +73,8 @@ public class TimeManager : MonoBehaviour
         if (isDayEnded && canPressEnter && Input.GetKeyDown(KeyCode.Return))
         {
             canPressEnter = false;
-            NextDay();
+
+            ShowEndDayPanel();
         }
     }
 
@@ -162,5 +172,38 @@ public class TimeManager : MonoBehaviour
             DynamicGI.UpdateEnvironment();
             lastSkyColor = skyColor;
         }
+    }
+    public void AddSale(int tacos, int money)
+    {
+        tacosSoldToday += tacos;
+        moneyEarnedToday += money;
+    }
+
+    void ShowEndDayPanel()
+    {
+        endDayPanel.SetActive(true);
+
+        tacoText.text = $"Tacos sold: {tacosSoldToday}";
+        moneyText.text = $"Money earned: ${moneyEarnedToday}";
+
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void OnContinueButton()
+    {
+        endDayPanel.SetActive(false);
+
+        Time.timeScale = 1f;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        tacosSoldToday = 0;
+        moneyEarnedToday = 0;
+
+        NextDay();
     }
 }
