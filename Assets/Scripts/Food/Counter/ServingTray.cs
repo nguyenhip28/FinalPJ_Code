@@ -14,6 +14,13 @@ public class ServingTray : BaseCounter
         Debug.Log($"📥 Tray nhận order: Meat={data.meat}, Lettuce={data.lettuce}, Tomato={data.tomato}");
     }
 
+    private PaymentManager paymentManager;
+
+    void Start()
+    {
+        paymentManager = FindObjectOfType<PaymentManager>();
+    }
+
     // =====================================================
     // PLAYER NHẤN E
     // =====================================================
@@ -59,14 +66,29 @@ public class ServingTray : BaseCounter
 
         Debug.Log($"👉 Player Taco: Meat={taco.data.meat}, Lettuce={taco.data.lettuce}, Tomato={taco.data.tomato}");
 
-        // 🔥 SO SÁNH
         if (taco.data.Compare(currentOrder))
         {
             Debug.Log("✅ ĐÚNG MÓN!");
+
+            if (paymentManager != null && paymentManager.currentNPC != null)
+            {
+                paymentManager.currentNPC.OnCorrectOrder();
+            }
+
+            // 🔥 XÓA TACO (biến mất)
+            Destroy(obj);
         }
         else
         {
             Debug.Log("❌ SAI MÓN!");
+
+            if (paymentManager != null && paymentManager.currentNPC != null)
+            {
+                paymentManager.currentNPC.OnWrongOrder();
+            }
+
+            // ❗ có thể vẫn destroy hoặc giữ lại tùy bạn
+            Destroy(obj);
         }
 
         // =====================================================
