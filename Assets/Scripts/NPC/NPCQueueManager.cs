@@ -75,4 +75,9 @@ public class NPCQueueManager : MonoBehaviour
             index++;
         }
     }
+
+    public void ClearQueue()
+    {
+        queue.Clear();
+    }
 }

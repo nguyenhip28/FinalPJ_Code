@@ -20,6 +20,8 @@ public class NPCSpawner : MonoBehaviour
 
     private float timer;
 
+    public Transform npcContainer;
+
     void Update()
     {
         timer += Time.deltaTime;
@@ -59,7 +61,7 @@ public class NPCSpawner : MonoBehaviour
         Vector3 offset = transform.right * Random.Range(-0.5f, 0.5f);
 
         GameObject prefab = npcPrefabs[Random.Range(0, npcPrefabs.Length)];
-        GameObject npc = Instantiate(prefab, basePos + offset, Quaternion.identity);
+        GameObject npc = Instantiate(prefab, basePos + offset, Quaternion.identity, npcContainer);
 
         NPCMovement move = npc.GetComponent<NPCMovement>();
 

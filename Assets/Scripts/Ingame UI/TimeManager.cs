@@ -30,6 +30,8 @@ public class TimeManager : MonoBehaviour
     public int GetDay() => day;
     public float GetTime() => gameTime;
 
+    public GameResetManager resetManager;
+
     public void LoadTime(int d, float t)
     {
         day = d;
@@ -73,6 +75,12 @@ public class TimeManager : MonoBehaviour
         if (isDayEnded && canPressEnter && Input.GetKeyDown(KeyCode.Return))
         {
             canPressEnter = false;
+
+            // 🔥 RESET GAME
+            if (resetManager != null)
+            {
+                resetManager.ResetDay();
+            }
 
             ShowEndDayPanel();
         }
