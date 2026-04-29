@@ -80,4 +80,10 @@ public class NPCQueueManager : MonoBehaviour
     {
         queue.Clear();
     }
+
+    public NPCMovement GetFirstNPC()
+    {
+        if (queue.Count == 0) return null;
+        return queue.Peek();
+    }
 }

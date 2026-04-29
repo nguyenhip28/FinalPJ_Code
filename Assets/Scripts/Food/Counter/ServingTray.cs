@@ -4,21 +4,26 @@ public class ServingTray : BaseCounter
 {
     private TacoData currentOrder;
 
+    private PaymentManager paymentManager;
+    private NPCQueueManager queueManager; // 🔥 FIX: khai báo global
+
     // =====================================================
-    // NHẬN ORDER TỪ PAYMENT
+    // INIT
+    // =====================================================
+    void Start()
+    {
+        paymentManager = FindObjectOfType<PaymentManager>();
+        queueManager = FindObjectOfType<NPCQueueManager>(); // 🔥 FIX
+    }
+
+    // =====================================================
+    // NHẬN ORDER
     // =====================================================
     public void SetOrder(TacoData data)
     {
         currentOrder = data;
 
         Debug.Log($"📥 Tray nhận order: Meat={data.meat}, Lettuce={data.lettuce}, Tomato={data.tomato}");
-    }
-
-    private PaymentManager paymentManager;
-
-    void Start()
-    {
-        paymentManager = FindObjectOfType<PaymentManager>();
     }
 
     // =====================================================
@@ -36,7 +41,6 @@ public class ServingTray : BaseCounter
 
         bool placed = PlaceFood(obj);
 
-        // 🔥 chỉ clear tay nếu đặt thành công
         if (placed)
         {
             player.ClearHeld();
@@ -66,33 +70,44 @@ public class ServingTray : BaseCounter
 
         Debug.Log($"👉 Player Taco: Meat={taco.data.meat}, Lettuce={taco.data.lettuce}, Tomato={taco.data.tomato}");
 
+        // =====================================================
+        // 🔥 LẤY NPC ĐẦU HÀNG (FIX CHUẨN)
+        // =====================================================
+        NPCMovement firstNPC = null;
+
+        if (queueManager != null)
+        {
+            firstNPC = queueManager.GetFirstNPC();
+        }
+
+        // =====================================================
+        // CHECK MÓN
+        // =====================================================
         if (taco.data.Compare(currentOrder))
         {
             Debug.Log("✅ ĐÚNG MÓN!");
 
-            if (paymentManager != null && paymentManager.currentNPC != null)
+            if (firstNPC != null)
             {
-                paymentManager.currentNPC.OnCorrectOrder();
+                firstNPC.OnCorrectOrder();
             }
 
-            // 🔥 XÓA TACO (biến mất)
             Destroy(obj);
         }
         else
         {
             Debug.Log("❌ SAI MÓN!");
 
-            if (paymentManager != null && paymentManager.currentNPC != null)
+            if (firstNPC != null)
             {
-                paymentManager.currentNPC.OnWrongOrder();
+                firstNPC.OnWrongOrder();
             }
 
-            // ❗ có thể vẫn destroy hoặc giữ lại tùy bạn
             Destroy(obj);
         }
 
         // =====================================================
-        // 🔥 ĐẶT TACO LÊN ĐÚNG FOOD PLACE POINT
+        // ĐẶT FOOD LÊN KHAY
         // =====================================================
         if (foodPlacePoint == null)
         {
@@ -105,7 +120,6 @@ public class ServingTray : BaseCounter
         obj.transform.localRotation = Quaternion.identity;
         obj.transform.localScale = Vector3.one;
 
-        // tắt physics để không rơi
         Rigidbody rb = obj.GetComponent<Rigidbody>();
         if (rb != null)
         {

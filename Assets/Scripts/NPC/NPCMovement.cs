@@ -103,12 +103,16 @@ public class NPCMovement : MonoBehaviour
     public void CompleteOrder()
     {
         isOrderingDone = true;
+        hasCreatedOrder = false;
     }
 
     public void GoToOrder(Transform orderPos)
     {
         queueTarget = orderPos;
         currentState = NPCState.GoingToQueue;
+
+        isOrderingDone = false;     // 🔥 reset
+        hasCreatedOrder = false;
     }
 
     // ================= INIT =================
@@ -154,7 +158,12 @@ public class NPCMovement : MonoBehaviour
 
                     if (queueManager != null && queueManager.IsFirst(this))
                     {
-                        currentState = NPCState.Ordering;
+                        if (currentState != NPCState.Ordering)
+                        {
+                            currentState = NPCState.Ordering;
+                            hasCreatedOrder = false; // 🔥 cực quan trọng
+                            isOrderingDone = false;  // 🔥 đảm bảo reset
+                        }
                     }
 
                     return;
@@ -236,7 +245,6 @@ public class NPCMovement : MonoBehaviour
             pm.currentNPC = this;
         }
 
-        // 🔥 QUAN TRỌNG: gửi order lên máy tính
         TacoOrderUI.Instance.SetupFromNPC(currentOrder);
     }
 
@@ -286,6 +294,7 @@ public class NPCMovement : MonoBehaviour
             Instantiate(likeEffect, transform.position + Vector3.up * 2, Quaternion.identity);
 
         isOrderingDone = true;
+        hasCreatedOrder = false;
     }
 
     public void OnWrongOrder()
