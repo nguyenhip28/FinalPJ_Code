@@ -231,7 +231,7 @@ public class NPCMovement : MonoBehaviour
 
         // tạo UI bubble
         currentBubble = Instantiate(orderBubblePrefab, transform);
-        currentBubble.transform.localPosition = new Vector3(0, 1.8f, 0.3f);
+        currentBubble.transform.localPosition = new Vector3(0.1f, 3f, 0.25f);
 
         OrderBubbleUI ui = currentBubble.GetComponent<OrderBubbleUI>();
         if (ui != null)
