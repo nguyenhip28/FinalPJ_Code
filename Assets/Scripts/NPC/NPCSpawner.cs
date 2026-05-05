@@ -12,18 +12,24 @@ public class NPCSpawner : MonoBehaviour
     public int spawnPerWave = 1;
 
     [Header("Density Control")]
-    public float spawnCheckRadius = 3f;   // 🔥 tăng lên
-    public int maxNearbyNPC = 2;          // 🔥 giảm xuống
+    public float spawnCheckRadius = 3f;
+    public int maxNearbyNPC = 2;
 
     [Header("Global Limit")]
     public int maxTotalNPC = 5;
 
-    private float timer;
-
     public Transform npcContainer;
+
+    public TimeManager timeManager; // 🔥 thêm
+
+    private float timer;
 
     void Update()
     {
+        // ❌ Không spawn nếu hết ngày
+        if (timeManager != null && timeManager.IsDayEnded())
+            return;
+
         timer += Time.deltaTime;
 
         float dynamicDelay = spawnDelay + GetDensityFactor();
@@ -39,17 +45,20 @@ public class NPCSpawner : MonoBehaviour
         }
     }
 
-    // 🔵 TÁCH RA NGOÀI
     float GetDensityFactor()
     {
-        int npcCount = GameObject.FindGameObjectsWithTag("NPC").Length;
-
+        // ✅ tối ưu (không dùng FindGameObjectsWithTag nữa)
+        int npcCount = npcContainer.childCount;
         return npcCount * 0.05f;
     }
 
     void SpawnNPC()
     {
         if (npcPrefabs.Length == 0 || path == null || path.Count() == 0)
+            return;
+
+        // ❌ Giới hạn tổng NPC
+        if (npcContainer.childCount >= maxTotalNPC)
             return;
 
         Vector3 basePos = spawnFromStart
@@ -88,6 +97,11 @@ public class NPCSpawner : MonoBehaviour
         }
 
         return count < maxNearbyNPC;
+    }
+
+    public void ResetSpawner()
+    {
+        timer = 0f;
     }
 
     void OnDrawGizmosSelected()

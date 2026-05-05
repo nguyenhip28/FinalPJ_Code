@@ -32,6 +32,11 @@ public class TimeManager : MonoBehaviour
 
     public GameResetManager resetManager;
 
+    public bool IsDayEnded()
+    {
+        return isDayEnded;
+    }
+
     public void LoadTime(int d, float t)
     {
         day = d;
@@ -213,5 +218,12 @@ public class TimeManager : MonoBehaviour
         moneyEarnedToday = 0;
 
         NextDay();
+
+        // 🔥 reset spawner
+        NPCSpawner spawner = FindObjectOfType<NPCSpawner>();
+        if (spawner != null)
+        {
+            spawner.ResetSpawner();
+        }
     }
 }
