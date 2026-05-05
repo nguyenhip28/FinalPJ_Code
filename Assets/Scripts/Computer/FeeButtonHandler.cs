@@ -9,24 +9,21 @@ public class FeeButtonHandler : MonoBehaviour
     public Button payButton;
     public TextMeshProUGUI statusText;
 
-    private bool isPaid = false;
+    public int feeIndex; // 🔥 thêm: index của fee trong FeeManager
 
+    private bool isPaid = false;
     public void OnPayClicked()
     {
         if (isPaid) return;
 
-        if (PlayerMoney.Instance.CanAfford(amount))
+        var fee = FeeManager.Instance.fees[feeIndex];
+        bool success = FeeManager.Instance.PayFee(fee);
+
+        if (success)
         {
-            PlayerMoney.Instance.Spend(amount);
-
             isPaid = true;
-
             payButton.gameObject.SetActive(false);
             statusText.text = "Successful";
-        }
-        else
-        {
-            Debug.Log("Not enough money!");
         }
     }
 }

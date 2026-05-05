@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FeeManager : MonoBehaviour
 {
@@ -7,11 +8,14 @@ public class FeeManager : MonoBehaviour
 
     public List<FeeData> fees = new List<FeeData>();
 
-    public int currentDay = 0;
+    private bool hasEnded = false;
 
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
 
     void Start()
@@ -25,11 +29,16 @@ public class FeeManager : MonoBehaviour
     {
         if (fee.isPaid) return false;
 
-        // 🔥 dùng PlayerMoney của bạn
         if (PlayerMoney.Instance.CanAfford(fee.amount))
         {
             PlayerMoney.Instance.Spend(fee.amount);
             fee.isPaid = true;
+
+            Debug.Log(fee.feeName + " paid!");
+
+            // 🔥 CHECK NGAY SAU KHI PAY
+            CheckAllFeesPaid();
+
             return true;
         }
 
@@ -37,21 +46,25 @@ public class FeeManager : MonoBehaviour
         return false;
     }
 
-    public void NextDay()
-    {
-        currentDay++;
-
-        if (currentDay % 7 == 0)
-        {
-            ResetFees();
-        }
-    }
-
-    void ResetFees()
+    void CheckAllFeesPaid()
     {
         foreach (var fee in fees)
         {
-            fee.isPaid = false;
+            if (!fee.isPaid)
+                return; // chưa đủ
         }
+
+        // đủ hết → end game
+        if (!hasEnded)
+        {
+            hasEnded = true;
+            TriggerEnding();
+        }
+    }
+
+    void TriggerEnding()
+    {
+        Debug.Log("GAME COMPLETE!");
+        SceneManager.LoadScene("EndingScene");
     }
 }
