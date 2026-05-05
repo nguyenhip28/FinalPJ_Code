@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 public class NPCMovement : MonoBehaviour
@@ -279,7 +280,7 @@ public class NPCMovement : MonoBehaviour
         if (currentBubble != null)
         {
             Destroy(currentBubble);
-            currentBubble = null;
+            currentBubble = null; // 🔥 QUAN TRỌNG
         }
     }
 
@@ -288,22 +289,16 @@ public class NPCMovement : MonoBehaviour
         Debug.Log("Correct Order!");
 
         if (currentBubble != null)
-            Destroy(currentBubble);
+            HideOrderBubble();
 
-        if (likeEffect != null)
-            Instantiate(likeEffect, transform.position + Vector3.up * 2, Quaternion.identity);
-
-        isOrderingDone = true;
-        hasCreatedOrder = false;
+        StartCoroutine(HandleReactionAndLeave(true));
     }
 
     public void OnWrongOrder()
     {
         Debug.Log("Wrong Order!");
 
-        if (dislikeEffect != null)
-            Instantiate(dislikeEffect, transform.position + Vector3.up * 2, Quaternion.identity);
-
+        StartCoroutine(HandleReactionAndLeave(false));
     }
 
     // ================= MOVE =================
@@ -380,5 +375,30 @@ public class NPCMovement : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+    }
+
+    IEnumerator HandleReactionAndLeave(bool isCorrect)
+    {
+        if (isCorrect)
+        {
+            if (likeEffect != null)
+            {
+                GameObject fx = Instantiate(likeEffect);
+                fx.transform.position = transform.position + transform.forward * 0.5f + Vector3.up * 1.5f;
+            }
+        }
+        else
+        {
+            if (dislikeEffect != null)
+            {
+                GameObject fx = Instantiate(likeEffect);
+                fx.transform.position = transform.position + transform.forward * 0.5f + Vector3.up * 1.5f;
+            }
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        isOrderingDone = true;
+        hasCreatedOrder = false;
     }
 }
