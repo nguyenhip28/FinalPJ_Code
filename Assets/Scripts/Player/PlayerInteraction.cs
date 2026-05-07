@@ -41,7 +41,7 @@ public class PlayerInteraction : MonoBehaviour
             knifeVisual.SetActive(false);
 
         if (hintText != null)
-            hintText.gameObject.SetActive(false); // 👈 thêm dòng này
+            hintText.gameObject.SetActive(false); 
     }
 
     void Update()
@@ -55,7 +55,7 @@ public class PlayerInteraction : MonoBehaviour
         bool showHint = false;
         string hinte = "";
 
-        // ===== CHECK COMPUTER MODE =====
+        
         ComputerInteractionAdvanced computerMain = FindObjectOfType<ComputerInteractionAdvanced>();
 
         if (computerMain != null && computerMain.isUsingComputer)
@@ -63,11 +63,11 @@ public class PlayerInteraction : MonoBehaviour
             if (hintText != null)
                 hintText.gameObject.SetActive(false);
 
-            // ❗ KHÔNG return nếu bên dưới còn logic quan trọng
+            
         }
         else
         {
-            // ===== ƯU TIÊN: COOK =====
+            
             if (selectedCounter is StoveCounter && heldObject != null)
             {
                 FoodItem food = heldObject.GetComponent<FoodItem>();
@@ -79,7 +79,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // ===== DEFAULT INTERACTION =====
+            
             else if (Physics.Raycast(rayUI, out hitUI, interactDistance, uiInteractLayer))
             {
                 BaseCounter counter = hitUI.collider.GetComponentInParent<BaseCounter>();
@@ -101,7 +101,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // ===== HIỂN THỊ =====
+            
             if (hintText != null)
             {
                 hintText.gameObject.SetActive(showHint);
@@ -118,13 +118,13 @@ public class PlayerInteraction : MonoBehaviour
                 hintText.gameObject.SetActive(false);
             }
 
-            // ===== DOOR INTERACTION =====
+            
             Ray rayDoor = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             RaycastHit hitDoor;
 
             if (Physics.Raycast(rayDoor, out hitDoor, interactDistance))
             {
-                // 👉 Nếu nhìn vào bảng OPEN
+                
                 if (hitDoor.collider.CompareTag("DoorSwitch"))
                 {
                     DoorSwitch switcher = hitDoor.collider.GetComponent<DoorSwitch>();
@@ -136,7 +136,7 @@ public class PlayerInteraction : MonoBehaviour
                     }
                 }
 
-                // 👉 Nếu nhìn trực tiếp vào cửa
+                
                 opencloseDoor door = hitDoor.collider.GetComponentInParent<opencloseDoor>();
 
                 if (door != null)
@@ -146,11 +146,11 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // ===== COMPUTER INTERACTION (ƯU TIÊN CAO NHẤT) =====
+            
             Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
             RaycastHit hit;
 
-            // 👇 CHỈ BẮN VÀO LAYER COMPUTER
+            
             if (Physics.Raycast(ray, out hit, interactDistance, computerLayer))
             {
                 ComputerInteractionAdvanced computer = hit.collider.GetComponentInParent<ComputerInteractionAdvanced>();
@@ -162,7 +162,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // ===== SHELF STORAGE =====    
+               
             if (heldObject != null)
             {
                 if (Physics.Raycast(ray, out hit, interactDistance, shelfLayer))
@@ -186,7 +186,7 @@ public class PlayerInteraction : MonoBehaviour
                                 rb.angularVelocity = Vector3.zero;
                             }
 
-                            // ✅ reset layer
+                            
                             if (obj.GetComponent<FoodItem>() != null)
                             {
                                 obj.layer = LayerMask.NameToLayer("Food");
@@ -196,7 +196,7 @@ public class PlayerInteraction : MonoBehaviour
                                 obj.layer = LayerMask.NameToLayer("HoldItem");
                             }
 
-                            // ✅ collider
+                            
                             Collider col = obj.GetComponent<Collider>();
                             if (col != null)
                             {
@@ -204,19 +204,19 @@ public class PlayerInteraction : MonoBehaviour
                                 col.isTrigger = false;
                             }
 
-                            // (optional nhưng an toàn)
+                            
                             obj.transform.SetParent(null);
 
                             heldObject = null;
                             currentHoldPoint = null;
                         }
 
-                        return; // ❗ chặn toàn bộ logic dưới
+                        return; 
                     }
                 }
             }
 
-            // ===== CẦM BOX + NHÌN TRAY =====
+            
             if (heldObject != null && heldObject.GetComponent<FoodBox>() != null)
             {
                 if (selectedCounter is TrayCounter tray)
@@ -233,7 +233,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // ===== CHẶN E VỚI FOODBOX =====
+            
             if (Physics.Raycast(ray, out hit, interactDistance))
             {
                 if (hit.collider.GetComponent<FoodBox>() != null)
@@ -242,7 +242,7 @@ public class PlayerInteraction : MonoBehaviour
                 }
             }
 
-            // ===== LOGIC CŨ =====
+            
             if (selectedCounter != null)
             {
                 selectedCounter.Interact(this);
@@ -273,7 +273,7 @@ public class PlayerInteraction : MonoBehaviour
 
                 if (outline != null)
                 {
-                    outline.enabled = true;   // 👈 bật
+                    outline.enabled = true;   
                     currentOutline = outline;
                 }
             }
@@ -288,14 +288,11 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (currentOutline != null)
         {
-            currentOutline.enabled = false;  // 👈 tắt
+            currentOutline.enabled = false;  
             currentOutline = null;
         }
     }
 
-    // =====================================================
-    // RAYCAST
-    // =====================================================
 
     void HandleRaycast()
     {
@@ -316,9 +313,7 @@ public class PlayerInteraction : MonoBehaviour
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
     }
 
-    // =====================================================
-    // LEFT CLICK
-    // =====================================================
+
 
     void HandlePrimaryAction()
     {
@@ -327,7 +322,7 @@ public class PlayerInteraction : MonoBehaviour
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
-        // ===== BLOCK COOK =====
+        
         if (selectedCounter is StoveCounter && heldObject != null)
         {
             FoodItem food = heldObject.GetComponent<FoodItem>();
@@ -343,34 +338,28 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
 
-        // ===== CLICK OBJECT (BOX / FOOD / KNIFE) =====
-
-        // 👉 TRƯỜNG HỢP ĐANG CẦM → CLICK LÀ DROP LUÔN
         if (heldObject != null || heldKnife != null)
         {
             DropToGround();
             return;
         }
 
-        // 👉 KHÔNG CẦM GÌ → MỚI ĐI PICK
+        
         int pickLayer = LayerMask.GetMask("HoldItem", "Food");
 
         if (Physics.Raycast(ray, out hit, interactDistance, pickLayer))
         {
             GameObject target = hit.collider.gameObject;
 
-            // 👉 Ưu tiên lấy FoodBox parent
+            
             FoodBox box = hit.collider.GetComponentInParent<FoodBox>();
             if (box != null)
             {
                 target = box.gameObject;
             }
 
-            // 👉 CHECK ĐÚNG LOẠI OBJECT
-            // ❗ Nếu đang nhìn tray thì KHÔNG pick trực tiếp
             if (selectedCounter is TrayCounter)
             {
-                // bỏ qua → xử lý phía dưới
             }
             else
             {
@@ -385,11 +374,10 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
 
-        // ===== INTERACT COUNTER =====
+
 
         if (selectedCounter != null)
         {
-            // ===== KHÔNG CẦM → LẤY =====
             if (heldObject == null)
             {
                 if (selectedCounter.HasFood())
@@ -405,7 +393,6 @@ public class PlayerInteraction : MonoBehaviour
 
                         if (f != null)
                         {
-                            // 👉 luôn lấy ROOT object của food
                             GameObject rootFood = f.gameObject;
 
                             float dist = Vector3.Distance(ray.origin, h.point);
@@ -418,7 +405,7 @@ public class PlayerInteraction : MonoBehaviour
                         }
                     }
 
-                    // ✅ Tray → lấy đúng cái crosshair nhìn vào
+
                     if (selectedCounter is TrayCounter tray)
                     {
                         if (tray.HasFood())
@@ -451,7 +438,7 @@ public class PlayerInteraction : MonoBehaviour
                         return;
                     }
 
-                    // fallback nếu KHÔNG phải tray
+
                     if (!(selectedCounter is TrayCounter))
                     {
                         GameObject fallback = selectedCounter.TakeObject();
@@ -463,7 +450,7 @@ public class PlayerInteraction : MonoBehaviour
                     }
                 }
             }
-            // ===== ĐANG CẦM → ĐẶT =====
+
             else
             {
                 FoodItem food = heldObject.GetComponent<FoodItem>();
@@ -480,22 +467,18 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // PICK UP
-    // =====================================================
 
-    public Transform boxPoint; // kéo trong Inspector
+
+    public Transform boxPoint; 
 
     public void PickUp(GameObject obj)
     {
-        // ===== SAFETY CHECK =====
         if (obj == null)
         {
             Debug.LogError("PickUp nhận obj NULL");
             return;
         }
 
-        // ===== CLEAR SHELF (nếu có) =====
         ShelfItem shelfItem = obj.GetComponent<ShelfItem>();
 
         if (shelfItem != null)
@@ -505,11 +488,10 @@ public class PlayerInteraction : MonoBehaviour
                 shelfItem.shelf.ClearSlot(shelfItem.index);
             }
 
-            // delay destroy để tránh lỗi frame
             Destroy(shelfItem, 0.01f);
         }
 
-        // ===== PICK KNIFE =====
+
         Knife knife = obj.GetComponent<Knife>();
 
         if (knife != null)
@@ -524,12 +506,10 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-        // ===== PICK OBJECT =====
-        // ✅ Khi cầm → đổi sang layer "Ignore Raycast" để không bị raycast hit
+
         heldObject = obj;
         obj.layer = LayerMask.NameToLayer("Ignore Raycast");
 
-        // ===== RESET PHYSICS =====
         Rigidbody rb = obj.GetComponent<Rigidbody>();
 
         if (rb != null)
@@ -540,7 +520,6 @@ public class PlayerInteraction : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
         }
 
-        // ===== CHỌN HOLD POINT =====
         Transform targetPoint = holdPoint;
 
         if (obj.GetComponent<FoodBox>() != null && boxPoint != null)
@@ -556,19 +535,15 @@ public class PlayerInteraction : MonoBehaviour
 
         currentHoldPoint = targetPoint;
 
-        // ===== DETACH TRƯỚC KHI GẮN =====
         obj.transform.SetParent(null, false);
 
-        // ===== GẮN VÀO TAY =====
         obj.transform.SetParent(currentHoldPoint, false);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
 
         obj.transform.localScale = Vector3.one;
     }
-    // =====================================================
-    // DROP
-    // =====================================================
+
 
     void DropToGround()
     {
@@ -597,10 +572,8 @@ public class PlayerInteraction : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
             }
 
-            // ✅ QUAN TRỌNG: bỏ parent
             obj.transform.SetParent(null);
 
-            // ✅ RESET LAYER (để raycast lại được)
             FoodItem food = obj.GetComponent<FoodItem>();
 
             if (food != null)
@@ -612,7 +585,6 @@ public class PlayerInteraction : MonoBehaviour
                 obj.layer = LayerMask.NameToLayer("HoldItem");
             }
 
-            // ✅ đảm bảo collider bật
             Collider col = obj.GetComponent<Collider>();
             if (col != null)
             {
@@ -625,9 +597,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // API
-    // =====================================================
+
 
     public GameObject GetHeldObject()
     {

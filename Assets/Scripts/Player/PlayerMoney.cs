@@ -15,7 +15,7 @@ public class PlayerMoney : MonoBehaviour
 
     void Start()
     {
-        UpdateUI(); // đảm bảo UI luôn đúng khi vào game
+        UpdateUI(); 
     }
 
     public void Spend(int amount)
@@ -31,7 +31,6 @@ public class PlayerMoney : MonoBehaviour
         UpdateUI();
     }
 
-    // 🔥 QUAN TRỌNG (GameManager sẽ gọi)
     public void SetMoney(int value)
     {
         money = value;

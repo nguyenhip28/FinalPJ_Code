@@ -25,7 +25,6 @@ public class TacoOrderUI : MonoBehaviour
         Instance = this;
     }
 
-    // 👉 nhận order từ NPC
     public void SetupFromNPC(NPCOrder order)
     {
         currentOrder = order;
@@ -34,7 +33,6 @@ public class TacoOrderUI : MonoBehaviour
         tomatoToggle.isOn = order.tomato;
         meatToggle.isOn = order.meat;
 
-        // khóa toggle
         lettuceToggle.interactable = false;
         tomatoToggle.interactable = false;
         meatToggle.interactable = false;

@@ -4,13 +4,9 @@ using System.Collections.Generic;
 public class TrayCounter : BaseCounter
 {
     [Header("Food Slots")]
-    public Transform[] foodPoints; // 6 slot
+    public Transform[] foodPoints;
 
     private List<GameObject> currentFoods = new List<GameObject>();
-
-    // =====================================================
-    // CHECK
-    // =====================================================
 
     public bool IsFull()
     {
@@ -22,31 +18,20 @@ public class TrayCounter : BaseCounter
         return currentFoods.Count > 0;
     }
 
-    // =====================================================
-    // PLACE OBJECT (QUAN TRỌNG NHẤT)
-    // =====================================================
-
     public override void PlaceObject(GameObject obj)
     {
         if (obj == null) return;
 
-        // chỉ nhận FoodItem
         if (!obj.TryGetComponent(out FoodItem food)) return;
 
-        // full rồi thì không cho đặt
         if (IsFull()) return;
 
         Transform point = foodPoints[currentFoods.Count];
 
         currentFoods.Add(obj);
 
-        // dùng base để set position + tắt physics
         PlaceAtPoint(obj, point);
     }
-
-    // =====================================================
-    // ADD FOOD (dùng cho FoodBox -> E)
-    // =====================================================
 
     public void AddFood(GameObject foodPrefab)
     {
@@ -60,10 +45,6 @@ public class TrayCounter : BaseCounter
 
         PlaceAtPoint(food, point);
     }
-
-    // =====================================================
-    // TAKE FOOD (lấy ra 1 cái - LIFO)
-    // =====================================================
 
     public GameObject TakeObjectByPlayer(Transform player)
     {
@@ -91,10 +72,6 @@ public class TrayCounter : BaseCounter
 
         return closest;
     }
-
-    // =====================================================
-    // INTERACT (optional debug)
-    // =====================================================
 
     public override void Interact(PlayerInteraction player)
     {
@@ -127,7 +104,6 @@ public class TrayCounter : BaseCounter
     {
         if (currentFoods.Count == 0) return null;
 
-        // lấy item cuối (LIFO)
         GameObject obj = currentFoods[currentFoods.Count - 1];
 
         currentFoods.RemoveAt(currentFoods.Count - 1);

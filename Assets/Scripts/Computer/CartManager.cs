@@ -47,7 +47,6 @@ public class CartManager : MonoBehaviour
 
         SpawnItems();
 
-        // ✅ gọi task
         if (taskManager != null)
         {
             taskManager.CompleteOrder();

@@ -16,16 +16,10 @@ public class StoveCounter : BaseCounter
 
     private List<FoodItem> cookingFoods = new List<FoodItem>();
 
-
-    // =====================================================
-    // INTERACT
-    // =====================================================
-
     public override void Interact(PlayerInteraction player)
     {
         Debug.Log("Stove Interact Called");
 
-        // CASE 1: Player không cầm gì → lấy thịt
         if (!player.IsHoldingObject())
         {
             if (cookingFoods.Count > 0)
@@ -43,7 +37,6 @@ public class StoveCounter : BaseCounter
             return;
         }
 
-        // CASE 2: Player đặt thịt lên bếp
         GameObject obj = player.GetHeldObject();
         FoodItem foodItem = obj.GetComponent<FoodItem>();
 
@@ -77,11 +70,6 @@ public class StoveCounter : BaseCounter
         UpdateSound();
     }
 
-
-    // =====================================================
-    // FIND EMPTY SLOT
-    // =====================================================
-
     private Transform GetFreeSlot()
     {
         foreach (Transform slot in meatPoints)
@@ -94,11 +82,6 @@ public class StoveCounter : BaseCounter
 
         return null;
     }
-
-
-    // =====================================================
-    // PLACE MEAT
-    // =====================================================
 
     private void PlaceMeat(FoodItem food, Transform slot)
     {
@@ -127,11 +110,6 @@ public class StoveCounter : BaseCounter
 
         food.transform.SetParent(slot, true);
     }
-
-
-    // =====================================================
-    // TAKE MEAT
-    // =====================================================
 
     public GameObject TakeMeat(FoodItem food)
     {

@@ -21,10 +21,10 @@ public class PaymentManager : MonoBehaviour
 
         TacoData orderData = tacoUI.GetOrderData();
 
-        // 🔥 mỗi order = 1 taco
+        
         int tacoCount = 1;
 
-        // 🔥 gửi sang TimeManager
+        
         if (timeManager != null)
         {
             timeManager.AddSale(tacoCount, total);

@@ -22,7 +22,6 @@ public class CookingBar3D : MonoBehaviour
     {
         if (food == null) return;
 
-        // 🔥 Chia mốc theo thời gian
         if (progress < 0.3f)
         {
             SetColor(rawColor);

@@ -36,7 +36,6 @@ public class FeeManager : MonoBehaviour
 
             Debug.Log(fee.feeName + " paid!");
 
-            // 🔥 CHECK NGAY SAU KHI PAY
             CheckAllFeesPaid();
 
             return true;
@@ -51,10 +50,9 @@ public class FeeManager : MonoBehaviour
         foreach (var fee in fees)
         {
             if (!fee.isPaid)
-                return; // chưa đủ
+                return; 
         }
 
-        // đủ hết → end game
         if (!hasEnded)
         {
             hasEnded = true;

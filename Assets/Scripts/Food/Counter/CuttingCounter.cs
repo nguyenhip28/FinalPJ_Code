@@ -7,9 +7,6 @@ public class CuttingCounter : BaseCounter
 
     public override void Interact(PlayerInteraction player)
     {
-        // =========================
-        // 1️⃣ Đặt food lên thớt
-        // =========================
         if (!HasFood())
         {
             GameObject held = player.GetHeldObject();
@@ -20,7 +17,6 @@ public class CuttingCounter : BaseCounter
 
                 if (food != null)
                 {
-                    // ❗ chặn đặt sai
                     if (!food.CanBePlacedOnCuttingBoard())
                     {
                         Debug.Log("Không thể đặt lên thớt!");
@@ -36,9 +32,6 @@ public class CuttingCounter : BaseCounter
             return;
         }
 
-        // =========================
-        // 2️⃣ Lấy food xuống
-        // =========================
         if (!player.HasKnife())
         {
             if (player.GetHeldObject() == null)
@@ -55,15 +48,11 @@ public class CuttingCounter : BaseCounter
             return;
         }
 
-        // =========================
-        // 3️⃣ Cắt food
-        // =========================
         FoodItem foodItem = currentFood.GetComponent<FoodItem>();
 
         if (foodItem == null)
             return;
 
-        // ❗ chặn cắt sai
         if (!foodItem.CanBeChopped())
         {
             Debug.Log("Không thể cắt!");

@@ -15,7 +15,7 @@ public class Waypoint : MonoBehaviour
     public WaypointType type = WaypointType.Normal;
 
     [Header("Traffic Light")]
-    public TrafficLight trafficLight; // 🔥 thêm dòng này
+    public TrafficLight trafficLight; 
     
     public bool isStopPoint = false;
 

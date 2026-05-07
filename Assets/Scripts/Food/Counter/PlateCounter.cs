@@ -28,17 +28,14 @@ public class PlateCounter : BaseCounter
 
     private PlateState state = PlateState.Empty;
 
-    // ===== TOPPING TRACK =====
     private bool hasTomato = false;
     private bool hasLettuce = false;
 
     private int currentToppingCount = 0;
     private const int totalTopping = 2;
 
-    // =====================================================
     public override void Interact(PlayerInteraction player)
     {
-        // ===== KHÔNG CẦM GÌ → LẤY TACO =====
         if (!player.IsHoldingObject())
         {
             if (state == PlateState.Complete && currentVisual != null)
@@ -53,7 +50,6 @@ public class PlateCounter : BaseCounter
             return;
         }
 
-        // ===== PLAYER ĐANG CẦM FOOD =====
         GameObject held = player.GetHeldObject();
         FoodItem food = held.GetComponent<FoodItem>();
 
@@ -66,12 +62,10 @@ public class PlateCounter : BaseCounter
         }
     }
 
-    // =====================================================
     private bool TryAddIngredient(FoodItem food)
     {
         switch (state)
         {
-            // =========================
             case PlateState.Empty:
                 if (food.foodType == FoodType.Tortilla)
                 {
@@ -79,7 +73,6 @@ public class PlateCounter : BaseCounter
 
                     SetState(PlateState.HasTortilla);
 
-                    // ✅ TASK 1
                     if (taskManager != null)
                         taskManager.AddTacoStep();
 
@@ -87,10 +80,8 @@ public class PlateCounter : BaseCounter
                 }
                 break;
 
-            // =========================
             case PlateState.HasTortilla:
 
-                // ADD TOMATO
                 if (food.foodType == FoodType.Tomato &&
                     food.currentState == FoodState.Chopped &&
                     !hasTomato)
@@ -107,7 +98,6 @@ public class PlateCounter : BaseCounter
                     return true;
                 }
 
-                // ADD LETTUCE
                 if (food.foodType == FoodType.Lettuce &&
                     food.currentState == FoodState.Chopped &&
                     !hasLettuce)
@@ -126,7 +116,6 @@ public class PlateCounter : BaseCounter
 
                 break;
 
-            // =========================
             case PlateState.HasSalad:
                 if (food.foodType == FoodType.Meat &&
                     food.currentState == FoodState.Chopped)
@@ -135,7 +124,6 @@ public class PlateCounter : BaseCounter
 
                     SetState(PlateState.Complete);
 
-                    // ✅ TASK 4
                     if (taskManager != null)
                         taskManager.AddTacoStep();
 
@@ -148,7 +136,6 @@ public class PlateCounter : BaseCounter
         return false;
     }
 
-    // =====================================================
     private void CheckVegComplete()
     {
         if (hasTomato && hasLettuce)
@@ -159,12 +146,10 @@ public class PlateCounter : BaseCounter
         }
     }
 
-    // =====================================================
     private void SetState(PlateState newState)
     {
         state = newState;
 
-        // Xoá visual cũ
         if (currentVisual != null)
         {
             Destroy(currentVisual);
@@ -183,14 +168,13 @@ public class PlateCounter : BaseCounter
 
             case PlateState.Complete:
                 currentVisual = Instantiate(tacoPrefab, holdPoint);
-                // 🔥 GÁN DATA CHO TACO
                 TacoItem tacoItem = currentVisual.GetComponent<TacoItem>();
 
                 if (tacoItem != null)
                 {
                     tacoItem.data = new TacoData()
                     {
-                        meat = 1, // vì bạn chỉ add 1 lần meat
+                        meat = 1, 
                         lettuce = hasLettuce,
                         tomato = hasTomato
                     };
@@ -205,7 +189,6 @@ public class PlateCounter : BaseCounter
         }
     }
 
-    // =====================================================
     private void ResetPlate()
     {
         hasTomato = false;

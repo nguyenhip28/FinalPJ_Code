@@ -12,19 +12,19 @@ public class GameResetManager : MonoBehaviour
 
     public void ResetDay()
     {
-        // ================= NPC =================
+        
         foreach (Transform child in npcContainer)
         {
             Destroy(child.gameObject);
         }
 
-        // ================= QUEUE =================
+        
         queueManager.ClearQueue();
 
-        // ================= DOOR =================
+       
         if (doorState.IsOpen())
         {
-            doorSwitch.ToggleBothDoors(); // 👉 đóng cửa
+            doorSwitch.ToggleBothDoors();
         }
     }
 }

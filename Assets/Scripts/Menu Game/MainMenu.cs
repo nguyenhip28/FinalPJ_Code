@@ -6,7 +6,7 @@ public class MainMenu : MonoBehaviour
     public GameObject settingsPanel;
     public GameObject darkOverlay;
 
-    public IntroManager introManager; // 🔥 THÊM DÒNG NÀY
+    public IntroManager introManager; 
 
     void Start()
     {
@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour
     {
         SaveSystem.DeleteSave();
 
-        PlayerPrefs.SetInt("NewGame", 1); // 🔥 FIX CHUẨN
+        PlayerPrefs.SetInt("NewGame", 1);
         PlayerPrefs.Save();
 
         MusicManager music = Object.FindFirstObjectByType<MusicManager>();
@@ -33,7 +33,7 @@ public class MainMenu : MonoBehaviour
     {
         if (SaveSystem.HasSave())
         {
-            PlayerPrefs.SetInt("NewGame", 0); // 🔥 QUAN TRỌNG
+            PlayerPrefs.SetInt("NewGame", 0); 
             SceneManager.LoadScene("FinalProject");
         }
     }

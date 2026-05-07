@@ -83,7 +83,6 @@ public class FoodItem : MonoBehaviour
         }
     }
 
-    // ===================== CHOP =====================
 
     public bool CanBeChopped()
     {
@@ -108,7 +107,6 @@ public class FoodItem : MonoBehaviour
 
         currentState = FoodState.Chopped;
 
-        // 👉 Ưu tiên prefab (meat)
         if (choppedPrefab != null)
         {
             GameObject newObj = Instantiate(
@@ -123,14 +121,12 @@ public class FoodItem : MonoBehaviour
             return newObj;
         }
 
-        // 👉 fallback (vegetable)
         if (choppedMesh != null)
             meshFilter.mesh = choppedMesh;
 
         return null;
     }
 
-    // ===================== COOK =====================
 
     public void StartCooking()
     {

@@ -2,8 +2,8 @@
 
 public class CameraCollision : MonoBehaviour
 {
-    public Transform target; // player (điểm gốc)
-    public float maxDistance = 0.4f; // khoảng cách cam
+    public Transform target; 
+    public float maxDistance = 0.4f; 
     public float minDistance = 0.1f;
     public LayerMask collisionMask;
 

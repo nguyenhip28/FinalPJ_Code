@@ -20,11 +20,11 @@ public class CarAI : MonoBehaviour
 
     private float currentSpeed;
 
-    // 🚧 trạng thái
+
     private bool isWaitingAtLight = false;
 
     private bool hasDecision = false;
-    private int priority; // số random
+    private int priority; 
 
     void Start()
     {
@@ -51,9 +51,6 @@ public class CarAI : MonoBehaviour
         Move();
     }
 
-    // =========================
-    // 🚦 TRAFFIC LIGHT
-    // =========================
     void HandleTrafficLight()
     {
         if (!currentWaypoint.isStopPoint)
@@ -84,9 +81,6 @@ public class CarAI : MonoBehaviour
         }
     }
 
-    // =========================
-    // 🚗 AVOID VEHICLE + YIELD
-    // =========================
     void DetectVehicle()
     {
         if (isWaitingAtLight) return;
@@ -108,33 +102,30 @@ public class CarAI : MonoBehaviour
 
             CarAI otherCar = hit.collider.GetComponent<CarAI>();
 
-            // =========================
-            // 🚧 INTERSECTION YIELD
-            // =========================
             if (IsInIntersection() && otherCar != null)
             {
-                // 🔥 chỉ random cho chính mình
+
                 if (!hasDecision)
                 {
                     priority = Random.Range(0, 100);
                     hasDecision = true;
                 }
 
-                // 🔥 nếu xe kia chưa có decision → KHÔNG xử lý vội
+
                 if (!otherCar.hasDecision)
                 {
                     currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 4f);
                     return;
                 }
 
-                // 🔥 giữ khoảng cách trước khi vào giao nhau
+
                 if (hit.distance < 5f)
                 {
                     currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 6f);
                     return;
                 }
 
-                // 🔥 so priority
+
                 if (priority < otherCar.priority)
                 {
                     currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 6f);
@@ -142,31 +133,25 @@ public class CarAI : MonoBehaviour
                 }
             }
 
-            // =========================
-            // 🚗 ADVANCED FOLLOW (FIX DÍNH XE)
-            // =========================
-
-            // 🔥 trừ chiều dài xe (rất quan trọng)
             dist -= 1.5f;
 
-            // khoảng cách an toàn
+
             float safeGap = 4f;
 
-            // tính speed theo khoảng cách (mượt)
             float ratio = dist / detectDistance;
             float targetSpeed = maxSpeed * ratio;
 
-            // clamp lại
+
             targetSpeed = Mathf.Clamp(targetSpeed, 0f, maxSpeed);
 
-            // ❌ quá gần → dừng hẳn
+
             if (dist < safeGap)
             {
                 currentSpeed = Mathf.Lerp(currentSpeed, 0f, Time.deltaTime * 8f);
             }
             else
             {
-                // ✅ chạy mượt theo xe trước
+
                 currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, Time.deltaTime * 4f);
             }
         }
@@ -176,9 +161,7 @@ public class CarAI : MonoBehaviour
         }
     }
 
-    // =========================
-    // 🚗 MOVE
-    // =========================
+
     void Move()
     {
         if (isWaitingAtLight) return;

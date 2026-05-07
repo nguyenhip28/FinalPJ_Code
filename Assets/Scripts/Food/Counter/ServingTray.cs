@@ -5,20 +5,14 @@ public class ServingTray : BaseCounter
     private TacoData currentOrder;
 
     private PaymentManager paymentManager;
-    private NPCQueueManager queueManager; // 🔥 FIX: khai báo global
+    private NPCQueueManager queueManager;
 
-    // =====================================================
-    // INIT
-    // =====================================================
     void Start()
     {
         paymentManager = FindObjectOfType<PaymentManager>();
-        queueManager = FindObjectOfType<NPCQueueManager>(); // 🔥 FIX
+        queueManager = FindObjectOfType<NPCQueueManager>(); 
     }
 
-    // =====================================================
-    // NHẬN ORDER
-    // =====================================================
     public void SetOrder(TacoData data)
     {
         currentOrder = data;
@@ -26,9 +20,6 @@ public class ServingTray : BaseCounter
         Debug.Log($"📥 Tray nhận order: Meat={data.meat}, Lettuce={data.lettuce}, Tomato={data.tomato}");
     }
 
-    // =====================================================
-    // PLAYER NHẤN E
-    // =====================================================
     public override void Interact(PlayerInteraction player)
     {
         if (!player.IsHoldingObject())
@@ -47,9 +38,6 @@ public class ServingTray : BaseCounter
         }
     }
 
-    // =====================================================
-    // XỬ LÝ ĐẶT MÓN
-    // =====================================================
     private bool PlaceFood(GameObject obj)
     {
         Debug.Log("🍽️ Placed on tray");
@@ -70,9 +58,6 @@ public class ServingTray : BaseCounter
 
         Debug.Log($"👉 Player Taco: Meat={taco.data.meat}, Lettuce={taco.data.lettuce}, Tomato={taco.data.tomato}");
 
-        // =====================================================
-        // 🔥 LẤY NPC ĐẦU HÀNG (FIX CHUẨN)
-        // =====================================================
         NPCMovement firstNPC = null;
 
         if (queueManager != null)
@@ -80,9 +65,6 @@ public class ServingTray : BaseCounter
             firstNPC = queueManager.GetFirstNPC();
         }
 
-        // =====================================================
-        // CHECK MÓN
-        // =====================================================
         if (taco.data.Compare(currentOrder))
         {
             Debug.Log("✅ ĐÚNG MÓN!");
@@ -106,9 +88,6 @@ public class ServingTray : BaseCounter
             Destroy(obj);
         }
 
-        // =====================================================
-        // ĐẶT FOOD LÊN KHAY
-        // =====================================================
         if (foodPlacePoint == null)
         {
             Debug.LogError("❌ Chưa gán Food Place Point!");
@@ -127,7 +106,6 @@ public class ServingTray : BaseCounter
             rb.useGravity = false;
         }
 
-        // reset order
         currentOrder = null;
 
         return true;

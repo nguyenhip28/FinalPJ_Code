@@ -9,7 +9,6 @@ public class EndingManager : MonoBehaviour
 
     void Start()
     {
-        // 👉 đăng ký sự kiện khi video kết thúc
         videoPlayer.loopPointReached += OnVideoEnd;
 
         popupPanel.SetActive(false);
@@ -17,17 +16,15 @@ public class EndingManager : MonoBehaviour
 
     void OnVideoEnd(VideoPlayer vp)
     {
-        // 👉 hiện popup
+
         popupPanel.SetActive(true);
     }
 
-    // 👉 nút YES
     public void OnYes()
     {
         SceneManager.LoadScene("MainMenu");
     }
 
-    // 👉 nút NO
     public void OnNo()
     {
         SceneManager.LoadScene("FinalProject");

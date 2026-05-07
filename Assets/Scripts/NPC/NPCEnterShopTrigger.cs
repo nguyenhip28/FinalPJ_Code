@@ -23,6 +23,5 @@ public class NPCEnterShopTrigger : MonoBehaviour
                 npc.EnterShop(queueManager, wp_order, wp_out);
             }
         }
-        // nếu cửa đóng → KHÔNG làm gì → NPC đi tiếp path
     }
 }

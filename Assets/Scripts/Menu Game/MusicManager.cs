@@ -47,12 +47,10 @@ public class MusicManager : MonoBehaviour
         }
         else if (scene.name == "FinalProject")
         {
-            // 🔥 KHÔNG LÀM GÌ CẢ
-            // nhạc game sẽ do AudioSource trong scene xử lý
         }
     }
 
-    // 🎵 MENU ONLY
+
     void PlayMenuMusic()
     {
         if (menuMusic == null) return;
@@ -68,7 +66,7 @@ public class MusicManager : MonoBehaviour
         Debug.Log("Play MENU music");
     }
 
-    // 🔥 dùng khi bấm NewGame
+
     public void StopMusic()
     {
         audioSource.Stop();

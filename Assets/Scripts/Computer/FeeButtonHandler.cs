@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 public class FeeButtonHandler : MonoBehaviour
 {
-    public int amount; // tiền của fee này (170, 300, 400)
+    public int amount; 
 
     public Button payButton;
     public TextMeshProUGUI statusText;
 
-    public int feeIndex; // 🔥 thêm: index của fee trong FeeManager
+    public int feeIndex; 
 
     private bool isPaid = false;
     public void OnPayClicked()

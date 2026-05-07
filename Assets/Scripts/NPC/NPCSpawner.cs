@@ -20,13 +20,13 @@ public class NPCSpawner : MonoBehaviour
 
     public Transform npcContainer;
 
-    public TimeManager timeManager; // 🔥 thêm
+    public TimeManager timeManager; 
 
     private float timer;
 
     void Update()
     {
-        // ❌ Không spawn nếu hết ngày
+        
         if (timeManager != null && timeManager.IsDayEnded())
             return;
 
@@ -47,7 +47,7 @@ public class NPCSpawner : MonoBehaviour
 
     float GetDensityFactor()
     {
-        // ✅ tối ưu (không dùng FindGameObjectsWithTag nữa)
+        
         int npcCount = npcContainer.childCount;
         return npcCount * 0.05f;
     }
@@ -57,7 +57,7 @@ public class NPCSpawner : MonoBehaviour
         if (npcPrefabs.Length == 0 || path == null || path.Count() == 0)
             return;
 
-        // ❌ Giới hạn tổng NPC
+        
         if (npcContainer.childCount >= maxTotalNPC)
             return;
 

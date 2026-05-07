@@ -18,10 +18,10 @@ public class CarSpawner : MonoBehaviour
 
     void SpawnCar()
     {
-        // 🔥 dọn xe đã bị destroy
+      
         allCars.RemoveAll(car => car == null);
 
-        // ❌ đạt giới hạn → không spawn nữa
+     
         if (allCars.Count >= maxTotalCars) return;
 
         if (spawnPoints.Count == 0 || carPrefabs.Count == 0) return;
@@ -48,7 +48,7 @@ public class CarSpawner : MonoBehaviour
 
         sp.RegisterCar(car);
 
-        // 🔥 thêm vào danh sách global
+
         allCars.Add(car);
     }
 }

@@ -7,17 +7,17 @@ public class NPCQueueManager : MonoBehaviour
     public Transform orderPoint;
     public Transform exitPoint;
 
-    public Transform[] queuePoints; // vị trí xếp hàng
-    public int maxNPCInShop = 3;    // 🔥 GIỚI HẠN
+    public Transform[] queuePoints; 
+    public int maxNPCInShop = 3;    
 
     private Queue<NPCMovement> queue = new Queue<NPCMovement>();
 
-    // ================= JOIN =================
+
     public bool TryJoinQueue(NPCMovement npc)
     {
         if (queue.Count >= maxNPCInShop)
         {
-            return false; // ❌ full → không vào
+            return false; 
         }
 
         queue.Enqueue(npc);
@@ -27,13 +27,13 @@ public class NPCQueueManager : MonoBehaviour
         return true;
     }
 
-    // ================= CHECK FIRST =================
+
     public bool IsFirst(NPCMovement npc)
     {
         return queue.Count > 0 && queue.Peek() == npc;
     }
 
-    // ================= FINISH ORDER =================
+
     public void FinishOrder(NPCMovement npc)
     {
         if (queue.Count == 0) return;
@@ -42,15 +42,15 @@ public class NPCQueueManager : MonoBehaviour
         {
             queue.Dequeue();
 
-            // 👉 cho NPC đi ra
+            
             npc.GoToExit(exitPoint);
 
-            // 👉 update lại queue
+            
             UpdateQueuePositions();
         }
     }
 
-    // ================= UPDATE POSITIONS =================
+    
     void UpdateQueuePositions()
     {
         int index = 0;
@@ -59,7 +59,7 @@ public class NPCQueueManager : MonoBehaviour
         {
             if (index == 0)
             {
-                // 🔥 NPC đầu → đi order
+                
                 npc.GoToOrder(orderPoint);
             }
             else

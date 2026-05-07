@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 public class NPCMovement : MonoBehaviour
@@ -24,9 +23,6 @@ public class NPCMovement : MonoBehaviour
 
     [Header("Order System")]
     public GameObject orderBubblePrefab;
-
-    public GameObject likeEffect;
-    public GameObject dislikeEffect;
 
     private NPCOrder currentOrder;
     private GameObject currentBubble;
@@ -77,7 +73,6 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    // ================= SHOP =================
 
     public void EnterShop(NPCQueueManager manager, Transform order, Transform exit)
     {
@@ -112,11 +107,10 @@ public class NPCMovement : MonoBehaviour
         queueTarget = orderPos;
         currentState = NPCState.GoingToQueue;
 
-        isOrderingDone = false;     // 🔥 reset
+        isOrderingDone = false;     
         hasCreatedOrder = false;
     }
 
-    // ================= INIT =================
 
     void Start()
     {
@@ -136,7 +130,6 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    // ================= UPDATE =================
 
     void Update()
     {
@@ -162,8 +155,8 @@ public class NPCMovement : MonoBehaviour
                         if (currentState != NPCState.Ordering)
                         {
                             currentState = NPCState.Ordering;
-                            hasCreatedOrder = false; // 🔥 cực quan trọng
-                            isOrderingDone = false;  // 🔥 đảm bảo reset
+                            hasCreatedOrder = false; 
+                            isOrderingDone = false;  
                         }
                     }
 
@@ -175,14 +168,14 @@ public class NPCMovement : MonoBehaviour
 
             case NPCState.Ordering:
 
-                // 👉 TẠO ORDER + UI (CHỈ 1 LẦN)
+                
                 if (!hasCreatedOrder)
                 {
                     CreateOrder();
                     hasCreatedOrder = true;
                 }
 
-                // quay mặt về quầy
+                
                 if (orderPoint != null)
                 {
                     Vector3 lookDir = orderPoint.position - transform.position;
@@ -222,7 +215,6 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    // ================= ORDER =================
 
     void CreateOrder()
     {
@@ -230,7 +222,7 @@ public class NPCMovement : MonoBehaviour
 
         currentOrder = new NPCOrder();
 
-        // tạo UI bubble
+        
         currentBubble = Instantiate(orderBubblePrefab, transform);
         currentBubble.transform.localPosition = new Vector3(0.1f, 3f, 0.25f);
 
@@ -280,7 +272,7 @@ public class NPCMovement : MonoBehaviour
         if (currentBubble != null)
         {
             Destroy(currentBubble);
-            currentBubble = null; // 🔥 QUAN TRỌNG
+            currentBubble = null; 
         }
     }
 
@@ -291,17 +283,18 @@ public class NPCMovement : MonoBehaviour
         if (currentBubble != null)
             HideOrderBubble();
 
-        StartCoroutine(HandleReactionAndLeave(true));
+        isOrderingDone = true;
+        hasCreatedOrder = false;
     }
 
     public void OnWrongOrder()
     {
         Debug.Log("Wrong Order!");
 
-        StartCoroutine(HandleReactionAndLeave(false));
+        isOrderingDone = true;
+        hasCreatedOrder = false;
     }
 
-    // ================= MOVE =================
 
     void MoveTo(Vector3 targetPos)
     {
@@ -348,7 +341,6 @@ public class NPCMovement : MonoBehaviour
         }
     }
 
-    // ================= PATH =================
 
     void HandlePathMovement()
     {
@@ -375,30 +367,5 @@ public class NPCMovement : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-    }
-
-    IEnumerator HandleReactionAndLeave(bool isCorrect)
-    {
-        if (isCorrect)
-        {
-            if (likeEffect != null)
-            {
-                GameObject fx = Instantiate(likeEffect);
-                fx.transform.position = transform.position + transform.forward * 0.5f + Vector3.up * 1.5f;
-            }
-        }
-        else
-        {
-            if (dislikeEffect != null)
-            {
-                GameObject fx = Instantiate(likeEffect);
-                fx.transform.position = transform.position + transform.forward * 0.5f + Vector3.up * 1.5f;
-            }
-        }
-
-        yield return new WaitForSeconds(1f);
-
-        isOrderingDone = true;
-        hasCreatedOrder = false;
     }
 }

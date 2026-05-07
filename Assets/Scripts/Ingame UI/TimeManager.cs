@@ -12,7 +12,7 @@ public class TimeManager : MonoBehaviour
     private int day = 1;
     private bool isDayEnded = false;
 
-    // 🔥 chỉ cho bấm Enter khi vừa hết ngày
+
     private bool canPressEnter = false;
     private int tacosSoldToday = 0;
     private int moneyEarnedToday = 0;
@@ -70,7 +70,6 @@ public class TimeManager : MonoBehaviour
             gameTime = 21f;
             isDayEnded = true;
 
-            // 🔥 chỉ bật Enter khi vừa tới 21h
             canPressEnter = true;
         }
     }
@@ -81,7 +80,7 @@ public class TimeManager : MonoBehaviour
         {
             canPressEnter = false;
 
-            // 🔥 RESET GAME
+          
             if (resetManager != null)
             {
                 resetManager.ResetDay();
@@ -98,7 +97,7 @@ public class TimeManager : MonoBehaviour
         isDayEnded = false;
         canPressEnter = false;
 
-        // reset lighting update
+   
         lastSkyColor = Color.clear;
     }
 
@@ -106,7 +105,7 @@ public class TimeManager : MonoBehaviour
     {
         if (isDayEnded)
         {
-            // 🔥 chỉ hiện thông báo, ẩn giờ
+           
             timeText.text = $"Day {day}\n<color=yellow>Press ENTER to end day</color>";
             return;
         }
@@ -127,34 +126,34 @@ public class TimeManager : MonoBehaviour
 
         float tDay = Mathf.InverseLerp(7f, 21f, gameTime);
 
-        // 🌤 7h → 16h
+      
         if (gameTime < 16f)
         {
             skyColor = dayColor;
         }
-        // 🌇 16h → 18h
+       
         else if (gameTime < 18f)
         {
             float t = Mathf.InverseLerp(16f, 18f, gameTime);
             skyColor = Color.Lerp(dayColor, sunsetColor, t);
         }
-        // 🌙 18h → 21h
+       
         else
         {
             float t = Mathf.InverseLerp(18f, 21f, gameTime);
             skyColor = Color.Lerp(sunsetColor, nightColor, t);
         }
 
-        // 🌤 Skybox
+        
         RenderSettings.skybox.SetColor("_SkyTint", skyColor);
         RenderSettings.skybox.SetFloat("_AtmosphereThickness", 0.6f);
         RenderSettings.skybox.SetFloat("_Exposure", gameTime < 16f ? 1.2f : 1.2f - tDay * 0.7f);
 
-        // 🌫 Ambient
+       
         Color ambientDay = new Color(0.8f, 0.85f, 0.9f);
         RenderSettings.ambientLight = Color.Lerp(ambientDay, nightColor, tDay);
 
-        // 🌞 Sun
+     
         if (sun != null)
         {
             float sunAngle = Mathf.Lerp(10f, 170f, tDay);
@@ -179,7 +178,7 @@ public class TimeManager : MonoBehaviour
             }
         }
 
-        // ⚡ tối ưu
+       
         if (Vector4.Distance(skyColor, lastSkyColor) > 0.01f)
         {
             DynamicGI.UpdateEnvironment();
@@ -219,7 +218,7 @@ public class TimeManager : MonoBehaviour
 
         NextDay();
 
-        // 🔥 reset spawner
+       
         NPCSpawner spawner = FindObjectOfType<NPCSpawner>();
         if (spawner != null)
         {

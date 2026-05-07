@@ -9,10 +9,6 @@ public class BaseCounter : MonoBehaviour, IInteractable
     protected GameObject currentFood;
     protected GameObject currentKnife;
 
-    // =====================================================
-    // CHECK STATE
-    // =====================================================
-
     public virtual bool HasFood()
     {
         return currentFood != null;
@@ -28,15 +24,10 @@ public class BaseCounter : MonoBehaviour, IInteractable
         return currentFood != null;
     }
 
-    // =====================================================
-    // PLACE OBJECT
-    // =====================================================
-
     public virtual void PlaceObject(GameObject obj)
     {
         if (obj == null) return;
 
-        // ===== KNIFE =====
         if (obj.TryGetComponent(out Knife knife))
         {
             if (currentKnife != null || knifePlacePoint == null) return;
@@ -46,7 +37,6 @@ public class BaseCounter : MonoBehaviour, IInteractable
             return;
         }
 
-        // ===== FOOD =====
         if (obj.TryGetComponent(out FoodItem food))
         {
             if (currentFood != null || foodPlacePoint == null) return;
@@ -55,10 +45,6 @@ public class BaseCounter : MonoBehaviour, IInteractable
             PlaceAtPoint(obj, foodPlacePoint);
         }
     }
-
-    // =====================================================
-    // TAKE FOOD
-    // =====================================================
 
     public virtual GameObject TakeObject()
     {
@@ -71,10 +57,6 @@ public class BaseCounter : MonoBehaviour, IInteractable
         return obj;
     }
 
-    // =====================================================
-    // TAKE KNIFE
-    // =====================================================
-
     public virtual GameObject TakeKnife()
     {
         if (currentKnife == null) return null;
@@ -86,27 +68,15 @@ public class BaseCounter : MonoBehaviour, IInteractable
         return obj;
     }
 
-    // =====================================================
-    // GET FOOD
-    // =====================================================
-
     public GameObject GetFood()
     {
         return currentFood;
     }
 
-    // =====================================================
-    // INTERACT
-    // =====================================================
-
     public virtual void Interact(PlayerInteraction player)
     {
-        // Override ở class con
     }
 
-    // =====================================================
-    // HELPER FUNCTIONS
-    // =====================================================
 
     protected void PlaceAtPoint(GameObject obj, Transform point)
     {
@@ -123,7 +93,6 @@ public class BaseCounter : MonoBehaviour, IInteractable
             rb.useGravity = false;
         }
 
-        // ===== FIX SCALE =====
         Vector3 originalScale = obj.transform.localScale;
 
         obj.transform.SetParent(point, true);
@@ -133,12 +102,11 @@ public class BaseCounter : MonoBehaviour, IInteractable
 
         obj.transform.localScale = originalScale;
 
-        // ===== GIỮ COLLIDER để raycast vẫn hit được =====
         Collider col = obj.GetComponent<Collider>();
         if (col != null)
         {
             col.enabled = true;
-            col.isTrigger = false; // trigger để không bị va chạm vật lý, nhưng vẫn raycast được
+            col.isTrigger = false; 
         }
     }
 
@@ -165,6 +133,5 @@ public class BaseCounter : MonoBehaviour, IInteractable
 
     public virtual void InteractAlternate(PlayerInteraction player)
     {
-        // để trống
     }
 }

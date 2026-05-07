@@ -33,7 +33,7 @@ public class ComputerInteractionAdvanced : MonoBehaviour
 
         isUsingComputer = true;
 
-        playerCamera.gameObject.SetActive(false);   // 🔥 QUAN TRỌNG
+        playerCamera.gameObject.SetActive(false);  
         computerCamera.gameObject.SetActive(true);
 
         computerUI.SetActive(true);

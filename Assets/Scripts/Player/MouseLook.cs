@@ -32,13 +32,12 @@ public class MouseLook : MonoBehaviour
         mouseSensitivity = value;
     }
 
-    // 🔥 THÊM
+ 
     public float GetXRotation()
     {
         return xRotation;
     }
 
-    // 🔥 THÊM
     public void SetRotation(float xRot)
     {
         xRotation = xRot;

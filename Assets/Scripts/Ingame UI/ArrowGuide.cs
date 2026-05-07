@@ -2,15 +2,15 @@
 
 public class ArrowGuide : MonoBehaviour
 {
-    public Transform target;   // nhà hàng
-    public Transform player;   // player
+    public Transform target;   
+    public Transform player;   
 
     void Update()
     {
         if (target == null || player == null) return;
 
         Vector3 direction = target.position - player.position;
-        direction.y = 0; // không cho ngửa lên trời
+        direction.y = 0; 
 
         if (direction != Vector3.zero)
         {

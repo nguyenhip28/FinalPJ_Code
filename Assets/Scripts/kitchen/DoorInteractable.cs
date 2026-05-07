@@ -20,11 +20,11 @@ public class DoorInteractable : MonoBehaviour
 
     void Start()
     {
-        // Lấy rotation ban đầu
+
         leftClosed = leftDoor.localRotation;
         rightClosed = rightDoor.localRotation;
 
-        // Tính góc mở
+
         leftOpen = leftClosed * Quaternion.Euler(0, -openAngle, 0);
         rightOpen = rightClosed * Quaternion.Euler(0, openAngle, 0);
     }
@@ -47,13 +47,13 @@ public class DoorInteractable : MonoBehaviour
         );
     }
 
-    // 👉 Toggle cửa (QUAN TRỌNG)
+
     public void Toggle()
     {
         isOpen = !isOpen;
     }
 
-    // 👉 Cho script khác biết trạng thái
+
     public bool IsOpen()
     {
         return isOpen;

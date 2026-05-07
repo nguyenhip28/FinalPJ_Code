@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
         ApplyGravity();
     }
 
-    // ===================== GROUND =====================
+
     void GroundCheck()
     {
         isGrounded = controller.isGrounded;
@@ -44,16 +44,16 @@ public class PlayerMovement : MonoBehaviour
             velocity.y = -2f;
     }
 
-    // ===================== MOVE (TPS + STRAFE) =====================
+
     void Move()
     {
-        float h = Input.GetAxis("Horizontal"); // A / D
-        float v = Input.GetAxis("Vertical");   // W / S
+        float h = Input.GetAxis("Horizontal"); 
+        float v = Input.GetAxis("Vertical");  
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
         float speed = isRunning ? runSpeed : walkSpeed;
 
-        // Camera-relative directions (không xoay theo A/D)
+
         Vector3 camForward = Vector3.Scale(cam.forward, new Vector3(1, 0, 1)).normalized;
         Vector3 camRight = cam.right;
 
@@ -63,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
         {
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
 
-            // Chỉ xoay nhân vật theo hướng camera
+
             Quaternion targetRot = Quaternion.LookRotation(camForward);
             transform.rotation = Quaternion.Lerp(
                 transform.rotation,
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
             );
         }
 
-        // ===== ANIMATION (SMOOTH WALK ↔ RUN) =====
+
         bool hasInput = Mathf.Abs(h) > 0.1f || Mathf.Abs(v) > 0.1f;
 
         float targetAnimSpeed = 0f;
@@ -83,13 +83,13 @@ public class PlayerMovement : MonoBehaviour
         float smoothAnimSpeed = Mathf.Lerp(
             currentAnimSpeed,
             targetAnimSpeed,
-            Time.deltaTime * 8f // chỉnh 6–10 nếu muốn
+            Time.deltaTime * 8f 
         );
 
         animator.SetFloat("Speed", smoothAnimSpeed);
     }
 
-    // ===================== JUMP =====================
+
     void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
@@ -99,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // ===================== GRAVITY =====================
+
     void ApplyGravity()
     {
         velocity.y += gravity * Time.deltaTime;

@@ -53,10 +53,9 @@ public class NPCController : MonoBehaviour
 
         Debug.Log("NPC ordering...");
 
-        // TODO: bật UI order ở đây
+        
         yield return new WaitForSeconds(3f);
 
-        // TODO: tắt UI order
 
         agent.isStopped = false;
         agent.SetDestination(seatPoint.position);
@@ -76,7 +75,6 @@ public class NPCController : MonoBehaviour
 
         agent.isStopped = true;
 
-        // snap vào ghế
         transform.position = seatPoint.position;
         transform.rotation = seatPoint.rotation;
 
